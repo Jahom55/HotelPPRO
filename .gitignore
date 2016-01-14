@@ -1,0 +1,3 @@
+target
+.git
+src/main/webapp/WEB-INF/database.properties
