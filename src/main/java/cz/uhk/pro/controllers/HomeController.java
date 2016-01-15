@@ -14,7 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import cz.uhk.pro.model.Person;
+import cz.uhk.pro.service.AddressService;
+import cz.uhk.pro.service.EquipmentService;
+import cz.uhk.pro.service.HotelService;
+import cz.uhk.pro.service.ImageService;
 import cz.uhk.pro.service.PersonService;
+import cz.uhk.pro.service.ReviewService;
+import cz.uhk.pro.service.RoleService;
+import cz.uhk.pro.service.TypeService;
+import cz.uhk.pro.service.UserService;
 
 /**
  * Handles requests for the application home page.
@@ -26,7 +34,34 @@ public class HomeController {
 	
 	 @Autowired(required = true)
 	 private PersonService personService;
-	
+
+	 @Autowired(required = true)
+	 private AddressService addressService;
+
+	 @Autowired(required = true)
+	 private RoleService roleService;
+	 
+	 @Autowired(required = true)
+	 private TypeService typeService;
+	 
+	 @Autowired(required = true)
+	 private UserService userService;
+	 
+	 @Autowired(required = true)
+	 private EquipmentService equipmentService;
+	 
+	 @Autowired(required = true)
+	 private HotelService hotelService;
+	 
+	 @Autowired(required = true)
+	 private ImageService imageService;
+	 
+	 @Autowired(required = true)
+	 private ReviewService reviewService;
+	 
+
+	 
+
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
