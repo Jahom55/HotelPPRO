@@ -1,11 +1,14 @@
 package cz.uhk.pro.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -36,6 +39,22 @@ public class User {
     @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "addressId")
     private Address address;
+    
+    @OneToMany(mappedBy="user")
+    private List<Review> reviews;
+    
+    @OneToMany(mappedBy="user")
+    private List<Hotel> hotels;
+    
+
+    
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
 
 	public int getUserId() {
 		return userId;

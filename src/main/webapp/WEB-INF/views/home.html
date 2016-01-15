@@ -1,0 +1,12 @@
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <link th:src="@{/style/app.css}" rel="stylesheet"/>
+  </head>
+  <body>
+  NEjakou cgyby nebo vyis
+  <br />
+   <p th:each="prod : ${persons}">
+      <p th:text="${prod.name}"></p>
+    </p>
+   
+   </body></html>
