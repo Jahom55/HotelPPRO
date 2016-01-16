@@ -4,20 +4,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Homolka Lihm " />
-
     <title>Hotely</title>
-
 	<!-- Bootstrap Core CSS -->
     <link href="/resources/css/bootstrap.min.css" rel="stylesheet" />
-
-
     <!-- Custom CSS -->
-    <link href="/resources/css/round-about.css" rel="stylesheet" />
-    
+    <link href="/resources/css/round-about.css" rel="stylesheet" />    
   </head>
 
   <body>
-
     <!-- Static navbar -->
        <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -52,41 +46,36 @@
     </nav>
 
     <div class="container">
+		<form action="#" data-th-action="@{/updatePerson}"
+			data-th-object="${person}" method="post">
+			<table class="box-table-a">
+				<thead>
+					<tr>
+						<th>Jmeno</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<input type="text" hidden="hidden" data-th-field="${person.personId}"  />
+						<td><input type="text" data-th-field="${person.name}" data-th-value="${person.name}" /></td>
+					</tr>
+					<tr>					
+						<td>
+							<button th:if="${person.name}" type="submit">Edit</button>
+							<button th:unless="${person.name}" type="submit">Add</button>
+						</td>
+						
+					</tr>
+				</tbody>
+			</table>
+		</form>
 
-        <!-- Introduction Row -->
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">About Us
-                    <small>It's Nice to Meet You!</small>
-                </h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, explicabo dolores ipsam aliquam inventore corrupti eveniet quisquam quod totam laudantium repudiandae obcaecati ea consectetur debitis velit facere nisi expedita vel?</p>
-            </div>
-        </div>
 
-        <!-- Team Members Row -->
-        <div class="row">
-            <div class="col-lg-12">
-                <h2 class="page-header">Hotely</h2>
-            </div>
-            
-            
-            <div th:each="person : ${persons}" >            
-             <div class="col-lg-4 col-sm-6 text-center">
-                <img class="img-circle img-responsive img-center" src="http://placehold.it/200x200" alt="" />
-                <h3 th:text="${person.name}">
-                    <small>Fucking nic</small>
-                </h3>
-                <p>Fucking nic</p>
-                <a href="#" data-th-href="@{/remove/(id=${person.personId})}" onclick="return confirm('Really remove from basket?');">Remove</a>
-                <a href="#" data-th-href="@{/person/(id=${person.personId})}">Detail</a>
-				<a href="#" data-th-href="@{/person/}">Add</a>                             
-            </div>
 
-			</div>      
-            
-        </div>
 
-        <hr />
+
+
+		<hr />
 
       
     

@@ -8,10 +8,13 @@ import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import cz.uhk.pro.model.Person;
 import cz.uhk.pro.service.AddressService;
@@ -67,14 +70,46 @@ public class HomeController {
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-		
-		List<Person> personList = personService.getAll();
-		
-		model.addAttribute("persons", personList);		
-		
+	public String home(Locale locale, Model model) {		
+		List<Person> personList = personService.getAll();		
+		model.addAttribute("persons", personList);			
 		return "home";
 	}
+	
+	@RequestMapping(value = "/remove")
+	public String remove(@RequestParam int id, @ModelAttribute Person person) {		
+        Person p = personService.get(id);
+        personService.remove(p);
+		return "redirect:/";
+	}
+	
+	@RequestMapping(value="/person")
+	public String addPerson(Model model){		
+		Person p = new Person();
+		model.addAttribute(p);
+		return "person";
+	}
+	@RequestMapping(value="/person", params = "id")
+	public String detail(Model model, @RequestParam int id){		
+        Person p = personService.get(id);        
+        model.addAttribute("person", p);
+		return "person";
+	}
+	
+	
+	@RequestMapping(value = "/updatePerson", method = RequestMethod.POST)
+	public String updateUser(@ModelAttribute("person") Person p,
+			Model model) {        
+			personService.saveOrUpdate(p);
+			return "redirect:/";
+
+	
+
+	}
+	
+	
+	
+	
+	
 	
 }

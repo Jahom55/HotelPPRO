@@ -1,4 +1,4 @@
-<jsp:include page="layout/header.jsp">
+<jsp:include page="layout/header.html">
 	<jsp:param value="Hotely" name="title" />
 </jsp:include>
 <%@ include file="layout/taglibs.jsp"%>
@@ -77,7 +77,7 @@
 
       
     
-    <jsp:include page="layout/footer.jsp" />
+    <jsp:include page="layout/footer.html" />
 
 </body>
 

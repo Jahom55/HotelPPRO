@@ -1,7 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ include file="taglibs.jsp"%>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,13 +8,11 @@
     <title>${param.title}</title>
 
 	<!-- Bootstrap Core CSS -->
-	<c:url value="/resources/css/bootstrap.min.css" var="bootstrapCssUrl" />
-    <link href="${bootstrapCssUrl}" rel="stylesheet">
+    <link href="/resources/css/bootstrap.min.css" rel="stylesheet" />
 
 
     <!-- Custom CSS -->
-    <c:url value="/resources/css/round-about.css" var="bootstrapCustomCssUrl" />
-    <link href="${bootstrapCustomCssUrl}" rel="stylesheet">
+    <link href="/resources/css/round-about.css" rel="stylesheet" />
     
   </head>
 
