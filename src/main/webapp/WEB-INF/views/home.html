@@ -19,6 +19,7 @@
                 </h1>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, explicabo dolores ipsam aliquam inventore corrupti eveniet quisquam quod totam laudantium repudiandae obcaecati ea consectetur debitis velit facere nisi expedita vel?</p>
             </div>
+            <a href="#" data-th-href="@{/hotel/}">Pridat Hotel</a>  
         </div>
 
         <!-- Team Members Row -->
@@ -28,16 +29,17 @@
             </div>
             
             
-            <div th:each="person : ${allPersons}" >            
+            <div th:each="hotel : ${allHotels}" >            
              <div class="col-lg-4 col-sm-6 text-center">
                 <img class="img-circle img-responsive img-center" src="http://placehold.it/200x200" alt="" />
-                <h3 th:text="${person.name}">
-                    <small>Fucking nic</small>
+                <h3 th:text="${hotel.name}">
+                    <small th:text="${hotel.address.city}"></small>
                 </h3>
-                <p>Fucking nic</p>
-                <a href="#" data-th-href="@{/remove/(id=${person.personId})}" onclick="return confirm('Really remove from basket?');">Remove</a>
-                <a href="#" data-th-href="@{/person/(id=${person.personId})}">Detail</a>
-				<a href="#" data-th-href="@{/person/}">Add</a>                             
+                <p>Hodnoceni je:  <span th:text="${hotel.rating}"></span></p>
+
+                <a href="#" data-th-href="@{/remove/(id=${hotel.hotelId})}" onclick="return confirm('Really remove from basket?');">Remove</a>
+                <a href="#" data-th-href="@{/review/(hotelId=${hotel.hotelId})}">Pridat recenzi</a> 
+                <a href="#" data-th-href="@{/hotel/(id=${hotel.hotelId})}">Edit</a>                           
             </div>
 
 			</div>      

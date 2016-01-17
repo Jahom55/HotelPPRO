@@ -3,6 +3,7 @@ package cz.uhk.pro.model;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +28,11 @@ public class Hotel {
 	
 	private byte stars;
 	
-    @Column(columnDefinition="LONGTEXT")
+	private double rating;
+	
+   
+
+	@Column(columnDefinition="LONGTEXT")
 	private String description;
 	
 	private String image;
@@ -38,7 +43,7 @@ public class Hotel {
 	
 	private boolean functional;
 	
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne(fetch=FetchType.LAZY,cascade=CascadeType.ALL)
     @JoinColumn(name = "addressId")
 	private Address address;
 	
@@ -51,11 +56,11 @@ public class Hotel {
 	private Type type;
 	
     
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY,cascade=CascadeType.ALL)
     @JoinColumn(name="equipmentId")
 	private Equipment equipment;
     
-    @OneToMany(mappedBy="hotel")
+    @OneToMany(mappedBy="hotel", cascade=CascadeType.ALL)
     private List<Review> reviews;
 	
 	@OneToMany(mappedBy="hotel")
@@ -74,6 +79,16 @@ public class Hotel {
 
 	public int getHotelId() {
 		return hotelId;
+	}
+
+
+	public double getRating() {
+		return rating;
+	}
+
+
+	public void setRating(double rating) {
+		this.rating = rating;
 	}
 
 
@@ -190,27 +205,6 @@ public class Hotel {
 	public void setEquipment(Equipment equipment) {
 		this.equipment = equipment;
 	}
-
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((address == null) ? 0 : address.hashCode());
-		result = prime * result + counter;
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((equipment == null) ? 0 : equipment.hashCode());
-		result = prime * result + (functional ? 1231 : 1237);
-		result = prime * result + hotelId;
-		result = prime * result + ((image == null) ? 0 : image.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + stars;
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
-		result = prime * result + ((website == null) ? 0 : website.hashCode());
-		return result;
-	}
-
 
 	@Override
 	public boolean equals(Object obj) {

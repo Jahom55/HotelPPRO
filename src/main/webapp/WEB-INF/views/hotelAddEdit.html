@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout/header :: header">
+</head>
+
+<body>
+
+//TODO Edit -> nefilluje
+	<nav th:replace="/layout/header :: navbar"></nav>
+
+	<div class="container">
+		<form action="#" data-th-action="@{/updateHotel/}"
+			data-th-object="${hotel}" method="post">
+			<div class="form-group">
+				<input type="text" hidden="hidden" data-th-field="${hotel.hotelId}" />
+				<label for="name">Název: </label> <input type="text"
+					class="form-control" id="name" placeholder="Název"
+					data-th-field="${hotel.name}" data-th-value="${hotel.name}" />
+			</div>
+			<div class="form-group">
+				<label for="website">Webová stránka</label> <input type="text"
+					class="form-control" id="website" placeholder="www.neco.cz"
+					data-th-field="${hotel.website}" data-th-value="${hotel.website}" />
+			</div>
+			<div class="form-group">
+				<label for="stars">Hvězd: </label>
+				<div class="input-group">
+					<input type="number" class="form-control" id="stars"
+						placeholder="*" data-th-field="${hotel.stars}"
+						data-th-value="${hotel.stars}" />
+					<div class="input-group-addon">*</div>
+				</div>
+			</div>
+			<select class="form-control">
+				<option th:each="type : ${types}" th:text="${type.description}"
+					th:value="${type.typeId}">Types</option>
+			</select>
+
+			<div class="form-group">
+				<label for="description">Popis: </label>
+				<textarea class="form-control" rows="3"
+					data-th-field="${hotel.description}"
+					data-th-value="${hotel.description}"></textarea>
+			</div>
+
+			<div class="form-group">
+				<label for="city">Město: </label> <input type="text"
+					class="form-control" id="city"
+					data-th-field="*{hotel.address.city}" />
+			</div>
+			<div class="form-group">
+				<label for="district">Čtvrť: </label> <input type="text"
+					class="form-control" id="district"
+					data-th-field="${hotel.address.district}" />
+			</div>
+
+			<div class="form-group">
+				<label for="street">Ulice: </label> <input type="text"
+					class="form-control" id="street"
+					data-th-field="${hotel.address.street}" />
+			</div>
+
+			<div class="form-group">
+				<label for="streetNumber">Číslo popisné: </label> <input type="text"
+					class="form-control" id="streetNumber"
+					data-th-field="${hotel.address.streetNumber}" />
+			</div>
+
+			<div class="form-group">
+				<label for="zipCode">PSČ: </label> <input type="text"
+					class="form-control" id="zipCode"
+					data-th-field="${hotel.address.zipCode}" />
+			</div>
+
+			<div class="form-group">
+				<label for="image">Úvodní obrázek</label> <input type="file"
+					id="image" data-th-field="${hotel.image}"
+					data-th-value="${hotel.image}" />
+			</div>
+			<div class="checkbox">
+				<label> <input type="checkbox"
+					data-th-field="${hotel.functional}" th:checked="true" /> Aktivní
+				</label>
+			</div>
+
+
+
+
+			<div class="checkbox">
+				<label class="checkbox-inline"> <input type="checkbox"
+					id="internet" data-th-field="${hotel.equipment.internet}" />
+					Internet
+				</label> <label class="checkbox-inline"> <input type="checkbox"
+					id="inlineCheckbox1" data-th-field="${hotel.equipment.parking}" />
+					Parkování
+				</label> <label class="checkbox-inline"> <input type="checkbox"
+					id="inlineCheckbox1" data-th-field="${hotel.equipment.pets}" />
+					Zvířata
+				</label> <label class="checkbox-inline"> <input type="checkbox"
+					id="inlineCheckbox1" data-th-field="${hotel.equipment.pool}" />
+					Bazén
+				</label>
+			</div>
+			<div class="checkbox">
+				<label class="checkbox-inline"> <input type="checkbox"
+					id="inlineCheckbox1"
+					data-th-field="${hotel.equipment.restauration}" /> Restaurace
+				</label> <label class="checkbox-inline"> <input type="checkbox"
+					id="inlineCheckbox1" data-th-field="${hotel.equipment.saloon}" />
+					Salon
+				</label> <label class="checkbox-inline"> <input type="checkbox"
+					id="inlineCheckbox1" data-th-field="${hotel.equipment.wellness}" />
+					Wellness
+				</label> <label class="checkbox-inline"> <input type="checkbox"
+					id="inlineCheckbox1"
+					data-th-field="${hotel.equipment.wheellchairAccess}" />
+					Bezbarierový přístup
+				</label>
+			</div>
+
+			<button th:if="${hotel.name}" type="submit">Edit</button>
+			<button th:unless="${hotel.name}" type="submit">Add</button>
+		</form>
+
+
+
+
+
+
+		<hr />
+
+
+
+
+		<!-- Footer -->
+		<footer th:replace="/layout/footer :: footer"> </footer>
+
+	</div>
+	<!-- /.container -->
+
+	<div th:replace="/layout/footer :: scripts"></div>
+
+</body>
+
+</html>

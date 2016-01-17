@@ -17,7 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import cz.uhk.pro.model.Address;
+import cz.uhk.pro.model.Hotel;
 import cz.uhk.pro.model.Person;
+import cz.uhk.pro.model.Type;
+import cz.uhk.pro.model.User;
 import cz.uhk.pro.service.AddressService;
 import cz.uhk.pro.service.EquipmentService;
 import cz.uhk.pro.service.HotelService;
@@ -32,7 +36,6 @@ import cz.uhk.pro.service.UserService;
  * Handles requests for the application home page.
  */
 @Controller
-@SessionAttributes(types = Person.class)
 public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
@@ -72,23 +75,27 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {	
-		List<Person> personList = personService.getAll();		
-		model.addAttribute("persons", personList);			
+		List<Hotel> hotelList = hotelService.getAll();		
+		model.addAttribute("hotels", hotelList);
+		
+		//Hotel hotel = hotelService.get(1);
+		
+		//double d = hotelService.getRate(hotel);
 		return "home";
 	}
 	
-	@ModelAttribute("allPersons")
-	public List<Person> populatePersons() {
-	    return this.personService.getAll();
+	@ModelAttribute("allHotels")
+	public List<Hotel> populateHotels() {
+	    return this.hotelService.getAll();
 	}
 
 
-	@RequestMapping(value = "/remove")
-	public String remove(@RequestParam int id, @ModelAttribute Person person) {		
-        Person p = personService.get(id);
-        personService.remove(p);
+/*	@RequestMapping(value = "/remove")
+	public String remove(@RequestParam int id, @ModelAttribute Hotel hotel) {		
+        Hotel p = hotelService.get(id);
+        hotelService.remove(p);
 		return "redirect:/";
-	}
+	}*/
 	
 	@RequestMapping(value="/person")
 	public String addPerson(Model model){		
@@ -109,9 +116,44 @@ public class HomeController {
 			Model model) {        
 			personService.saveOrUpdate(p);
 			return "redirect:/";
-
+	}
 	
-
+	@RequestMapping(value="/hotel")
+	public String addHotel(Model model){		
+		List<Type> typesList = typeService.getAll();
+		model.addAttribute("types", typesList);
+		Hotel h = new Hotel();
+		model.addAttribute("hotel", h);
+		Address a = new Address();
+		model.addAttribute("address", a);
+		return "hotelAddEdit";
+	}
+	
+	@RequestMapping(value="/hotel", params = "id")
+	public String editHotel(Model model, @RequestParam int id){		
+		List<Type> typesList = typeService.getAll();
+		model.addAttribute("types", typesList);
+        Hotel h = hotelService.get(id);        
+        model.addAttribute("hotel", h);
+        model.addAttribute("address",h.getAddress());
+        model.addAttribute("equipment",h.getEquipment());
+		return "hotelAddEdit";
+	}
+	
+	@RequestMapping(value = "/updateHotel", method = RequestMethod.POST)
+	public String updateHotel(@ModelAttribute("hotel") Hotel h,
+			Model model) { 
+			addressService.saveOrUpdate(h.getAddress());
+			equipmentService.saveOrUpdate(h.getEquipment());
+			hotelService.saveOrUpdate(h);
+			return "redirect:/";
+	}
+	
+	@RequestMapping(value = "/remove")
+	public String removeHotel(@RequestParam int id, @ModelAttribute Hotel hotel) {		
+        Hotel p = hotelService.get(id);
+        hotelService.remove(p);
+		return "redirect:/";
 	}
 	
 	
