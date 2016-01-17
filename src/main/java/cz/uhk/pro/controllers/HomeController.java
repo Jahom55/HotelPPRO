@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import cz.uhk.pro.model.Person;
 import cz.uhk.pro.service.AddressService;
@@ -31,6 +32,7 @@ import cz.uhk.pro.service.UserService;
  * Handles requests for the application home page.
  */
 @Controller
+@SessionAttributes(types = Person.class)
 public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
@@ -62,7 +64,6 @@ public class HomeController {
 	 @Autowired(required = true)
 	 private ReviewService reviewService;
 	 
-
 	 
 
 	
@@ -70,12 +71,18 @@ public class HomeController {
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {		
+	public String home(Locale locale, Model model) {	
 		List<Person> personList = personService.getAll();		
 		model.addAttribute("persons", personList);			
 		return "home";
 	}
 	
+	@ModelAttribute("allPersons")
+	public List<Person> populatePersons() {
+	    return this.personService.getAll();
+	}
+
+
 	@RequestMapping(value = "/remove")
 	public String remove(@RequestParam int id, @ModelAttribute Person person) {		
         Person p = personService.get(id);
