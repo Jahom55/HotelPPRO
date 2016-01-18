@@ -43,20 +43,20 @@ public class Hotel {
 	
 	private boolean functional;
 	
-    @OneToOne(fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+    @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "addressId")
 	private Address address;
 	
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne()
     @JoinColumn(name = "userId")    
 	private User user;
 	
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne()
     @JoinColumn(name = "typeId") 
 	private Type type;
 	
     
-    @ManyToOne(fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="equipmentId")
 	private Equipment equipment;
     
