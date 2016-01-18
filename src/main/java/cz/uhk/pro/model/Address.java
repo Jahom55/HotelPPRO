@@ -25,7 +25,7 @@ public class Address {
     
     private String city;
     
-    private int zipCode;
+    private String zipCode;
     
     @OneToMany(mappedBy="address")
     private List<User> users;
@@ -79,15 +79,27 @@ public class Address {
 		this.city = city;
 	}
 
-	public int getZipCode() {
+	public String getZipCode() {
 		return zipCode;
 	}
 
-	public void setZipCode(int zipCode) {
+	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
 
-	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + addressId;
+		result = prime * result + ((city == null) ? 0 : city.hashCode());
+		result = prime * result + ((district == null) ? 0 : district.hashCode());
+		result = prime * result + ((street == null) ? 0 : street.hashCode());
+		result = prime * result + ((streetNumber == null) ? 0 : streetNumber.hashCode());
+		result = prime * result + ((users == null) ? 0 : users.hashCode());
+		result = prime * result + ((zipCode == null) ? 0 : zipCode.hashCode());
+		return result;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -120,7 +132,15 @@ public class Address {
 				return false;
 		} else if (!streetNumber.equals(other.streetNumber))
 			return false;
-		if (zipCode != other.zipCode)
+		if (users == null) {
+			if (other.users != null)
+				return false;
+		} else if (!users.equals(other.users))
+			return false;
+		if (zipCode == null) {
+			if (other.zipCode != null)
+				return false;
+		} else if (!zipCode.equals(other.zipCode))
 			return false;
 		return true;
 	}
@@ -128,10 +148,11 @@ public class Address {
 	@Override
 	public String toString() {
 		return "Address [addressId=" + addressId + ", street=" + street + ", streetNumber=" + streetNumber
-				+ ", district=" + district + ", city=" + city + ", zipCode=" + zipCode + "]";
+				+ ", district=" + district + ", city=" + city + ", zipCode=" + zipCode + ", users=" + users + "]";
 	}
+
 	
-	
+
 
 
 }
