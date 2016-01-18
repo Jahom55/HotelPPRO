@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import cz.uhk.pro.model.Address;
 import cz.uhk.pro.model.Hotel;
 import cz.uhk.pro.model.Person;
-import cz.uhk.pro.model.Review;
 import cz.uhk.pro.model.Type;
 import cz.uhk.pro.model.User;
 import cz.uhk.pro.service.AddressService;
@@ -134,32 +133,12 @@ public class HomeController {
 	public String editHotel(Model model, @RequestParam int id){		
 		List<Type> typesList = typeService.getAll();
 		model.addAttribute("types", typesList);
-        Hotel h = hotelService.get(id);
+        Hotel h = hotelService.get(id);        
         model.addAttribute("hotel", h);
         model.addAttribute("address",h.getAddress());
         model.addAttribute("equipment",h.getEquipment());
 		return "hotelAddEdit";
 	}
-	@RequestMapping(value="/detail", params = "id")
-	public String detailHotel(Model model, @RequestParam int id){		
-		List<Review> reviewList = reviewService.getAll();
-		List<Review> forhotel = null;
-		for (Review review : reviewList) {
-			if(review.getHotel().getHotelId() == id){
-				forhotel.add(review);
-				
-			}
-		}
-		Hotel h = hotelService.get(id);
-		model.addAttribute("type", h.getType());
-		model.addAttribute("reviews", forhotel);
-		model.addAttribute("hotel", h);
-        model.addAttribute("address",h.getAddress());
-        model.addAttribute("equipment",h.getEquipment());
-
-		return "hotelDetail";
-	}
-	
 	
 	@RequestMapping(value = "/updateHotel", method = RequestMethod.POST)
 	public String updateHotel(@ModelAttribute("hotel") Hotel h,

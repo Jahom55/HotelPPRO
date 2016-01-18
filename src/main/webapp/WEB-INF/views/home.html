@@ -38,7 +38,7 @@
                 <p>Hodnoceni je:  <span th:text="${hotel.rating}"></span></p>
 
                 <a href="#" data-th-href="@{/remove/(id=${hotel.hotelId})}" onclick="return confirm('Really remove from basket?');">Remove</a>
-                <a href="#" data-th-href="@{/detail/(id=${hotel.hotelId})}">Detail</a> 
+                <a href="#" data-th-href="@{/review/(hotelId=${hotel.hotelId})}">Pridat recenzi</a> 
                 <a href="#" data-th-href="@{/hotel/(id=${hotel.hotelId})}">Edit</a>                           
             </div>
 

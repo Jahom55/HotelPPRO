@@ -65,7 +65,6 @@
        class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
   <property name="prefix" value="/WEB-INF/views/" />
   <property name="suffix" value=".html" />
-  <property name="characterEncoding" value="UTF-8" />
   <property name="templateMode" value="HTML5" />
 </bean>
     
@@ -76,7 +75,6 @@
     
     <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
   <property name="templateEngine" ref="templateEngine" />
-  <property name="characterEncoding" value="UTF-8" />
   <property name="order" value="1" />
 </bean>
 
