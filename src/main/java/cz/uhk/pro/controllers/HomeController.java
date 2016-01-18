@@ -142,15 +142,8 @@ public class HomeController {
 	}
 	@RequestMapping(value="/detail", params = "id")
 	public String detailHotel(Model model, @RequestParam int id){		
-		List<Review> reviewList = reviewService.getAll();
-		List<Review> forhotel = null;
-		for (Review review : reviewList) {
-			if(review.getHotel().getHotelId() == id){
-				forhotel.add(review);
-				
-			}
-		}
 		Hotel h = hotelService.get(id);
+		List<Review> forhotel = reviewService.getReviewsByHotel(h);		
 		model.addAttribute("type", h.getType());
 		model.addAttribute("reviews", forhotel);
 		model.addAttribute("hotel", h);
