@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html 	xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:th="http://www.thymeleaf.org" >
+<head>
+<title>Login Page</title>
+<style>
+.error {
+	padding: 15px;
+	margin-bottom: 20px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	color: #a94442;
+	background-color: #f2dede;
+	border-color: #ebccd1;
+}
+
+.msg {
+	padding: 15px;
+	margin-bottom: 20px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	color: #31708f;
+	background-color: #d9edf7;
+	border-color: #bce8f1;
+}
+
+#login-box {
+	width: 300px;
+	padding: 20px;
+	margin: 100px auto;
+	background: #fff;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border: 1px solid #000;
+}
+</style>
+</head>
+<body onload='document.loginForm.username.focus();'>
+
+	<h1>Spring Security Login Form (Database + Hibernate Authentication)</h1>
+
+	<div id="login-box">
+
+		<h3>Login with Username and Password</h3>
+		
+		<p th:if="${error}">Wrong user or password</p>
+		<p th:if="${msg}">Wrong user or password</p>
+		
+		<form th:action="@{/login}" method="post">
+      			<label for="username">Username</label>:
+      			<input type="text" id="username" name="username" /> <br />
+     			 <label for="password">Password</label>:
+     			 <input type="password" id="password" name="password" /> <br />
+     			 <input type="submit" value="Log in" />
+			
+			<input type="hidden" name="${_csrf.parameterName}"
+				value="${_csrf.token}" />
+
+		</form>
+	</div>
+
+</body>
+</html>
