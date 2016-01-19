@@ -32,9 +32,36 @@
                 <tr>
                     <th>Kategorie</th>
                     <th class="text-center">Hodnocení</th>
-                    <th class="text-center">Počet hlasujících</th>
+<!--                     <th class="text-center">Počet hlasujících</th> -->
                 </tr>
             </thead>
+            <tbody>
+            	<tr>
+            	<td>Ubytování</td><td>				
+            	<input class="rating form-control" th:field="*{review.reviewAccommodation}" data-min="0" data-max="5" data-step="1" 
+				 glyphicon="true"/></td>
+            	</tr>
+            	<tr>
+            	<td>Prostředí</td><td>				
+            	<input class="rating form-control" th:field="*{review.reviewEnviroment}" data-min="0" data-max="5" data-step="1" 
+				 glyphicon="true"/></td>
+            	</tr>
+            	<tr>
+            	<td>Jídlo</td><td>				
+            	<input class="rating form-control" th:field="*{review.reviewFood}" data-min="0" data-max="5" data-step="1" 
+				 glyphicon="true"/></td>
+            	</tr>
+            	<tr>
+            	<td>Cena</td><td>				
+            	<input class="rating form-control" th:field="*{review.reviewPrice}" data-min="0" data-max="5" data-step="1" 
+				 glyphicon="true"/></td>
+            	</tr>
+            	<tr>
+            	<td>Celkem</td><td>				
+            	<input class="rating form-control" th:field="*{review.reviewComplete}" data-min="0" data-max="5" data-step="1" 
+				 glyphicon="true"/></td>
+            	</tr>
+            </tbody>
             
         </table>
     </div>
@@ -43,7 +70,7 @@
 <div class="row">
     <div class="col-lg-9">
         <h2 class="text-center">Popis</h2>
-        <p th:text="${hotel.description}"></p>
+        <p th:utext="${hotel.description}"></p>
     </div>
 
     <div class="col-lg-offset-9 text-center">

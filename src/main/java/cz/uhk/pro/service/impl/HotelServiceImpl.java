@@ -1,5 +1,7 @@
 package cz.uhk.pro.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,20 @@ public class HotelServiceImpl extends GenericServiceImpl<Hotel, Integer> impleme
 	@Transactional(propagation = Propagation.REQUIRED)
 	public double getRate(Hotel hotel) {
 		return hotelDao.getRate(hotel);
+		
+	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public List<Hotel> getPage(int page, int size){
+		return hotelDao.getPage(page, size);
+		
+	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public Long countHotels(){
+		return hotelDao.countHotels();
 		
 	}
 

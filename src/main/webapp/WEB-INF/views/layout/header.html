@@ -16,7 +16,7 @@
     	<link rel="stylesheet" type="text/css" media="all" 
           href="../../reources/css/round-about.css" th:href="@{/resources/css/round-about.css}" />
     <link rel="stylesheet" type="text/css" media="all" 
-          href="../../reources/css/star-rating.min.css" th:href="@{/resources/css/star-rating.min.css}" />      
+          href="../../reources/css/star-rating.min.css" th:href="@{/resources/css/star-rating.min.css}" />           
     
   </head>		
 
@@ -43,7 +43,7 @@
                         <a href="#">About</a>
                     </li>
                     <li>
-                        <a href="#">Services</a>
+                        <a th:href="@{/hotels(page=1,size=1)}">Vsechny hotely</a>
                     </li>
                     <li>
                         <a href="#">Contact</a>

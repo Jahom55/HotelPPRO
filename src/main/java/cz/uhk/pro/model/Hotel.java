@@ -15,6 +15,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.URL;
 
 @Entity
 @Table(name="hotels")
@@ -24,19 +27,23 @@ public class Hotel {
     @GeneratedValue(strategy= GenerationType.AUTO)
 	private int hotelId;
 	
+    //@NotNull(message = "Zadejte jméno hotelu")
 	private String name;
 	
+    //@NotNull(message = "Zadejte poèet hvìzd hotelu")
 	private byte stars;
 	
+    
 	private double rating;
 	
    
-
+	
 	@Column(columnDefinition="LONGTEXT")
 	private String description;
 	
 	private String image;
 	
+	//@URL(message = "Zadejte URL ve správném tvaru")
 	private String website;
 	
 	private int counter;

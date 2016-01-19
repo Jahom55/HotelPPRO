@@ -1,10 +1,18 @@
 package cz.uhk.pro.controllers;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
+import org.hibernate.id.GUIDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +24,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 import cz.uhk.pro.model.Address;
 import cz.uhk.pro.model.Hotel;
+import cz.uhk.pro.model.HotelUpload;
 import cz.uhk.pro.model.Person;
 import cz.uhk.pro.model.Review;
 import cz.uhk.pro.model.Type;
@@ -68,7 +80,8 @@ public class HomeController {
 	 @Autowired(required = true)
 	 private ReviewService reviewService;
 	 
-	 
+	 @Autowired
+	 private HttpServletRequest context;
 
 	
 	/**
@@ -85,9 +98,47 @@ public class HomeController {
 		return "home";
 	}
 	
+	@RequestMapping(value = "/hotels", method = RequestMethod.GET, params = {"page", "size"})
+	public String allHotels(Locale locale, Model model, @RequestParam int page, @RequestParam int size) {	
+		List<Hotel> hotelList = hotelService.getPage(page,size);		
+		model.addAttribute("hotels", hotelList);
+		double number = hotelService.countHotels();
+		int pages = (int) Math.ceil(number / (double) size);
+		model.addAttribute("pages", pages);
+		int from = 1, to = pages;
+		if(pages <= 5){
+			from = 1;
+			to = pages;
+		}else{
+			if(page + 2 > pages){
+				from = pages - 4;
+				to = pages;
+			}else{
+				if(page > 2){
+					from = page - 2;
+					to = page + 2;
+				}else{
+					from = 1;
+					to = 5;
+				}
+			}
+		}
+		List<String> paginator = new ArrayList<String>();
+		
+		for(int i = from;i<=to;i++){
+			paginator.add(String.valueOf(i));
+		}
+		model.addAttribute("paginator", paginator);
+		
+		return "hotels";
+	}
+	
+	
+	
 	@ModelAttribute("allHotels")
 	public List<Hotel> populateHotels() {
-	    return this.hotelService.getAll();
+		return this.hotelService.getPage(2, 1);
+	    //return this.hotelService.getAll();
 	}
 
 
@@ -125,8 +176,9 @@ public class HomeController {
 		model.addAttribute("types", typesList);
 		Hotel h = new Hotel();
 		model.addAttribute("hotel", h);
-		Address a = new Address();
-		model.addAttribute("address", a);
+
+		HotelUpload hU = new HotelUpload();
+		model.addAttribute("hotelUpload", hU);
 		return "hotelAddEdit";
 	}
 	
@@ -146,6 +198,8 @@ public class HomeController {
 		List<Review> forhotel = reviewService.getReviewsByHotel(h);		
 		model.addAttribute("type", h.getType());
 		model.addAttribute("reviews", forhotel);
+		Review r = new Review();
+		model.addAttribute("review", r);
 		model.addAttribute("hotel", h);
         model.addAttribute("address",h.getAddress());
         model.addAttribute("equipment",h.getEquipment());
@@ -154,12 +208,39 @@ public class HomeController {
 	}
 	
 	
-	@RequestMapping(value = "/updateHotel", method = RequestMethod.POST)
-	public String updateHotel(@ModelAttribute("hotel") Hotel h,
+	@RequestMapping(value = "/updateHotel" ,method = RequestMethod.POST)
+	public String updateHotel(@ModelAttribute("hotelUpload") HotelUpload hotelUpload,
 			Model model) { 
-			addressService.saveOrUpdate(h.getAddress());
-			equipmentService.saveOrUpdate(h.getEquipment());
-			hotelService.saveOrUpdate(h);
+			String path = "";
+			MultipartFile image = hotelUpload.getImage();
+			if(!image.isEmpty()){
+				try {
+					UUID uuid = new UUID(255, 200);
+					
+					String name = String.valueOf(uuid.randomUUID());
+					path = "C:/Users/Adam-LenovoY570/git/HotelPPRO/src/main/webapp/resources/images/" + name + image.getOriginalFilename();
+					File destination = new File(path);
+					image.transferTo(destination);
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			Hotel hotel = new Hotel();
+			hotel.setImage(path);
+			hotel.setAddress(hotelUpload.getHotel().getAddress());
+			hotel.setEquipment(hotelUpload.getHotel().getEquipment());
+			hotel.setDescription(hotelUpload.getHotel().getDescription());
+			hotel.setName(hotelUpload.getHotel().getName());
+			hotel.setStars(hotelUpload.getHotel().getStars());
+			hotel.setWebsite(hotelUpload.getHotel().getWebsite());
+			hotel.setType(hotelUpload.getHotel().getType());
+			addressService.saveOrUpdate(hotel.getAddress());
+			equipmentService.saveOrUpdate(hotel.getEquipment());
+			hotelService.saveOrUpdate(hotel);
 			return "redirect:/";
 	}
 	
