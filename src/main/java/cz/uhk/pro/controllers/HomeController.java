@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
+import org.springframework.web.util.HtmlUtils;
 
 import cz.uhk.pro.model.Address;
 import cz.uhk.pro.model.Hotel;
@@ -174,9 +175,6 @@ public class HomeController {
 	public String addHotel(Model model){		
 		List<Type> typesList = typeService.getAll();
 		model.addAttribute("types", typesList);
-		Hotel h = new Hotel();
-		model.addAttribute("hotel", h);
-
 		HotelUpload hU = new HotelUpload();
 		model.addAttribute("hotelUpload", hU);
 		return "hotelAddEdit";
@@ -187,9 +185,9 @@ public class HomeController {
 		List<Type> typesList = typeService.getAll();
 		model.addAttribute("types", typesList);
         Hotel h = hotelService.get(id);
-        model.addAttribute("hotel", h);
-        model.addAttribute("address",h.getAddress());
-        model.addAttribute("equipment",h.getEquipment());
+        HotelUpload hU = new HotelUpload();
+        hU.setHotel(h);
+        model.addAttribute("hotelUpload", hU);
 		return "hotelAddEdit";
 	}
 	@RequestMapping(value="/detail", params = "id")
@@ -215,10 +213,15 @@ public class HomeController {
 			MultipartFile image = hotelUpload.getImage();
 			if(!image.isEmpty()){
 				try {
+					String pType = image.getContentType().split("/")[0];
+					String sType = image.getContentType().split("/")[1];
 					UUID uuid = new UUID(255, 200);
-					
 					String name = String.valueOf(uuid.randomUUID());
-					path = "C:/Users/Adam-LenovoY570/git/HotelPPRO/src/main/webapp/resources/images/" + name + image.getOriginalFilename();
+					String fileName = image.getOriginalFilename();
+					if(fileName.length() > 15)
+						fileName = fileName.substring(0,15);
+					fileName = String.valueOf(fileName.hashCode());
+					path = "C:/Users/Adam-LenovoY570/git/HotelPPRO/src/main/webapp/resources/images/" + name + fileName + "." + sType;
 					File destination = new File(path);
 					image.transferTo(destination);
 				} catch (IllegalStateException e) {
@@ -230,10 +233,14 @@ public class HomeController {
 				}
 			}
 			Hotel hotel = new Hotel();
+			if(hotelUpload.getHotel().getHotelId() != 0)
+				hotel.setHotelId(hotelUpload.getHotel().getHotelId());
 			hotel.setImage(path);
 			hotel.setAddress(hotelUpload.getHotel().getAddress());
 			hotel.setEquipment(hotelUpload.getHotel().getEquipment());
-			hotel.setDescription(hotelUpload.getHotel().getDescription());
+			
+			//hotel.setDescription(hotelUpload.getHotel().getDescription());
+			hotel.setDescription(HtmlUtils.htmlUnescape((hotelUpload.getHotel().getDescription())));
 			hotel.setName(hotelUpload.getHotel().getName());
 			hotel.setStars(hotelUpload.getHotel().getStars());
 			hotel.setWebsite(hotelUpload.getHotel().getWebsite());

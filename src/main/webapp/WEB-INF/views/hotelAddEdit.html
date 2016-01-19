@@ -9,7 +9,7 @@
 	<nav th:replace="/layout/header :: navbar"></nav>
 
 	<div class="container">
-		<form action="#" th:action="@{/updateHotel/}"
+		<form action="#" th:action="@{/updateHotel/}" class="dropzone"
 			th:object="${hotelUpload}" method="post" enctype="multipart/form-data">
 			<div class="form-group">
 				<input type="hidden" th:field="*{hotel.hotelId}" />
@@ -64,12 +64,21 @@
 					class="form-control"
 					th:field="*{hotel.address.zipCode}" />
 			</div>
-
-			<div class="form-group  dropzone">
-				<label for="image">Úvodní obrázek</label> <input type="file"
+				<div class="form-group">
+				<label for="image">Image: </label> <input type="file"
+					class="form-control"
 					th:field="*{image}" />
 			</div>
+			
+			
+			<div id="dropzone" class="form-group dropzone">
+				<div class="dz-message needsclick">
 
+    				Drop files here or click to upload.<br />
+    			<span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
+  				</div>
+			</div>
+			
 
 
 
@@ -127,8 +136,10 @@
 	
 	<script type="text/javascript" th:src="@{/resources/js/tinymce/tinymce.min.js}"></script>
 	<script type="text/javascript">tinymce.init({ 
-		selector: 'textarea', 
-		  language: 'cs_CZ' });</script>
+			selector: 'textarea', 
+		  	language: 'cs_CZ',
+		  	entity_encoding : "numeric" 
+	});</script>
 	<script type="text/javascript" th:src="@{/resources/js/dropzone.min.js}"></script>
 	<script type="text/javascript">
 
@@ -137,8 +148,21 @@
 		showCaption: false	
 	});
 	
+	/*		
+	Dropzone.options.dropzone = {
+	        paramName: "image" // The name that will be used to
+	        maxFilesize: 150, // M
+	        uploadMultiple: true,
+	        autoProcessQueue: false,
+	        addRemoveLinks: true,
+	        createImageThumbnails: true,
+	        
+	        init.function(){
+	        	
+	        }
+	};
 	
-/* 	jQuery(document).ready(function($) {
+ 	jQuery(document).ready(function($) {
 	    Dropzone.options.image = {
 	        paramName: "image", // The name that will be used to
 	        // transfer the file
