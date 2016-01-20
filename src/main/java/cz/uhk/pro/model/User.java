@@ -32,7 +32,7 @@ public class User {
     
     private boolean enabled;
     
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "roleId")
     private Role role;
     

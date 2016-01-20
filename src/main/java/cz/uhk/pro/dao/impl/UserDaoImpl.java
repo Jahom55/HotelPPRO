@@ -12,8 +12,7 @@ import cz.uhk.pro.model.User;
 public class UserDaoImpl extends GenericDaoImpl<User, Integer> implements UserDao {
 
 	@Override
-	public User findByUserName(String username) {
-		
+	public User findByUserName(String username) {		
 		Criteria criteria = currentSession().createCriteria(User.class)
                 .add(Restrictions.eq("login",username));
         

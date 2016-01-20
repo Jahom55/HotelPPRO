@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,9 +41,9 @@ public class UserServiceImpl extends GenericServiceImpl<cz.uhk.pro.model.User, I
 	public UserDetails loadUserByUsername(String username) 
                throws UsernameNotFoundException {
 
-		cz.uhk.pro.model.User user = userDao.findByUserName(username);
+		cz.uhk.pro.model.User user = findByUserName(username);
 		List<GrantedAuthority> authority = new ArrayList<GrantedAuthority>();
-		authority.add((GrantedAuthority) user.getRole());
+		authority.add(new SimpleGrantedAuthority(user.getRole().getDescription()));
 
 		return buildUserForAuthentication(user, authority);
 		
@@ -56,6 +57,12 @@ public class UserServiceImpl extends GenericServiceImpl<cz.uhk.pro.model.User, I
 		return new User(user.getLogin(), 
 			user.getPassword(), user.isEnabled(), 
                         true, true, true, authorities);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public cz.uhk.pro.model.User findByUserName(String username) {
+		return userDao.findByUserName(username);
 	}
 	
 	
