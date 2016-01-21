@@ -11,7 +11,7 @@
 	<div class="container">
 	
 		<form action="#" th:action="@{/updateHotel/}"
-			th:object="${hotelUpload}" method="post" enctype="multipart/form-data">
+			th:object="${hotelUpload}" method="post" 	>
 			
 			<h2 th:if="*{hotel.name}">Editace hotelu: <span th:text="*{hotel.name}"></span>Přidání nového hotelu</h2>
 	<h2 th:unless="*{hotel.name}">Přidání nového hotelu</h2>
@@ -138,7 +138,7 @@
 		  	entity_encoding : "numeric" 
 	});</script>
 	<script type="text/javascript" th:src="@{/resources/js/dropzone.min.js}"></script>
-<script th:inline="javascript">
+	<script th:inline="javascript">
 	/*<![CDATA[*/
 	
 	$("#stars").rating({
@@ -147,7 +147,7 @@
 	
 			
 	Dropzone.options.dropanbula = {
-			url: "updateHotelsImages/",
+			url: "updateHotelsImages",
 	        paramName: 'file', // The name that will be used to
 	        maxFilesize: 15000000000, // M
 	        uploadMultiple: true,
@@ -157,6 +157,7 @@
 	        addRemoveLinks: true,
 	        createImageThumbnails: true,
 	        clickable: true,
+	        headers: { "My-Header": [[${hotelUpload.hotel.hotelId}]] }, 
 	        acceptedFiles: "image/*",
 	        
 	        	init: function() {
@@ -165,37 +166,24 @@
 	        	    // First change the button to actually tell Dropzone to process the queue.
 	        	    	window.document.getElementById("send").addEventListener("click", function(e) {
 	        	      // Make sure that the form isn't actually being sent.
-	        	      
-//	        	                  myDropzone.on("sendingmultiple", function(file, xhr, formData) {
-//                formData.append("id", [[${hotelUpload.hotel.hotelId}]]);    
-//            });
-	        	      
 	        	      e.preventDefault();
-	        	      //e.stopPropagation();
+	        	      e.stopPropagation();
 	        	      myDropzone.processQueue();
-	        	      //document.hotel.submit();
+	        	      document.hotel.submit();
 	        	    });
 	        	    
 	        	 // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
 	        	    // of the sending event because uploadMultiple is set to true.
-	        	    this.on("sendingmultiple", function(file, xhr, formData) {
-	        	    	formData.append("id", [[${hotelUpload.hotel.hotelId}]]);
+	        	    this.on("sendingmultiple", function() {
 	        	      // Gets triggered when the form is actually being sent.
 	        	      // Hide the success button or the complete form.
 	        	    });
-	        	    this.on("sending", function(file, xhr, formData) {
-	        	    	//formData.append("id", [[${hotelUpload.hotel.hotelId}]]); 
-		        	      // Gets triggered when the form is actually being sent.
-		        	      // Hide the success button or the complete form.
-		        	    });
 	        	    this.on("successmultiple", function(files, response) {
-	        	    	document.hotel.submit();
-	        	    	// Gets triggered when the files have successfully been sent.
+	        	      // Gets triggered when the files have successfully been sent.
 	        	      // Redirect user or notify of success.
 	        	    });
 	        	    this.on("errormultiple", function(files, response) {
-	        	    	document.hotel.submit();
-	        	    	// Gets triggered when there was an error sending the files.
+	        	      // Gets triggered when there was an error sending the files.
 	        	      // Maybe show form again, and notify user of error
 	        	    });
 	        	  }

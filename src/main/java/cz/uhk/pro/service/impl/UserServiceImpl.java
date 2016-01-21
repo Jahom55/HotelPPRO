@@ -47,6 +47,7 @@ public class UserServiceImpl extends GenericServiceImpl<cz.uhk.pro.model.User, I
 
 		return buildUserForAuthentication(user, authority);
 		
+		
 
 	}
 

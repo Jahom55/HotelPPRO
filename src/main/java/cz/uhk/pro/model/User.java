@@ -30,7 +30,7 @@ public class User {
     
     private String password;
     
-    private boolean enabled;
+    private boolean enabled = true;
     
     private String email;
     
@@ -200,4 +200,3 @@ public class User {
 	}
 
 }
-

@@ -160,6 +160,7 @@ public class LoginController {
 	
 	@RequestMapping(value="/updateUser", method = RequestMethod.POST)
 	public String addUserProcess(Model model, @ModelAttribute("user") User u){	
+		addressService.saveOrUpdate(u.getAddress());
 		userService.saveOrUpdate(u);				
 		return "redirect:/";
 	}
