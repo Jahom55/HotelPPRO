@@ -32,7 +32,11 @@ public class User {
     
     private boolean enabled;
     
-    @OneToOne
+    private String email;
+    
+    
+
+	@OneToOne
     @JoinColumn(name = "roleId")
     private Role role;
     
@@ -46,7 +50,14 @@ public class User {
     @OneToMany(mappedBy="user")
     private List<Hotel> hotels;
     
+    
+    public String getEmail() {
+		return email;
+	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
     
 	public List<Review> getReviews() {
 		return reviews;

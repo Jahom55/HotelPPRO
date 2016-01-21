@@ -9,14 +9,13 @@
 	<nav th:replace="/layout/header :: navbar"></nav>
 
 	<div class="container">
-<<<<<<< HEAD
-		<form action="#" th:action="@{/updateHotel/}" name="hotel"
-=======
-	<h2 th:if="${hotel.name}">Editace hotelu: <span th:text="${hotel.name}"></span>Přidání nového hotelu</h2>
-	<h2 th:unless="${hotel.name}">Přidání nového hotelu</h2>
+	
 		<form action="#" th:action="@{/updateHotel/}"
->>>>>>> registration-form
 			th:object="${hotelUpload}" method="post" enctype="multipart/form-data">
+			
+			<h2 th:if="*{hotel.name}">Editace hotelu: <span th:text="*{hotel.name}"></span>Přidání nového hotelu</h2>
+	<h2 th:unless="*{hotel.name}">Přidání nového hotelu</h2>
+			
 			<div class="form-group">
 				<input type="hidden" th:field="*{hotel.hotelId}" /> 
 				<label for="hotel.name">Název:</label>
@@ -106,6 +105,8 @@
   				<input type="checkbox" th:field="*{hotel.equipment.wheellchairAccess}" />Bezbarierový přístup</label>
 			
 			</div>
+			<input type="hidden" name="${_csrf.parameterName}"
+				value="${_csrf.token}" />
 
 			<button id="send" th:if="${hotelUpload.hotel.name}" type="submit">Edit</button>
 			<button id="send" th:unless="${hotelUpload.hotel.name}" type="submit" name="add">Přidat hotel</button>
@@ -146,7 +147,7 @@
 	
 			
 	Dropzone.options.dropanbula = {
-			url: "updateHotelsImages/",
+			url: "updateHotelsImages",
 	        paramName: 'file', // The name that will be used to
 	        maxFilesize: 15000000000, // M
 	        uploadMultiple: true,
@@ -156,8 +157,7 @@
 	        addRemoveLinks: true,
 	        createImageThumbnails: true,
 	        clickable: true,
-	        headers: { "My-Header": /*[[${hotelUpload.hotel.hotelId}]]*/ 
-	        }, 
+	        headers: { "My-Header": [[${hotelUpload.hotel.hotelId}]] }, 
 	        acceptedFiles: "image/*",
 	        
 	        	init: function() {

@@ -1,5 +1,6 @@
 package cz.uhk.pro.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +22,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import cz.uhk.pro.model.Hotel;
 import cz.uhk.pro.model.HotelUpload;
+import cz.uhk.pro.model.Review;
+import cz.uhk.pro.model.Role;
 import cz.uhk.pro.model.Type;
 import cz.uhk.pro.model.User;
 import cz.uhk.pro.service.AddressService;
@@ -147,12 +151,34 @@ public class LoginController {
 	
 	@RequestMapping(value="/registration")
 	public String addUser(Model model){		
+		List<Role> roleList = getAllWithoutAdmin();
+		model.addAttribute("roles", roleList);
 		User u = new User();
 		model.addAttribute("user", u);
+		return "registration";		
+	}
+	
+	@RequestMapping(value="/updateUser", method = RequestMethod.POST)
+	public String addUserProcess(Model model, @ModelAttribute("user") User u){	
+		userService.saveOrUpdate(u);				
+		return "redirect:/";
+	}
+	
+	
+	
+	
 
-		HotelUpload hU = new HotelUpload();
-		model.addAttribute("hotelUpload", hU);
-		return "hotelAddEdit";
+	private List<Role> getAllWithoutAdmin() {
+		List<Role> roleList = roleService.getAll();
+		List<Role> roleListSelect = new ArrayList<Role>();
+		for (Role role : roleList) {
+			if (role.getRoleId() != 1) {
+				if(role.getDescription().equals("ROLE_USER")) role.setDescription("Návštìvník");
+				if(role.getDescription().equals("ROLE_HOTELIER")) role.setDescription("Hoteliér");
+				roleListSelect.add(role);
+			}
+		}
+		return roleListSelect;
 	}
 
 }

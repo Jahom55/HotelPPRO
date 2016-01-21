@@ -37,7 +37,6 @@ import cz.uhk.pro.model.Address;
 import cz.uhk.pro.model.Hotel;
 import cz.uhk.pro.model.HotelUpload;
 import cz.uhk.pro.model.Image;
-import cz.uhk.pro.model.FileUpload;
 import cz.uhk.pro.model.Person;
 import cz.uhk.pro.model.Review;
 import cz.uhk.pro.model.Type;
@@ -147,14 +146,6 @@ public class HomeController {
 		return this.hotelService.getPage(2, 1);
 	    //return this.hotelService.getAll();
 	}
-
-
-/*	@RequestMapping(value = "/remove")
-	public String remove(@RequestParam int id, @ModelAttribute Hotel hotel) {		
-        Hotel p = hotelService.get(id);
-        hotelService.remove(p);
-		return "redirect:/";
-	}*/
 	
 	@RequestMapping(value="/person")
 	public String addPerson(Model model){		
@@ -236,7 +227,7 @@ public class HomeController {
 					if(fileName.length() > 15)
 						fileName = fileName.substring(0,15);
 					fileName = String.valueOf(fileName.hashCode());
-					path = "C:/Users/Adam-LenovoY570/git/HotelPPRO/src/main/webapp/resources/images/" + name + fileName + "." + sType;
+					path = "D:/" + name + fileName + "." + sType;
 					File destination = new File(path);
 					file.transferTo(destination);
 
@@ -260,7 +251,7 @@ public class HomeController {
 			Model model) { 
 			Hotel hotel = new Hotel();
 			if(hotelUpload.getHotel().getHotelId() != 0)
-				hotel.setHotelId(hotelUpload.getHotel().getHotelId());
+			hotel.setHotelId(hotelUpload.getHotel().getHotelId());
 			hotel.setAddress(hotelUpload.getHotel().getAddress());
 			hotel.setEquipment(hotelUpload.getHotel().getEquipment());
 			hotel.setDescription(HtmlUtils.htmlUnescape((hotelUpload.getHotel().getDescription())));
