@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout/header :: header">
+</head>
+
+<body>
+
+	<nav th:replace="/layout/header :: navbar"></nav>
+
+
+	<div class="container">
+		
+		<form class="form-signin" th:action="@{/login}" method="post">
+			<p th:if="${error}">Wrong user or password</p>
+			<p th:if="${msg}">Logout succesfull matafaka</p>
+			<h2 class="form-signin-heading">Přihlašte se prosím</h2>
+			<label for="username" class="sr-only">Username</label> <input
+				type="text" id="username" class="form-control"
+				placeholder="Username" name="username" required="required" autofocus="autofocus" />
+			<label for="password" class="sr-only">Password</label> <input
+				type="password" id="password" class="form-control"
+				placeholder="Password" required="required" name="password"/>
+			<div class="checkbox">
+				<label> <input type="checkbox" value="remember-me" />
+					Zapamatovat si mě
+				</label>
+			</div>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Přihlásit</button>
+			<input type="hidden" name="${_csrf.parameterName}"
+				value="${_csrf.token}" />
+		</form>
+
+		<!-- Footer -->
+		<footer th:replace="/layout/footer :: footer"> </footer>
+
+	</div>
+	<!-- /.container -->
+
+	<div th:replace="/layout/footer :: scripts"></div>
+
+</body>
+
+</html>

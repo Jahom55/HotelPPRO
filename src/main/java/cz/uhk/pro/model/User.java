@@ -30,9 +30,13 @@ public class User {
     
     private String password;
     
-    private boolean deleted;
+    private boolean enabled;
     
-    @OneToOne(fetch=FetchType.LAZY)
+    private String email;
+    
+    
+
+	@OneToOne
     @JoinColumn(name = "roleId")
     private Role role;
     
@@ -46,7 +50,14 @@ public class User {
     @OneToMany(mappedBy="user")
     private List<Hotel> hotels;
     
+    
+    public String getEmail() {
+		return email;
+	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
     
 	public List<Review> getReviews() {
 		return reviews;
@@ -104,12 +115,12 @@ public class User {
 		this.password = password;
 	}
 
-	public boolean isDeleted() {
-		return deleted;
+	public boolean isEnabled() {
+		return enabled;
 	}
 
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public Role getRole() {
@@ -144,7 +155,7 @@ public class User {
 				return false;
 		} else if (!address.equals(other.address))
 			return false;
-		if (deleted != other.deleted)
+		if (enabled != other.enabled)
 			return false;
 		if (image == null) {
 			if (other.image != null)
@@ -184,7 +195,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", name=" + name + ", surname=" + surname + ", login=" + login + ", image="
-				+ image + ", password=" + password + ", deleted=" + deleted + ", role=" + role + ", address=" + address
+				+ image + ", password=" + password + ", deleted=" + enabled + ", role=" + role + ", address=" + address
 				+ "]";
 	}
 
