@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
@@ -195,3 +196,202 @@
 </body>
 
 </html>
+=======
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:include="/layout/header :: header">
+</head>
+
+<body>
+	
+	<nav th:replace="/layout/header :: navbar"></nav>
+
+	<div class="container">
+	
+		<form action="#" th:action="@{/updateHotel/}"
+			th:object="${hotelUpload}" method="post" enctype="multipart/form-data">
+			
+			<h2 th:if="*{hotel.name}">Editace hotelu: <span th:text="*{hotel.name}"></span>Přidání nového hotelu</h2>
+	<h2 th:unless="*{hotel.name}">Přidání nového hotelu</h2>
+			
+			<div class="form-group">
+				<input type="hidden" th:field="*{hotel.hotelId}" /> 
+				<label for="hotel.name">Název:</label>
+				<input class="form-control" type="text" th:field="*{hotel.name}" />
+			</div>
+			<div class="form-group">
+				<label for="hotel.website">Webová stránka</label> 
+				<input class="form-control" type="text" th:field="*{hotel.website}" placeholder="www.neco.cz"/>
+			</div>
+			<div class="form-group">
+				<label for="hotel.stars">Hvězd: </label>
+				<input class="rating form-control" th:field="*{hotel.stars}" data-min="0" data-max="5" data-step="1" 
+				 glyphicon="true"/>
+			</div>
+			<select class="form-control" th:field="*{hotel.type.typeId}">
+				<option th:each="t : ${types}" th:value="${t.typeId}"  th:text="${t.description}"
+					 >Types</option>
+			</select>
+
+			<div class="form-group">
+				<label for="hotel.description">Popis: </label>
+				<textarea class="form-control"
+					th:field="*{hotel.description}"></textarea>
+			</div>
+
+			<div class="form-group">
+				<label for="hotel.address.city">Město: </label> <input type="text"
+					class="form-control" 
+					th:field="*{hotel.address.city}" />
+			</div>
+			<div class="form-group">
+				<label for="hotel.address.district">Kraj: </label> <input type="text"
+					class="form-control"
+					th:field="*{hotel.address.district}" />
+			</div>
+
+			<div class="form-group">
+				<label for="hotel.address.street">Ulice: </label> <input type="text"
+					class="form-control"
+					th:field="*{hotel.address.street}" />
+			</div>
+
+			<div class="form-group">
+				<label for="hotel.address.streetNumber">Číslo popisné: </label> <input type="text"
+					class="form-control"
+					th:field="*{hotel.address.streetNumber}" />
+			</div>
+
+			<div class="form-group">
+				<label for="hotel.address.zipCode">PSČ: </label> <input type="text"
+					class="form-control"
+					th:field="*{hotel.address.zipCode}" />
+			</div>
+			
+			<div id="dropanbula" class="dropzone form-group">
+			
+			</div>
+			
+
+
+
+			<div class="checkbox">
+			  	<label th:for="${#ids.next('hotel.equipment.internet')}">
+  				<input type="checkbox" th:field="*{hotel.equipment.internet}" />Internet</label>
+  				
+  				<label th:for="${#ids.next('hotel.equipment.parking')}">
+  				<input type="checkbox" th:field="*{hotel.equipment.parking}" />Parkování</label>
+  				
+ 				<label th:for="${#ids.next('hotel.equipment.pets')}">
+  				<input type="checkbox" th:field="*{hotel.equipment.pets}" />Zvířata</label>
+  				
+  				<label th:for="${#ids.next('hotel.equipment.pool')}">
+  				<input type="checkbox" th:field="*{hotel.equipment.pool}" />Bazén</label>
+
+			</div>
+			<div class="checkbox">
+				<label th:for="${#ids.next('hotel.equipment.restauration')}">
+  				<input type="checkbox" th:field="*{hotel.equipment.restauration}" />Restaurace</label>
+  				
+  				<label th:for="${#ids.next('hotel.equipment.saloon')}">
+  				<input type="checkbox" th:field="*{hotel.equipment.saloon}" />Společenská místnost</label>
+  				
+ 				<label th:for="${#ids.next('hotel.equipment.wellness')}">
+  				<input type="checkbox" th:field="*{hotel.equipment.wellness}" />Wellness</label>
+  				
+  				<label th:for="${#ids.next('hotel.equipment.wheellchairAccess')}">
+  				<input type="checkbox" th:field="*{hotel.equipment.wheellchairAccess}" />Bezbarierový přístup</label>
+			
+			</div>
+			<input type="hidden" name="${_csrf.parameterName}"
+				value="${_csrf.token}" />
+
+			<button id="send" th:if="${hotelUpload.hotel.name}" type="submit">Edit</button>
+			<button id="send" th:unless="${hotelUpload.hotel.name}" type="submit" name="add">Přidat hotel</button>
+		</form>
+
+
+
+
+
+
+		<hr />
+
+
+
+
+		<!-- Footer -->
+		<footer th:replace="/layout/footer :: footer"> </footer>
+
+	</div>
+	<!-- /.container -->
+
+	<div th:replace="/layout/footer :: scripts">
+	</div>
+	
+	<script type="text/javascript" th:src="@{/resources/js/tinymce/tinymce.min.js}"></script>
+	<script type="text/javascript">tinymce.init({ 
+			selector: 'textarea', 
+		  	language: 'cs_CZ',
+		  	entity_encoding : "numeric" 
+	});</script>
+	<script type="text/javascript" th:src="@{/resources/js/dropzone.min.js}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	
+	$("#stars").rating({
+		showCaption: false	
+	});
+	
+			
+	Dropzone.options.dropanbula = {
+			url: "updateHotelsImages",
+	        paramName: 'file', // The name that will be used to
+	        maxFilesize: 15000000000, // M
+	        uploadMultiple: true,
+	        parallelUploads: 100,
+	        maxFiles: 100,
+	        autoProcessQueue: false,
+	        addRemoveLinks: true,
+	        createImageThumbnails: true,
+	        clickable: true,
+	        headers: { "My-Header": [[${hotelUpload.hotel.hotelId}]] }, 
+	        acceptedFiles: "image/*",
+	        
+	        	init: function() {
+	        	    var myDropzone = this;
+
+	        	    // First change the button to actually tell Dropzone to process the queue.
+	        	    	window.document.getElementById("send").addEventListener("click", function(e) {
+	        	      // Make sure that the form isn't actually being sent.
+	        	      e.preventDefault();
+	        	      e.stopPropagation();
+	        	      myDropzone.processQueue();
+	        	      document.hotel.submit();
+	        	    });
+	        	    
+	        	 // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+	        	    // of the sending event because uploadMultiple is set to true.
+	        	    this.on("sendingmultiple", function() {
+	        	      // Gets triggered when the form is actually being sent.
+	        	      // Hide the success button or the complete form.
+	        	    });
+	        	    this.on("successmultiple", function(files, response) {
+	        	      // Gets triggered when the files have successfully been sent.
+	        	      // Redirect user or notify of success.
+	        	    });
+	        	    this.on("errormultiple", function(files, response) {
+	        	      // Gets triggered when there was an error sending the files.
+	        	      // Maybe show form again, and notify user of error
+	        	    });
+	        	  }
+	};
+	
+	/*]]>*/
+	</script>
+
+</body>
+
+</html>
+>>>>>>> a834695cf48d44764eaf94af72f22f330b1c0a55

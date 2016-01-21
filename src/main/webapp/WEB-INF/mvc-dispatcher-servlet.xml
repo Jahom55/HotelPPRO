@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
@@ -126,4 +127,134 @@
 
 
     
+=======
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+    <context:component-scan base-package="cz"/>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
+    <mvc:annotation-driven/>
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!-- Spring bean configuration. Tell Spring to bounce off BoneCP -->
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="cz.uhk.pro.model"/>
+        <property name="hibernateProperties">
+            <props>
+               <prop key="hibernate.hbm2ddl.auto">update</prop>  <!-- Odkomentovat pro schema Adame! -->  
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.connection.CharSet">utf8</prop>
+                <prop key="hibernate.connection.characterEncoding">utf8</prop>
+                <prop key="hibernate.connection.useUnicode">true</prop>
+            </props>
+        </property>
+
+    </bean>
+    
+    
+   
+    
+    
+    
+<bean 
+	class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<property name="location">
+		<value>/WEB-INF/database.properties</value>
+	</property>
+</bean> 
+
+
+
+     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+    </bean>
+
+ <!--    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+  -->   
+    <bean id="templateResolver"
+       class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+  <property name="prefix" value="/WEB-INF/views/" />
+  <property name="suffix" value=".html" />
+  <property name="characterEncoding" value="UTF-8" />
+  <property name="templateMode" value="HTML5" />
+</bean>
+    
+<bean id="templateEngine"
+      class="org.thymeleaf.spring4.SpringTemplateEngine">
+  <property name="templateResolver" ref="templateResolver" />
+   <property name="additionalDialects">
+        <set>
+          <bean class="org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect"/>
+        </set>
+      </property>
+</bean>
+    
+    <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+  <property name="templateEngine" ref="templateEngine" />
+  <property name="characterEncoding" value="UTF-8" />
+  <property name="order" value="1" />
+</bean>
+
+
+<bean id="multipartResolver"
+  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <property name="maxUploadSize" value="25000000000"/>
+</bean>
+
+<sec:http auto-config="true" use-expressions="true">
+		<sec:intercept-url pattern="/admin**" access="hasRole('admin')" />
+		<sec:intercept-url pattern="/welcome" access="isAuthenticated()" />
+				
+		<!-- access denied page -->
+		<sec:access-denied-handler error-page="/403" />
+		<sec:form-login 
+		    login-page="/login" 
+		    default-target-url="/welcome"
+			authentication-failure-url="/login?error" 
+			username-parameter="username"
+			password-parameter="password" />
+		<sec:logout logout-success-url="/login?logout" />
+		<!-- enable csrf protection -->
+		<sec:csrf />
+	</sec:http>
+
+	<sec:authentication-manager>
+		<sec:authentication-provider user-service-ref="userServiceImpl" >
+		<!--  	<sec:password-encoder hash="bcrypt" />    -->
+		</sec:authentication-provider>
+	</sec:authentication-manager>
+
+
+
+
+
+
+    
+>>>>>>> a834695cf48d44764eaf94af72f22f330b1c0a55
 </beans>
