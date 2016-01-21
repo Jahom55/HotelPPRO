@@ -206,46 +206,46 @@ public class HomeController {
 		return "hotelDetail";
 	}
 	
+
 	@RequestMapping(value = "/updateHotelsImages", method = RequestMethod.POST)
-    public ResponseEntity uploadFile(MultipartHttpServletRequest request) {
+        public ResponseEntity uploadFile(MultipartHttpServletRequest request) {
 
-        try {
-			int id = Integer.valueOf(request.getParameter("id"));
-			Iterator<String> itr = request.getFileNames();
-			
-            
-            while (itr.hasNext()) {
-            	String path = "";
-                String uploadedFile = itr.next();
-                MultipartFile file = request.getFile(uploadedFile);                    
+            try {
+    			int id = Integer.valueOf(request.getParameter("id"));
+    			Iterator<String> itr = request.getFileNames();
+    			
                 
-                String pType = file.getContentType().split("/")[0];
-				String sType = file.getContentType().split("/")[1];
-				UUID uuid = new UUID(255, 200);
-				String name = String.valueOf(uuid.randomUUID());
-				String fileName = file.getOriginalFilename();
-				System.out.println(fileName);
-				if(fileName.length() > 15)
-					fileName = fileName.substring(0,15);
-				fileName = String.valueOf(fileName.hashCode());
-				path = "C:/Users/Adam-LenovoY570/git/HotelPPRO/src/main/webapp/resources/images/" + name + fileName + "." + sType;
-				File destination = new File(path);
-				file.transferTo(destination);
+                while (itr.hasNext()) {
+                	String path = "";
+                    String uploadedFile = itr.next();
+                    MultipartFile file = request.getFile(uploadedFile);                    
+                    
+                    String pType = file.getContentType().split("/")[0];
+					String sType = file.getContentType().split("/")[1];
+					UUID uuid = new UUID(255, 200);
+					String name = String.valueOf(uuid.randomUUID());
+					String fileName = file.getOriginalFilename();
+					if(fileName.length() > 15)
+						fileName = fileName.substring(0,15);
+					fileName = String.valueOf(fileName.hashCode());
+					path = "C:/Users/Adam-LenovoY570/git/HotelPPRO/src/main/webapp/resources/images/" + name + fileName + "." + sType;
+					File destination = new File(path);
+					file.transferTo(destination);
 
-                Image image = new Image();
-                Hotel hotel = hotelService.get(id);
-                image.setHotel(hotel);
-                image.setImage(path);
-                imageService.saveOrUpdate(image);
+                    Image image = new Image();
+                    Hotel hotel = hotelService.get(id);
+                    image.setHotel(hotel);
+                    image.setImage(path);
+                    imageService.saveOrUpdate(image);
+                }
             }
-        }
-        catch (Exception e) {
-        	System.out.println(e.getMessage());
-            return new ResponseEntity("{}", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            catch (Exception e) {
+            	System.out.println(e.getMessage());
+                return new ResponseEntity("{}", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
 
-        return new ResponseEntity("{}", HttpStatus.OK);
-    }
+            return new ResponseEntity("{}", HttpStatus.OK);
+        }
 	
 	
 	@RequestMapping(value = "/updateHotel", method = RequestMethod.POST)
@@ -253,7 +253,7 @@ public class HomeController {
 			Model model) { 
 			Hotel hotel = new Hotel();
 			if(hotelUpload.getHotel().getHotelId() != 0)
-			hotel.setHotelId(hotelUpload.getHotel().getHotelId());
+				hotel.setHotelId(hotelUpload.getHotel().getHotelId());
 			hotel.setAddress(hotelUpload.getHotel().getAddress());
 			hotel.setEquipment(hotelUpload.getHotel().getEquipment());
 			hotel.setDescription(HtmlUtils.htmlUnescape((hotelUpload.getHotel().getDescription())));

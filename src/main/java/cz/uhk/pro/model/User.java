@@ -40,7 +40,7 @@ public class User {
     @JoinColumn(name = "roleId")
     private Role role;
     
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne()
     @JoinColumn(name = "addressId")
     private Address address;
     
