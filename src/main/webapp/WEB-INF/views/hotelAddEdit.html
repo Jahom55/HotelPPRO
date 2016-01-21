@@ -5,11 +5,17 @@
 </head>
 
 <body>
-
+	
 	<nav th:replace="/layout/header :: navbar"></nav>
 
 	<div class="container">
+<<<<<<< HEAD
 		<form action="#" th:action="@{/updateHotel/}" name="hotel"
+=======
+	<h2 th:if="${hotel.name}">Editace hotelu: <span th:text="${hotel.name}"></span>Přidání nového hotelu</h2>
+	<h2 th:unless="${hotel.name}">Přidání nového hotelu</h2>
+		<form action="#" th:action="@{/updateHotel/}"
+>>>>>>> registration-form
 			th:object="${hotelUpload}" method="post" enctype="multipart/form-data">
 			<div class="form-group">
 				<input type="hidden" th:field="*{hotel.hotelId}" /> 

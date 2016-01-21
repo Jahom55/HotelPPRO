@@ -200,7 +200,8 @@ public class HomeController {
 		return "hotelAddEdit";
 	}
 	@RequestMapping(value="/detail", params = "id")
-	public String detailHotel(Model model, @RequestParam int id){		
+	public String detailHotel(Model model, @RequestParam int id){	
+		User u = userService.findByUserName("admin");
 		Hotel h = hotelService.get(id);
 		List<Review> forhotel = reviewService.getReviewsByHotel(h);		
 		model.addAttribute("type", h.getType());

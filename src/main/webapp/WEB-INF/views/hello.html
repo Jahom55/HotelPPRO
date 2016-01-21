@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html 	xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:th="http://www.thymeleaf.org" >
+
+<body>
+	<h1>Title : ${title}</h1>
+	<h1>Message : ${message}</h1>
+
+<div sec:authorize="hasRole('ROLE_ADMIN')">
+  ROLE_ADMIN vidi
+</div>
+<div sec:authorize="hasRole('ROLE_USER')">
+  ROLE_USER vidi
+</div>
+<div sec:authorize="hasRole('ROLE_HOTELIER')">
+  ROLE_HOTELIER vidi
+</div>
+
+Logged user: <span sec:authentication="name">Bob</span> <br />
+Roles: <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>
+<br />
+		<form th:action="@{/logout}" method="post" id="logoutForm">
+			<input type="hidden" name="${_csrf.parameterName}"
+				value="${_csrf.token}" />
+		</form>
+		<script>
+			function formSubmit() {
+				document.getElementById("logoutForm").submit();
+			}
+		</script>
+		
+			<h2>
+				User : <span sec:authentication="name">Bob</span> <a
+					href="javascript:formSubmit()"> Logout</a>
+			</h2>
+	
+</body>
+</html>
