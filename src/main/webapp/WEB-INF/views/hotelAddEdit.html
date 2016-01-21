@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
-<head th:replace="/layout/header :: header">
+<head th:include="/layout/header :: header">
 </head>
 
 <body>
@@ -9,10 +9,10 @@
 	<nav th:replace="/layout/header :: navbar"></nav>
 
 	<div class="container">
-		<form action="#" th:action="@{/updateHotel/}" class="dropzone"
+		<form action="#" th:action="@{/updateHotel/}" name="hotel"
 			th:object="${hotelUpload}" method="post" enctype="multipart/form-data">
 			<div class="form-group">
-				<input type="hidden" th:field="*{hotel.hotelId}" />
+				<input type="hidden" th:field="*{hotel.hotelId}" /> 
 				<label for="hotel.name">Název:</label>
 				<input class="form-control" type="text" th:field="*{hotel.name}" />
 			</div>
@@ -64,19 +64,9 @@
 					class="form-control"
 					th:field="*{hotel.address.zipCode}" />
 			</div>
-				<div class="form-group">
-				<label for="image">Image: </label> <input type="file"
-					class="form-control"
-					th:field="*{image}" />
-			</div>
 			
+			<div id="dropanbula" class="dropzone form-group">
 			
-			<div id="dropzone" class="form-group dropzone">
-				<div class="dz-message needsclick">
-
-    				Drop files here or click to upload.<br />
-    			<span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
-  				</div>
 			</div>
 			
 
@@ -111,8 +101,8 @@
 			
 			</div>
 
-			<button th:if="${hotelUpload.hotel.name}" type="submit">Edit</button>
-			<button th:unless="${hotelUpload.hotel.name}" type="submit" name="add">Přidat hotel</button>
+			<button id="send" th:if="${hotelUpload.hotel.name}" type="submit">Edit</button>
+			<button id="send" th:unless="${hotelUpload.hotel.name}" type="submit" name="add">Přidat hotel</button>
 		</form>
 
 
@@ -141,34 +131,59 @@
 		  	entity_encoding : "numeric" 
 	});</script>
 	<script type="text/javascript" th:src="@{/resources/js/dropzone.min.js}"></script>
-	<script type="text/javascript">
-
+	<script th:inline="javascript">
+	/*<![CDATA[*/
 	
 	$("#stars").rating({
 		showCaption: false	
 	});
 	
-	/*		
-	Dropzone.options.dropzone = {
-	        paramName: "image" // The name that will be used to
-	        maxFilesize: 150, // M
+			
+	Dropzone.options.dropanbula = {
+			url: "updateHotelsImages/",
+	        paramName: 'file', // The name that will be used to
+	        maxFilesize: 15000000000, // M
 	        uploadMultiple: true,
+	        parallelUploads: 100,
+	        maxFiles: 100,
 	        autoProcessQueue: false,
 	        addRemoveLinks: true,
 	        createImageThumbnails: true,
+	        clickable: true,
+	        headers: { "My-Header": /*[[${hotelUpload.hotel.hotelId}]]*/ 
+	        }, 
+	        acceptedFiles: "image/*",
 	        
-	        init.function(){
-	        	
-	        }
+	        	init: function() {
+	        	    var myDropzone = this;
+
+	        	    // First change the button to actually tell Dropzone to process the queue.
+	        	    	window.document.getElementById("send").addEventListener("click", function(e) {
+	        	      // Make sure that the form isn't actually being sent.
+	        	      e.preventDefault();
+	        	      e.stopPropagation();
+	        	      myDropzone.processQueue();
+	        	      document.hotel.submit();
+	        	    });
+	        	    
+	        	 // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+	        	    // of the sending event because uploadMultiple is set to true.
+	        	    this.on("sendingmultiple", function() {
+	        	      // Gets triggered when the form is actually being sent.
+	        	      // Hide the success button or the complete form.
+	        	    });
+	        	    this.on("successmultiple", function(files, response) {
+	        	      // Gets triggered when the files have successfully been sent.
+	        	      // Redirect user or notify of success.
+	        	    });
+	        	    this.on("errormultiple", function(files, response) {
+	        	      // Gets triggered when there was an error sending the files.
+	        	      // Maybe show form again, and notify user of error
+	        	    });
+	        	  }
 	};
 	
- 	jQuery(document).ready(function($) {
-	    Dropzone.options.image = {
-	        paramName: "image", // The name that will be used to
-	        // transfer the file
-	        maxFilesize: 50 // MB
-	    };
-	}); */
+	/*]]>*/
 	</script>
 
 </body>

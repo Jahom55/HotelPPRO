@@ -10,7 +10,7 @@ public interface GenericService<E, K> {
 
     public E get(K id);
 
-    public void add(E entity);
+    public Integer add(E entity);
 
     public void update(E entity);
 

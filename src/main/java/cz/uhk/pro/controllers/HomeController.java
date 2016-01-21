@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -17,6 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,6 +36,8 @@ import org.springframework.web.util.HtmlUtils;
 import cz.uhk.pro.model.Address;
 import cz.uhk.pro.model.Hotel;
 import cz.uhk.pro.model.HotelUpload;
+import cz.uhk.pro.model.Image;
+import cz.uhk.pro.model.FileUpload;
 import cz.uhk.pro.model.Person;
 import cz.uhk.pro.model.Review;
 import cz.uhk.pro.model.Type;
@@ -176,6 +182,9 @@ public class HomeController {
 		List<Type> typesList = typeService.getAll();
 		model.addAttribute("types", typesList);
 		HotelUpload hU = new HotelUpload();
+		Hotel hotel = new Hotel();
+		int id = (int) hotelService.add(hotel);
+		hU.setHotel(hotel);
 		model.addAttribute("hotelUpload", hU);
 		return "hotelAddEdit";
 	}
@@ -205,41 +214,54 @@ public class HomeController {
 		return "hotelDetail";
 	}
 	
-	
-	@RequestMapping(value = "/updateHotel" ,method = RequestMethod.POST)
-	public String updateHotel(@ModelAttribute("hotelUpload") HotelUpload hotelUpload,
-			Model model) { 
-			String path = "";
-			MultipartFile image = hotelUpload.getImage();
-			if(!image.isEmpty()){
-				try {
-					String pType = image.getContentType().split("/")[0];
-					String sType = image.getContentType().split("/")[1];
+	@RequestMapping(value = "/updateHotelsImages", method = RequestMethod.POST)
+        public ResponseEntity uploadFile(MultipartHttpServletRequest request) {
+			HttpHeaders headers = request.getRequestHeaders();
+			int id = Integer.valueOf(headers.get("my-header").get(0));
+			headers.clear();
+            try {
+                Iterator<String> itr = request.getFileNames();
+
+                while (itr.hasNext()) {
+                	String path = "";
+                    String uploadedFile = itr.next();
+                    MultipartFile file = request.getFile(uploadedFile);                    
+                    
+                    String pType = file.getContentType().split("/")[0];
+					String sType = file.getContentType().split("/")[1];
 					UUID uuid = new UUID(255, 200);
 					String name = String.valueOf(uuid.randomUUID());
-					String fileName = image.getOriginalFilename();
+					String fileName = file.getOriginalFilename();
 					if(fileName.length() > 15)
 						fileName = fileName.substring(0,15);
 					fileName = String.valueOf(fileName.hashCode());
 					path = "C:/Users/Adam-LenovoY570/git/HotelPPRO/src/main/webapp/resources/images/" + name + fileName + "." + sType;
 					File destination = new File(path);
-					image.transferTo(destination);
-				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+					file.transferTo(destination);
+
+                    Image image = new Image();
+                    Hotel hotel = hotelService.get(id);
+                    image.setHotel(hotel);
+                    image.setImage(path);
+                    imageService.saveOrUpdate(image);
+                }
+            }
+            catch (Exception e) {
+                return new ResponseEntity("{}", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            return new ResponseEntity("{}", HttpStatus.OK);
+        }
+	
+	
+	@RequestMapping(value = "/updateHotel", method = RequestMethod.POST)
+	public String updateHotel(@ModelAttribute("hotelUpload") HotelUpload hotelUpload,
+			Model model) { 
 			Hotel hotel = new Hotel();
 			if(hotelUpload.getHotel().getHotelId() != 0)
 				hotel.setHotelId(hotelUpload.getHotel().getHotelId());
-			hotel.setImage(path);
 			hotel.setAddress(hotelUpload.getHotel().getAddress());
 			hotel.setEquipment(hotelUpload.getHotel().getEquipment());
-			
-			//hotel.setDescription(hotelUpload.getHotel().getDescription());
 			hotel.setDescription(HtmlUtils.htmlUnescape((hotelUpload.getHotel().getDescription())));
 			hotel.setName(hotelUpload.getHotel().getName());
 			hotel.setStars(hotelUpload.getHotel().getStars());
@@ -248,7 +270,7 @@ public class HomeController {
 			addressService.saveOrUpdate(hotel.getAddress());
 			equipmentService.saveOrUpdate(hotel.getEquipment());
 			hotelService.saveOrUpdate(hotel);
-			return "redirect:/";
+			return "redirect:/detail/?id=" + hotel.getHotelId();
 	}
 	
 	@RequestMapping(value = "/remove")

@@ -6,6 +6,8 @@ public class HotelUpload {
 	
 	private MultipartFile image;
 	
+	private MultipartFile file;
+	
 	private Hotel hotel;
 
 	public MultipartFile getImage() {
@@ -14,6 +16,14 @@ public class HotelUpload {
 
 	public void setImage(MultipartFile image) {
 		this.image = image;
+	}
+	
+	public MultipartFile getFile() {
+		return file;
+	}
+
+	public void setFile(MultipartFile file) {
+		this.file = file;
 	}
 
 	public Hotel getHotel() {

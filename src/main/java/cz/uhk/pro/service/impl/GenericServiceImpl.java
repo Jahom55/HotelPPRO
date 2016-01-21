@@ -41,8 +41,8 @@ public abstract class GenericServiceImpl<E, K> implements GenericService<E, K> {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void add(E entity) {
-        genericDao.add(entity);
+    public Integer add(E entity) {
+        return (Integer) genericDao.add(entity);
     }
 
     @Override
