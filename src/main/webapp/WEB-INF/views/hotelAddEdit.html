@@ -150,8 +150,6 @@
 	        addRemoveLinks: true,
 	        createImageThumbnails: true,
 	        clickable: true,
-	        headers: { "My-Header": /*[[${hotelUpload.hotel.hotelId}]]*/ 
-	        }, 
 	        acceptedFiles: "image/*",
 	        
 	        	init: function() {
@@ -160,24 +158,37 @@
 	        	    // First change the button to actually tell Dropzone to process the queue.
 	        	    	window.document.getElementById("send").addEventListener("click", function(e) {
 	        	      // Make sure that the form isn't actually being sent.
+	        	      
+//	        	                  myDropzone.on("sendingmultiple", function(file, xhr, formData) {
+//                formData.append("id", [[${hotelUpload.hotel.hotelId}]]);    
+//            });
+	        	      
 	        	      e.preventDefault();
-	        	      e.stopPropagation();
+	        	      //e.stopPropagation();
 	        	      myDropzone.processQueue();
-	        	      document.hotel.submit();
+	        	      //document.hotel.submit();
 	        	    });
 	        	    
 	        	 // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
 	        	    // of the sending event because uploadMultiple is set to true.
-	        	    this.on("sendingmultiple", function() {
+	        	    this.on("sendingmultiple", function(file, xhr, formData) {
+	        	    	formData.append("id", [[${hotelUpload.hotel.hotelId}]]);
 	        	      // Gets triggered when the form is actually being sent.
 	        	      // Hide the success button or the complete form.
 	        	    });
+	        	    this.on("sending", function(file, xhr, formData) {
+	        	    	//formData.append("id", [[${hotelUpload.hotel.hotelId}]]); 
+		        	      // Gets triggered when the form is actually being sent.
+		        	      // Hide the success button or the complete form.
+		        	    });
 	        	    this.on("successmultiple", function(files, response) {
-	        	      // Gets triggered when the files have successfully been sent.
+	        	    	document.hotel.submit();
+	        	    	// Gets triggered when the files have successfully been sent.
 	        	      // Redirect user or notify of success.
 	        	    });
 	        	    this.on("errormultiple", function(files, response) {
-	        	      // Gets triggered when there was an error sending the files.
+	        	    	document.hotel.submit();
+	        	    	// Gets triggered when there was an error sending the files.
 	        	      // Maybe show form again, and notify user of error
 	        	    });
 	        	  }

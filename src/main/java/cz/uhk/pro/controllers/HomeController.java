@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -31,13 +32,13 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
+import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 import org.springframework.web.util.HtmlUtils;
 
 import cz.uhk.pro.model.Address;
 import cz.uhk.pro.model.Hotel;
 import cz.uhk.pro.model.HotelUpload;
 import cz.uhk.pro.model.Image;
-import cz.uhk.pro.model.FileUpload;
 import cz.uhk.pro.model.Person;
 import cz.uhk.pro.model.Review;
 import cz.uhk.pro.model.Type;
@@ -216,12 +217,12 @@ public class HomeController {
 	
 	@RequestMapping(value = "/updateHotelsImages", method = RequestMethod.POST)
         public ResponseEntity uploadFile(MultipartHttpServletRequest request) {
-			HttpHeaders headers = request.getRequestHeaders();
-			int id = Integer.valueOf(headers.get("my-header").get(0));
-			headers.clear();
-            try {
-                Iterator<String> itr = request.getFileNames();
 
+            try {
+    			int id = Integer.valueOf(request.getParameter("id"));
+    			Iterator<String> itr = request.getFileNames();
+    			
+                
                 while (itr.hasNext()) {
                 	String path = "";
                     String uploadedFile = itr.next();
@@ -232,6 +233,7 @@ public class HomeController {
 					UUID uuid = new UUID(255, 200);
 					String name = String.valueOf(uuid.randomUUID());
 					String fileName = file.getOriginalFilename();
+					System.out.println(fileName);
 					if(fileName.length() > 15)
 						fileName = fileName.substring(0,15);
 					fileName = String.valueOf(fileName.hashCode());
@@ -247,6 +249,7 @@ public class HomeController {
                 }
             }
             catch (Exception e) {
+            	System.out.println(e.getMessage());
                 return new ResponseEntity("{}", HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
