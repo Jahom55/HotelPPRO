@@ -6,6 +6,7 @@
 * Thymeleaf
 * Git
 * Bootstrap
+* Dropzone.js
 
 ##Future technologies:
 * Closure table
