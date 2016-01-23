@@ -116,7 +116,7 @@
 
 	<sec:authentication-manager>
 		<sec:authentication-provider user-service-ref="userServiceImpl" >
-		<!--  	<sec:password-encoder hash="bcrypt" />    -->
+		  	<sec:password-encoder hash="bcrypt" />    
 		</sec:authentication-provider>
 	</sec:authentication-manager>
 

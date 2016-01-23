@@ -8,6 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name="address")
@@ -16,15 +19,15 @@ public class Address {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
 	private int addressId;
-    
+    @NotEmpty( message = "Nesmí být prázdné")
     private String street;
-    
+    @NotEmpty( message = "Nesmí být prázdné")
     private String streetNumber;
-    
+    @NotEmpty( message = "Nesmí být prázdné")
     private String district;
-    
+    @NotEmpty( message = "Nesmí být prázdné")
     private String city;
-    
+    @NotEmpty( message = "Nesmí být prázdné")
     private String zipCode;
     
     @OneToMany(mappedBy="address")

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -12,8 +13,10 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -149,7 +152,7 @@ public class LoginController {
 
 	}
 	
-	@RequestMapping(value="/registration")
+	@RequestMapping(value="/registration",method = RequestMethod.GET)
 	public String addUser(Model model){		
 		List<Role> roleList = getAllWithoutAdmin();
 		model.addAttribute("roles", roleList);
@@ -158,12 +161,23 @@ public class LoginController {
 		return "registration";		
 	}
 	
-	@RequestMapping(value="/updateUser", method = RequestMethod.POST)
-	public String addUserProcess(Model model, @ModelAttribute("user") User u){	
+	@RequestMapping(value="/registration", method = RequestMethod.POST)
+	public String addUserProcess(Model model,@Valid @ModelAttribute("user") User u, BindingResult bindingResult){	
+		if (bindingResult.hasErrors()) {
+			List<Role> roleList = getAllWithoutAdmin();
+			model.addAttribute("roles", roleList);
+            return "registration";
+        }
+		BCryptPasswordEncoder b = new BCryptPasswordEncoder();
+		u.setPassword(b.encode(u.getPassword()));
 		addressService.saveOrUpdate(u.getAddress());
+		u.setRole(roleService.get(u.getRole().getRoleId()));
 		userService.saveOrUpdate(u);				
 		return "redirect:/";
 	}
+	
+	
+
 	
 	
 	

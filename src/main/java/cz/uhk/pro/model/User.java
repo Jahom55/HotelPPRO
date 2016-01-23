@@ -11,6 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name="users")
@@ -19,19 +24,22 @@ public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
 	private int userId;
-    
+    @NotEmpty( message = "Nesmí být prázdné")
     private String name;
-    
+    @NotEmpty( message = "Nesmí být prázdné")
     private String surname;
-    
+    @NotEmpty( message = "Nesmí být prázdné")
     private String login;
-
+    
     private String image;
     
+    @NotEmpty( message = "Nesmí být prázdné")
+    @Size(min = 6, message = "Heslo musi byt delsi nez 6 znaku")
     private String password;
-    
+   
     private boolean enabled = true;
-    
+    @NotEmpty( message = "Nesmí být prázdné")
+    @Email
     private String email;
     
     

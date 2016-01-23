@@ -11,63 +11,77 @@
 
     <div class="container">
 	<h2>Registrace</h2>
-    <form action="#" th:action="@{/updateUser/}"
-			th:object="${user}" method="post">
+    <form action="#" th:action="@{/registration/}"
+			th:object="${user}" method="post" data-toggle="validator">
 			<div class="form-group">
-				<input type="hidden" th:field="${user.userId}" />
+				<input type="hidden" th:field="*{userId}" />
 				
 				<label for="user.login">Username:</label>
-				<input class="form-control" type="text" th:field="${user.login}" />
+				<input class="form-control" type="text" th:field="*{login}" required="required"/>
+				<span th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Name Error</span>
 			</div>
 			<div class="form-group">
 				<label for="user.password">Password: </label> 
-				<input class="form-control" type="password" th:field="${user.password}" />
+				<input class="form-control" type="password" th:field="*{password}" required="required" id="passwordFirst"  data-minlength="6" data-error="Heslo musi mit 6+ znaku"/>
+				<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Name Error</span>
+				<div class="help-block with-errors"></div>
 			</div>
 			<div class="form-group">
 				<label for="user.passwordAgain">Password Again: </label> 
-				<input class="form-control" type="password" id="user.passwordAgain"/>
+				<input class="form-control" type="password" id="user.passwordAgain" required="required" data-match="#passwordFirst" data-match-error="Hesla nesedi"/>
+				<div class="help-block with-errors"></div>
 			</div>
 			<div class="form-group">
 				<label for="user.email">Email: </label> 
-				<input class="form-control" type="text" th:field="${user.email}"/>
+				<input class="form-control" type="email" th:field="*{email}" data-error="Spatny format emailu" required="required"/>
+				<div class="help-block with-errors"></div>
+				<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Name Error</span>
 			</div>			
 			
 			<div class="form-group">
 				<label for="user.name">Jmeno: </label> 
-				<input class="form-control" type="text" th:field="${user.name}" />
+				<input class="form-control" type="text" th:field="*{name}" required="required"/>
+				<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
 			</div>
 			<div class="form-group">
 				<label for="user.surname">Prijmeni: </label> 
-				<input class="form-control" type="text" th:field="${user.surname}" />
+				<input class="form-control" type="text" th:field="*{surname}" required="required" />
+				<span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">Name Error</span>
 			</div>
 			
 			<div class="form-group">
 				<label for="user.address.city">Město: </label> <input type="text"
 					class="form-control" 
-					th:field="${user.address.city}" />
+					th:field="*{address.city}" required="required"/>
+					<span th:if="${#fields.hasErrors('address.city')}" th:errors="*{address.city}">Name Error</span>
 			</div>
 			<div class="form-group">
 				<label for="user.address.district">Kraj: </label> <input type="text"
 					class="form-control"
-					th:field="${user.address.district}" />
+					th:field="*{address.district}" required="required"/>
+					<span th:if="${#fields.hasErrors('address.district')}" th:errors="*{address.district}">Name Error</span>
 			</div>
 
 			<div class="form-group">
 				<label for="user.address.street">Ulice: </label> <input type="text"
 					class="form-control"
-					th:field="${user.address.street}" />
+					th:field="*{address.street}" required="required"/>
+					<span th:if="${#fields.hasErrors('address.street')}" th:errors="*{address.street}">Name Error</span>
 			</div>
 
 			<div class="form-group">
 				<label for="user.address.streetNumber">Číslo popisné: </label> <input type="text"
 					class="form-control"
-					th:field="${user.address.streetNumber}" />
+					th:field="*{address.streetNumber}" required="required" />
+					<span th:if="${#fields.hasErrors('address.streetNumber')}" th:errors="*{address.streetNumber}">Name Error</span>
 			</div>
 
 			<div class="form-group">
 				<label for="user.address.zipCode">PSČ: </label> <input type="text"
 					class="form-control"
-					th:field="${user.address.zipCode}" />
+					th:field="*{address.zipCode}" required="required" pattern="\d{5}" data-error="Spatny format PSC"/>
+					<div class="help-block with-errors"></div>
+					<span th:if="${#fields.hasErrors('address.zipCode')}" th:errors="*{address.zipCode}">Name Error</span>
 			</div>
 
 			<div class="form-group">
@@ -82,8 +96,8 @@
 					 >Types</option>
 			</select>
 			
-			<button th:if="${user.login}" type="submit">Edit</button>
-			<button th:unless="${user.login}" type="submit">Registrovat</button>
+			<button th:if="*{userId}" type="submit">Edit</button>
+			<button th:unless="*{userId}" type="submit">Registrovat</button>
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		</form>    
 
