@@ -171,7 +171,11 @@ public class LoginController {
 		BCryptPasswordEncoder b = new BCryptPasswordEncoder();
 		u.setPassword(b.encode(u.getPassword()));
 		addressService.saveOrUpdate(u.getAddress());
-		u.setRole(roleService.get(u.getRole().getRoleId()));
+		
+		
+		// PRIRAZENI ROLE
+		u.setRole(roleService.get(2));
+		
 		userService.saveOrUpdate(u);				
 		return "redirect:/";
 	}

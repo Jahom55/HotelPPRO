@@ -15,7 +15,6 @@
 			th:object="${user}" method="post" data-toggle="validator">
 			<div class="form-group">
 				<input type="hidden" th:field="*{userId}" />
-				
 				<label for="user.login">Username:</label>
 				<input class="form-control" type="text" th:field="*{login}" required="required"/>
 				<span th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Name Error</span>
@@ -32,6 +31,7 @@
 				<div class="help-block with-errors"></div>
 			</div>
 			<div class="form-group">
+
 				<label for="user.email">Email: </label> 
 				<input class="form-control" type="email" th:field="*{email}" data-error="Spatny format emailu" required="required"/>
 				<div class="help-block with-errors"></div>
@@ -39,6 +39,7 @@
 			</div>			
 			
 			<div class="form-group">
+
 				<label for="user.name">Jmeno: </label> 
 				<input class="form-control" type="text" th:field="*{name}" required="required"/>
 				<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
@@ -47,37 +48,39 @@
 				<label for="user.surname">Prijmeni: </label> 
 				<input class="form-control" type="text" th:field="*{surname}" required="required" />
 				<span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">Name Error</span>
+
 			</div>
 			
 			<div class="form-group">
-				<label for="user.address.city">Město: </label> <input type="text"
-					class="form-control" 
+				<label for="address.city">Město: </label> <input type="text"
+					class="form-control"
 					th:field="*{address.city}" required="required"/>
 					<span th:if="${#fields.hasErrors('address.city')}" th:errors="*{address.city}">Name Error</span>
 			</div>
 			<div class="form-group">
-				<label for="user.address.district">Kraj: </label> <input type="text"
+				<label for="address.district">Kraj: </label> <input type="text"
 					class="form-control"
+
 					th:field="*{address.district}" required="required"/>
 					<span th:if="${#fields.hasErrors('address.district')}" th:errors="*{address.district}">Name Error</span>
 			</div>
 
 			<div class="form-group">
-				<label for="user.address.street">Ulice: </label> <input type="text"
+				<label for="address.street">Ulice: </label> <input type="text"
 					class="form-control"
 					th:field="*{address.street}" required="required"/>
 					<span th:if="${#fields.hasErrors('address.street')}" th:errors="*{address.street}">Name Error</span>
 			</div>
 
 			<div class="form-group">
-				<label for="user.address.streetNumber">Číslo popisné: </label> <input type="text"
+				<label for="address.streetNumber">Číslo popisné: </label> <input type="text"
 					class="form-control"
 					th:field="*{address.streetNumber}" required="required" />
 					<span th:if="${#fields.hasErrors('address.streetNumber')}" th:errors="*{address.streetNumber}">Name Error</span>
 			</div>
 
 			<div class="form-group">
-				<label for="user.address.zipCode">PSČ: </label> <input type="text"
+				<label for="address.zipCode">PSČ: </label> <input type="text"
 					class="form-control"
 					th:field="*{address.zipCode}" required="required" pattern="\d{5}" data-error="Spatny format PSC"/>
 					<div class="help-block with-errors"></div>
@@ -90,12 +93,13 @@
 			</div>
 			
 			
-			
+<!-- 			Roli budeme prirazovat automaticky  
 			<select class="form-control" th:field="${user.role.roleId}">
 				<option th:each="r : ${roles}" th:value="${r.roleId}"  th:text="${r.description}"
 					 >Types</option>
-			</select>
+			</select>-->
 			
+
 			<button th:if="*{userId}" type="submit">Edit</button>
 			<button th:unless="*{userId}" type="submit">Registrovat</button>
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />

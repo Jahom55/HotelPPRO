@@ -20,10 +20,8 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-3">
-
-            <img class="img" src="http://placehold.it/200x200" />
-
+    <div class="col-lg-3 fotorama" data-nav="thumbs" data-allowfullscreen="true" data-autoplay="true">
+            <img th:each="i : ${images}" class="img" th:attr="src=${i.image},alt=${i.alt}" />
     </div>
 <!-- TODO: tady se bude odehravat hlasovani -->
     <div class="col-lg-9">

@@ -194,7 +194,9 @@ public class HomeController {
 	public String detailHotel(Model model, @RequestParam int id){	
 		User u = userService.findByUserName("admin");
 		Hotel h = hotelService.get(id);
-		List<Review> forhotel = reviewService.getReviewsByHotel(h);		
+		List<Image> images = imageService.getImages(h);
+		model.addAttribute("images", images);
+		List<Double> forhotel = reviewService.getAverageReview(h);		
 		model.addAttribute("type", h.getType());
 		model.addAttribute("reviews", forhotel);
 		Review r = new Review();
@@ -231,7 +233,7 @@ public class HomeController {
 					path = "C:/Users/Adam-LenovoY570/git/HotelPPRO/src/main/webapp/resources/images/" + name + fileName + "." + sType;
 					File destination = new File(path);
 					file.transferTo(destination);
-
+					path = "../../pro/resources/images/" + name + fileName + "." + sType;
                     Image image = new Image();
                     Hotel hotel = hotelService.get(id);
                     image.setHotel(hotel);
