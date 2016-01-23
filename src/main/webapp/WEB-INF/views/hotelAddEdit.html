@@ -70,6 +70,12 @@
 					th:field="*{hotel.address.zipCode}" />
 			</div>
 			
+			<div>
+			
+			
+			</div>
+			
+			
 			<div id="dropanbula" class="dropzone form-group">
 			
 			</div>
@@ -78,8 +84,10 @@
 
 
 			<div class="checkbox">
-			  	<label th:for="${#ids.next('hotel.equipment.internet')}">
-  				<input type="checkbox" th:field="*{hotel.equipment.internet}" />Internet</label>
+			  	
+  				<input type="checkbox" th:field="*{hotel.equipment.internet}" />
+  				<label id="int" th:for="${#ids.prev('hotel.equipment.internet')}"></label>
+  				
   				
   				<label th:for="${#ids.next('hotel.equipment.parking')}">
   				<input type="checkbox" th:field="*{hotel.equipment.parking}" />Parkování</label>
@@ -140,15 +148,18 @@
 	<script type="text/javascript" th:src="@{/resources/js/dropzone.min.js}"></script>
 <script th:inline="javascript">
 	/*<![CDATA[*/
-	
+	           
+	           
+	           
+	           
 	$("#stars").rating({
 		showCaption: false	
 	});
 	
 			
 	Dropzone.options.dropanbula = {
-			url: "updateHotelsImages/",
-	        paramName: 'file', // The name that will be used to
+	        url: [[@{/updateHotelsImages/}]],
+			paramName: 'file', // The name that will be used to
 	        maxFilesize: 15000000000, // M
 	        uploadMultiple: true,
 	        parallelUploads: 100,

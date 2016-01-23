@@ -8,4 +8,5 @@ import cz.uhk.pro.model.Review;
 public interface ReviewDao extends GenericDao<Review, Integer> {
 
 	public List<Review> getReviewsByHotel(Hotel hotel);
+	public List<Double> getAverageReview(Hotel hotel);
 }

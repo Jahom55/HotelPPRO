@@ -12,6 +12,7 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -161,6 +162,9 @@ public class LoginController {
 	@RequestMapping(value="/updateUser", method = RequestMethod.POST)
 	public String addUserProcess(Model model, @ModelAttribute("user") User u){	
 		addressService.saveOrUpdate(u.getAddress());
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		u.setPassword(passwordEncoder.encode(u.getPassword()));
+		//hashujeme
 		userService.saveOrUpdate(u);				
 		return "redirect:/";
 	}

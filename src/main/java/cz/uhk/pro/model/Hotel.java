@@ -214,6 +214,31 @@ public class Hotel {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result + counter;
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((equipment == null) ? 0 : equipment.hashCode());
+		result = prime * result + (functional ? 1231 : 1237);
+		result = prime * result + hotelId;
+		result = prime * result + ((image == null) ? 0 : image.hashCode());
+		result = prime * result + ((images == null) ? 0 : images.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(rating);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((reviews == null) ? 0 : reviews.hashCode());
+		result = prime * result + stars;
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		result = prime * result + ((website == null) ? 0 : website.hashCode());
+		return result;
+	}
+
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -248,10 +273,22 @@ public class Hotel {
 				return false;
 		} else if (!image.equals(other.image))
 			return false;
+		if (images == null) {
+			if (other.images != null)
+				return false;
+		} else if (!images.equals(other.images))
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
+			return false;
+		if (Double.doubleToLongBits(rating) != Double.doubleToLongBits(other.rating))
+			return false;
+		if (reviews == null) {
+			if (other.reviews != null)
+				return false;
+		} else if (!reviews.equals(other.reviews))
 			return false;
 		if (stars != other.stars)
 			return false;

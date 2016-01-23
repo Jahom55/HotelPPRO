@@ -19,9 +19,21 @@ public class Image {
     
     private String image;
     
-    @ManyToOne(fetch=FetchType.LAZY)
+    private String alt;
+    
+    @ManyToOne()
     @JoinColumn(name="hotelId")
     private Hotel hotel;
+    
+    
+
+	public String getAlt() {
+		return alt;
+	}
+
+	public void setAlt(String alt) {
+		this.alt = alt;
+	}
 
 	public int getImageId() {
 		return imageId;
@@ -51,6 +63,7 @@ public class Image {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((alt == null) ? 0 : alt.hashCode());
 		result = prime * result + ((hotel == null) ? 0 : hotel.hashCode());
 		result = prime * result + ((image == null) ? 0 : image.hashCode());
 		result = prime * result + imageId;
@@ -66,6 +79,11 @@ public class Image {
 		if (getClass() != obj.getClass())
 			return false;
 		Image other = (Image) obj;
+		if (alt == null) {
+			if (other.alt != null)
+				return false;
+		} else if (!alt.equals(other.alt))
+			return false;
 		if (hotel == null) {
 			if (other.hotel != null)
 				return false;
@@ -83,7 +101,9 @@ public class Image {
 
 	@Override
 	public String toString() {
-		return "Image [imageId=" + imageId + ", image=" + image + ", hotel=" + hotel + "]";
+		return "Image [imageId=" + imageId + ", image=" + image + ", alt=" + alt + ", hotel=" + hotel + "]";
 	}
+
+
 
 }

@@ -14,60 +14,60 @@
     <form action="#" th:action="@{/updateUser/}"
 			th:object="${user}" method="post">
 			<div class="form-group">
-				<input type="hidden" th:field="${user.userId}" />
+				<input type="hidden" th:field="*{userId}" />
 				
-				<label for="user.login">Username:</label>
-				<input class="form-control" type="text" th:field="${user.login}" />
+				<label for="login">Username:</label>
+				<input class="form-control" type="text" th:field="*{login}" />
 			</div>
 			<div class="form-group">
-				<label for="user.password">Password: </label> 
-				<input class="form-control" type="password" th:field="${user.password}" />
+				<label for="password">Password: </label> 
+				<input class="form-control" type="password" th:field="*{password}" />
 			</div>
 			<div class="form-group">
 				<label for="user.passwordAgain">Password Again: </label> 
 				<input class="form-control" type="password" id="user.passwordAgain"/>
 			</div>
 			<div class="form-group">
-				<label for="user.email">Email: </label> 
-				<input class="form-control" type="text" th:field="${user.email}"/>
+				<label for="email">Email: </label> 
+				<input class="form-control" type="email" th:field="*{email}"/>
 			</div>			
 			
 			<div class="form-group">
-				<label for="user.name">Jmeno: </label> 
-				<input class="form-control" type="text" th:field="${user.name}" />
+				<label for="name">Jmeno: </label> 
+				<input class="form-control" type="text" th:field="*{name}" />
 			</div>
 			<div class="form-group">
-				<label for="user.surname">Prijmeni: </label> 
-				<input class="form-control" type="text" th:field="${user.surname}" />
+				<label for="surname">Prijmeni: </label> 
+				<input class="form-control" type="text" th:field="*{surname}" />
 			</div>
 			
 			<div class="form-group">
-				<label for="user.address.city">Město: </label> <input type="text"
+				<label for="address.city">Město: </label> <input type="text"
 					class="form-control" 
-					th:field="${user.address.city}" />
+					th:field="*{address.city}" />
 			</div>
 			<div class="form-group">
-				<label for="user.address.district">Kraj: </label> <input type="text"
+				<label for="address.district">Kraj: </label> <input type="text"
 					class="form-control"
-					th:field="${user.address.district}" />
-			</div>
-
-			<div class="form-group">
-				<label for="user.address.street">Ulice: </label> <input type="text"
-					class="form-control"
-					th:field="${user.address.street}" />
+					th:field="*{address.district}" />
 			</div>
 
 			<div class="form-group">
-				<label for="user.address.streetNumber">Číslo popisné: </label> <input type="text"
+				<label for="address.street">Ulice: </label> <input type="text"
 					class="form-control"
-					th:field="${user.address.streetNumber}" />
+					th:field="*{address.street}" />
 			</div>
 
 			<div class="form-group">
-				<label for="user.address.zipCode">PSČ: </label> <input type="text"
+				<label for="address.streetNumber">Číslo popisné: </label> <input type="text"
 					class="form-control"
-					th:field="${user.address.zipCode}" />
+					th:field="*{address.streetNumber}" />
+			</div>
+
+			<div class="form-group">
+				<label for="address.zipCode">PSČ: </label> <input type="text"
+					class="form-control"
+					th:field="*{address.zipCode}" />
 			</div>
 
 			<div class="form-group">
@@ -76,14 +76,14 @@
 			</div>
 			
 			
-			
+<!-- 			Roli budeme prirazovat automaticky  
 			<select class="form-control" th:field="${user.role.roleId}">
 				<option th:each="r : ${roles}" th:value="${r.roleId}"  th:text="${r.description}"
 					 >Types</option>
-			</select>
+			</select>-->
 			
-			<button th:if="${user.login}" type="submit">Edit</button>
-			<button th:unless="${user.login}" type="submit">Registrovat</button>
+			<button th:if="*{login}" type="submit">Edit</button>
+			<button th:unless="*{login}" type="submit">Registrovat</button>
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		</form>    
 
