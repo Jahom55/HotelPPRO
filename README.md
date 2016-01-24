@@ -7,6 +7,9 @@
 * Git
 * Bootstrap
 * Dropzone.js
+* Fotorama.js
+* JSON
+* AJAX
 
 ##Future technologies:
 * Closure table
