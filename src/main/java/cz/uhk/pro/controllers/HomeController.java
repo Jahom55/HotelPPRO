@@ -261,15 +261,16 @@ public class HomeController {
             return new ResponseEntity("{}", HttpStatus.OK);
         }
 	
-	
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public String searchHotel(Model model) { 
+		
+		
+		return "";
+	}
 	@RequestMapping(value = "/updateHotel", method = RequestMethod.POST)
 	public String updateHotel(@ModelAttribute("hotel") Hotel hotel,
 			Model model) { 
 			hotel.setDescription(HtmlUtils.htmlUnescape((hotel.getDescription())));
-			//System.out.println(hotel.getName());
-			System.out.println(hotel.getName().toString());
-			//System.out.println(HtmlUtils.);
-			//hotel.setName(HtmlUtils.htmlUnescape(HtmlUtils.htmlEscapeDecimal(hotel.getName())));
 			Address a = new Address();
 			a = hotel.getAddress();
 			District d = districtService.get(a.getDistrict().getDistrictId());

@@ -11,10 +11,10 @@
 
     <div class="container">
 	<h2>Registrace</h2>
-    <form action="#" th:action="@{/registration/}"
+    <form action="#" th:action="@{/registration/}" name="registration"
 			th:object="${user}" method="post" data-toggle="validator">
 			<div class="form-group">
-				<input type="hidden" th:field="*{userId}" />
+				<input type="hidden" th:field="*{userId}"/>
 				<label for="user.login">Username:</label>
 				<input class="form-control" type="text" th:field="*{login}" required="required"/>
 				<span th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Name Error</span>
@@ -57,12 +57,13 @@
 					th:field="*{address.city}" required="required"/>
 					<span th:if="${#fields.hasErrors('address.city')}" th:errors="*{address.city}">Name Error</span>
 			</div>
+			
 			<div class="form-group">
-				<label for="address.district">Kraj: </label> <input type="text"
-					class="form-control"
-
-					th:field="*{address.district}" required="required"/>
-					<span th:if="${#fields.hasErrors('address.district')}" th:errors="*{address.district}">Name Error</span>
+			<label for="address.district.districtId">Kraj: </label>
+			<select class="form-control" th:field="*{address.district.districtId}">
+				<option th:each="d : ${districts}" th:value="${d.districtId}"  th:text="${d.name}"
+					 >Districts</option>
+			</select>
 			</div>
 
 			<div class="form-group">
@@ -87,21 +88,25 @@
 					<span th:if="${#fields.hasErrors('address.zipCode')}" th:errors="*{address.zipCode}">Name Error</span>
 			</div>
 
+			<div id="dropanbula" class="dropzone form-group">
+			
+			</div>
+<!-- 
 			<div class="form-group">
 				<label for="image">Fotka:</label> <input type="file"
 					th:field="${user.image}" id="image"/>
 			</div>
 			
 			
-<!-- 			Roli budeme prirazovat automaticky  
+			Roli budeme prirazovat automaticky  
 			<select class="form-control" th:field="${user.role.roleId}">
 				<option th:each="r : ${roles}" th:value="${r.roleId}"  th:text="${r.description}"
 					 >Types</option>
 			</select>-->
 			
 
-			<button th:if="*{userId}" type="submit">Edit</button>
-			<button th:unless="*{userId}" type="submit">Registrovat</button>
+			<button id="send"  th:if="*{userId}" type="submit">Edit</button>
+			<button id="send" th:unless="*{userId}" type="submit">Registrovat</button>
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		</form>    
 
@@ -116,6 +121,69 @@
 
 	<div th:replace="/layout/footer :: scripts">
 	</div>
+	<script type="text/javascript" th:src="@{/resources/js/dropzone.min.js}"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	           
+			
+	Dropzone.options.dropanbula = {
+	        url: [[@{/updateUserImages/}]],
+			paramName: 'file', // The name that will be used to
+	        maxFilesize: 15000000000, // M
+	        uploadMultiple: false,
+	        parallelUploads: 1,
+	        maxFiles: 1,
+	        autoProcessQueue: false,
+	        addRemoveLinks: true,
+	        createImageThumbnails: true,
+	        clickable: true,
+	        headers: { "X-CSRF-HEADER": [[${_csrf.parameterName}]],
+	        			"X-CSRF-TOKEN": [[${_csrf.token}]]},
+	        acceptedFiles: "image/*",
+	        
+	        	init: function() {
+	        	    var myDropzone = this;
+
+	        	    // First change the button to actually tell Dropzone to process the queue.
+	        	    	window.document.getElementById("send").addEventListener("click", function(e) {
+	        	      // Make sure that the form isn't actually being sent.
+	        	          e.preventDefault();
+	        	      if (myDropzone.files.length > 0){
+		        	      myDropzone.processQueue();
+	        	      }else{
+	        	    	  document.registration.submit();
+	        	      }
+	        	      
+	        	      
+	        	      //e.stopPropagation();
+	        	      
+	        	    });
+	        	    
+	        	 // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+	        	    // of the sending event because uploadMultiple is set to true.
+	        	    this.on("sending", function(file, xhr, formData) {
+	        	    	
+	        	    	formData.append("id", [[${id}]]);
+	        	      // Gets triggered when the form is actually being sent.
+	        	      // Hide the success button or the complete form.
+	        	    });
+	        	    this.on("success", function(files, response) {
+	        	    	document.registration.submit();
+	        	    	// Gets triggered when the files have successfully been sent.
+	        	      // Redirect user or notify of success.
+	        	    });
+	        	    this.on("error", function(files, response) {
+	        	    	document.registration.submit();
+	        	    	// Gets triggered when there was an error sending the files.
+	        	      // Maybe show form again, and notify user of error
+	        	    });
+	        	    
+	        	  }
+	};
+	
+	/*]]>*/
+	</script>
+	
 
 </body>
 
