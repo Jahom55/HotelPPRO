@@ -195,6 +195,8 @@ public class HomeController {
 		model.addAttribute("districts", districtList);
         Hotel h = hotelService.get(id);
         model.addAttribute("hotel", h);
+        List<Image> images = imageService.getImages(h);
+        model.addAttribute("images", images);
 		return "hotelAddEdit";
 	}
 	@RequestMapping(value="/detail", params = "id")
@@ -212,7 +214,7 @@ public class HomeController {
         model.addAttribute("address",h.getAddress());
         model.addAttribute("district", h.getAddress().getDistrict());
         model.addAttribute("equipment",h.getEquipment());
-
+        
 		return "hotelDetail";
 	}
 	

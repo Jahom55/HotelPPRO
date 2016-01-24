@@ -132,7 +132,7 @@
 		<hr />
 
 
-
+	<div id="id01"></div>
 
 		<!-- Footer -->
 		<footer th:replace="/layout/footer :: footer"> </footer>
@@ -178,7 +178,37 @@
 	        
 	        	init: function() {
 	        	    var myDropzone = this;
+	        	    
+	        	   
+	        	    var xmlhttp = new XMLHttpRequest();
+	        	    var urlko = [[@{/getImages/(id=${hotel.hotelId})}]];
 
+	        	    xmlhttp.onreadystatechange = function() {
+	        	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	        	            var myArr = JSON.parse(xmlhttp.responseText);
+	        	            myFunction(myArr);
+	        	        }
+	        	    };
+	        	    xmlhttp.open("GET", urlko, true);
+	        	    xmlhttp.send();
+					
+	        	    
+	        	    
+	        	    function myFunction(arr) {
+	        	        var i;
+	        	        var vel = 1250;
+	        	        for(i = 0; i < arr.length; i++) {
+	        	        	 var mockFile = { name: arr[i].image, size: vel}; // here we get the file name and size as response 
+
+	        	        	 myDropzone.options.addedfile.call(myDropzone, mockFile);
+	        	        	 
+	        	        	 myDropzone.createThumbnailFromUrl(mockFile, arr[i].image);
+	        	        }
+	        	        
+	        	    }
+	        	    
+	        	    
+	        	    
 	        	    // First change the button to actually tell Dropzone to process the queue.
 	        	    	window.document.getElementById("send").addEventListener("click", function(e) {
 	        	      // Make sure that the form isn't actually being sent.

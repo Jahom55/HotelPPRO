@@ -17,6 +17,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.URL;
 
 @Entity
@@ -67,7 +69,8 @@ public class Hotel {
     @JoinColumn(name="equipmentId")
 	private Equipment equipment;
     
-    @OneToMany(mappedBy="hotel", cascade=CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="hotel", cascade=CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Review> reviews;
 	
 	@OneToMany(mappedBy="hotel")

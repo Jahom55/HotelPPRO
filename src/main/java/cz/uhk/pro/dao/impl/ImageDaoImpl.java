@@ -15,8 +15,8 @@ public class ImageDaoImpl extends GenericDaoImpl<Image, Integer> implements Imag
 	
 	@Override
 	public List<Image> getImages(Hotel hotel){
-		Criteria criteria = currentSession().createCriteria(Image.class)
-				.add(Restrictions.eq("hotel",hotel));
+		Criteria criteria = currentSession().createCriteria(Image.class);
+		criteria.add(Restrictions.eq("hotelId",hotel.getHotelId()));
 		List<Image> images = criteria.list();
 		return images;
 	}
