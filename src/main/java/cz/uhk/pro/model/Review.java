@@ -27,11 +27,11 @@ public class Review {
 	
 	private byte reviewComplete;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne()
 	@JoinColumn(name="hotelId")
 	private Hotel hotel;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne()
 	@JoinColumn(name="userId")
 	private User user;
 

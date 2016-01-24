@@ -2,10 +2,13 @@ package cz.uhk.pro.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
@@ -23,8 +26,9 @@ public class Address {
     private String street;
     @NotEmpty( message = "Nesmí být prázdné")
     private String streetNumber;
-    @NotEmpty( message = "Nesmí být prázdné")
-    private String district;
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="districtId")
+    private District district;
     @NotEmpty( message = "Nesmí být prázdné")
     private String city;
     @NotEmpty( message = "Nesmí být prázdné")
@@ -66,11 +70,12 @@ public class Address {
 		this.streetNumber = streetNumber;
 	}
 
-	public String getDistrict() {
+
+	public District getDistrict() {
 		return district;
 	}
 
-	public void setDistrict(String district) {
+	public void setDistrict(District district) {
 		this.district = district;
 	}
 

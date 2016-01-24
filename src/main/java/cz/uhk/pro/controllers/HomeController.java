@@ -34,6 +34,7 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.util.HtmlUtils;
 
 import cz.uhk.pro.model.Address;
+import cz.uhk.pro.model.District;
 import cz.uhk.pro.model.Hotel;
 import cz.uhk.pro.model.HotelUpload;
 import cz.uhk.pro.model.Image;
@@ -42,6 +43,7 @@ import cz.uhk.pro.model.Review;
 import cz.uhk.pro.model.Type;
 import cz.uhk.pro.model.User;
 import cz.uhk.pro.service.AddressService;
+import cz.uhk.pro.service.DistrictService;
 import cz.uhk.pro.service.EquipmentService;
 import cz.uhk.pro.service.HotelService;
 import cz.uhk.pro.service.ImageService;
@@ -59,8 +61,8 @@ public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
-	 @Autowired(required = true)
-	 private PersonService personService;
+	 //@Autowired(required = true)
+	 //private PersonService personService;
 
 	 @Autowired(required = true)
 	 private AddressService addressService;
@@ -70,6 +72,9 @@ public class HomeController {
 	 
 	 @Autowired(required = true)
 	 private TypeService typeService;
+	 
+	 @Autowired(required = true)
+	 private DistrictService districtService;
 	 
 	 @Autowired(required = true)
 	 private UserService userService;
@@ -146,7 +151,7 @@ public class HomeController {
 		return this.hotelService.getPage(2, 1);
 	    //return this.hotelService.getAll();
 	}
-	
+	/*
 	@RequestMapping(value="/person")
 	public String addPerson(Model model){		
 		Person p = new Person();
@@ -167,16 +172,18 @@ public class HomeController {
 			personService.saveOrUpdate(p);
 			return "redirect:/";
 	}
-	
+	*/
 	@RequestMapping(value="/hotel")
 	public String addHotel(Model model){		
 		List<Type> typesList = typeService.getAll();
 		model.addAttribute("types", typesList);
-		HotelUpload hU = new HotelUpload();
+		List<District> districtList = districtService.getAll();
+		model.addAttribute("districts", districtList);
 		Hotel hotel = new Hotel();
+		hotel.setName("");
+		hotel.setStars((byte) 3);
 		int id = (int) hotelService.add(hotel);
-		hU.setHotel(hotel);
-		model.addAttribute("hotelUpload", hU);
+		model.addAttribute("hotel", hotel);
 		return "hotelAddEdit";
 	}
 	
@@ -184,10 +191,10 @@ public class HomeController {
 	public String editHotel(Model model, @RequestParam int id){		
 		List<Type> typesList = typeService.getAll();
 		model.addAttribute("types", typesList);
+		List<District> districtList = districtService.getAll();
+		model.addAttribute("districts", districtList);
         Hotel h = hotelService.get(id);
-        HotelUpload hU = new HotelUpload();
-        hU.setHotel(h);
-        model.addAttribute("hotelUpload", hU);
+        model.addAttribute("hotel", h);
 		return "hotelAddEdit";
 	}
 	@RequestMapping(value="/detail", params = "id")
@@ -203,6 +210,7 @@ public class HomeController {
 		model.addAttribute("review", r);
 		model.addAttribute("hotel", h);
         model.addAttribute("address",h.getAddress());
+        model.addAttribute("district", h.getAddress().getDistrict());
         model.addAttribute("equipment",h.getEquipment());
 
 		return "hotelDetail";
@@ -233,16 +241,20 @@ public class HomeController {
 					path = "C:/Users/Adam-LenovoY570/git/HotelPPRO/src/main/webapp/resources/images/" + name + fileName + "." + sType;
 					File destination = new File(path);
 					file.transferTo(destination);
-					path = "../../pro/resources/images/" + name + fileName + "." + sType;
+					String path2 ="";
+					path2 = "../../pro/resources/images/" + name + fileName + "." + sType;
                     Image image = new Image();
                     Hotel hotel = hotelService.get(id);
                     image.setHotel(hotel);
-                    image.setImage(path);
+                    image.setImage(path2);
+                    File check = new File(path);
+                    while (!check.exists()){
+                    	System.out.println("jeste ne");
+                    }
                     imageService.saveOrUpdate(image);
                 }
             }
             catch (Exception e) {
-            	System.out.println(e.getMessage());
                 return new ResponseEntity("{}", HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
@@ -251,19 +263,18 @@ public class HomeController {
 	
 	
 	@RequestMapping(value = "/updateHotel", method = RequestMethod.POST)
-	public String updateHotel(@ModelAttribute("hotelUpload") HotelUpload hotelUpload,
+	public String updateHotel(@ModelAttribute("hotel") Hotel hotel,
 			Model model) { 
-			Hotel hotel = new Hotel();
-			if(hotelUpload.getHotel().getHotelId() != 0)
-				hotel.setHotelId(hotelUpload.getHotel().getHotelId());
-			hotel.setAddress(hotelUpload.getHotel().getAddress());
-			hotel.setEquipment(hotelUpload.getHotel().getEquipment());
-			hotel.setDescription(HtmlUtils.htmlUnescape((hotelUpload.getHotel().getDescription())));
-			hotel.setName(hotelUpload.getHotel().getName());
-			hotel.setStars(hotelUpload.getHotel().getStars());
-			hotel.setWebsite(hotelUpload.getHotel().getWebsite());
-			hotel.setType(hotelUpload.getHotel().getType());
-			addressService.saveOrUpdate(hotel.getAddress());
+			hotel.setDescription(HtmlUtils.htmlUnescape((hotel.getDescription())));
+			//System.out.println(hotel.getName());
+			System.out.println(hotel.getName().toString());
+			//System.out.println(HtmlUtils.);
+			//hotel.setName(HtmlUtils.htmlUnescape(HtmlUtils.htmlEscapeDecimal(hotel.getName())));
+			Address a = new Address();
+			a = hotel.getAddress();
+			District d = districtService.get(a.getDistrict().getDistrictId());
+			a.setDistrict(d);
+			addressService.saveOrUpdate(a);
 			equipmentService.saveOrUpdate(hotel.getEquipment());
 			hotelService.saveOrUpdate(hotel);
 			return "redirect:/detail/?id=" + hotel.getHotelId();

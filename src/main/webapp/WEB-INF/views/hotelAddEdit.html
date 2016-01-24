@@ -10,64 +10,68 @@
 
 	<div class="container">
 	
-		<form action="#" th:action="@{/updateHotel/}"
-			th:object="${hotelUpload}" method="post" name="hotel"	>
+		<form accept-charset="utf-8" action="#" th:action="@{/updateHotel/}"
+			th:object="${hotel}" method="post" name="hotel"	>
 			
-			<h2 th:if="*{hotel.name}">Editace hotelu: <span th:text="*{hotel.name}"></span>Přidání nového hotelu</h2>
-	<h2 th:unless="*{hotel.name}">Přidání nového hotelu</h2>
+			<h2 th:if="*{name}">Editace hotelu: <span th:text="*{name}"></span>Přidání nového hotelu</h2>
+	<h2 th:unless="*{name}">Přidání nového hotelu</h2>
 			
 			<div class="form-group">
-				<input type="hidden" th:field="*{hotel.hotelId}" /> 
-				<label for="hotel.name">Název:</label>
-				<input class="form-control" type="text" th:field="*{hotel.name}" />
+				<input type="hidden" th:field="*{hotelId}" /> 
+				<label for="name">Název:</label>
+				<input class="form-control" type="text" th:field="*{name}" />
 			</div>
 			<div class="form-group">
-				<label for="hotel.website">Webová stránka</label> 
-				<input class="form-control" type="text" th:field="*{hotel.website}" placeholder="www.neco.cz"/>
+				<label for="website">Webová stránka</label> 
+				<input class="form-control" type="text" th:field="*{website}" placeholder="www.neco.cz"/>
 			</div>
 			<div class="form-group">
-				<label for="hotel.stars">Hvězd: </label>
-				<input class="rating form-control" th:field="*{hotel.stars}" data-min="0" data-max="5" data-step="1" 
+				<label for="stars">Hvězd: </label>
+				<input class="rating form-control" th:field="*{stars}" data-min="0" data-max="5" data-step="1" 
 				 glyphicon="true"/>
 			</div>
-			<select class="form-control" th:field="*{hotel.type.typeId}">
+			<div class="form-group">
+			<select class="form-control" th:field="*{type.typeId}">
 				<option th:each="t : ${types}" th:value="${t.typeId}"  th:text="${t.description}"
 					 >Types</option>
 			</select>
-
+			</div>
 			<div class="form-group">
-				<label for="hotel.description">Popis: </label>
+				<label for="description">Popis: </label>
 				<textarea class="form-control"
-					th:field="*{hotel.description}"></textarea>
+					th:field="*{description}"></textarea>
 			</div>
 
 			<div class="form-group">
-				<label for="hotel.address.city">Město: </label> <input type="text"
+				<label for="address.city">Město: </label> <input type="text"
 					class="form-control" 
-					th:field="*{hotel.address.city}" />
+					th:field="*{address.city}" />
 			</div>
+			
 			<div class="form-group">
-				<label for="hotel.address.district">Kraj: </label> <input type="text"
+			<select class="form-control" th:field="*{address.district.districtId}">
+				<option th:each="d : ${districts}" th:value="${d.districtId}"  th:text="${d.name}"
+					 >Districts</option>
+			</select>
+			</div>
+
+
+			<div class="form-group">
+				<label for="address.street">Ulice: </label> <input type="text"
 					class="form-control"
-					th:field="*{hotel.address.district}" />
+					th:field="*{address.street}" />
 			</div>
 
 			<div class="form-group">
-				<label for="hotel.address.street">Ulice: </label> <input type="text"
+				<label for="address.streetNumber">Číslo popisné: </label> <input type="text"
 					class="form-control"
-					th:field="*{hotel.address.street}" />
+					th:field="*{address.streetNumber}" />
 			</div>
 
 			<div class="form-group">
-				<label for="hotel.address.streetNumber">Číslo popisné: </label> <input type="text"
+				<label for="address.zipCode">PSČ: </label> <input type="text"
 					class="form-control"
-					th:field="*{hotel.address.streetNumber}" />
-			</div>
-
-			<div class="form-group">
-				<label for="hotel.address.zipCode">PSČ: </label> <input type="text"
-					class="form-control"
-					th:field="*{hotel.address.zipCode}" />
+					th:field="*{address.zipCode}" />
 			</div>
 			
 			<div>
@@ -85,39 +89,39 @@
 
 			<div class="checkbox">
 			  	
-  				<input type="checkbox" th:field="*{hotel.equipment.internet}" />
-  				<label id="int" th:for="${#ids.prev('hotel.equipment.internet')}"></label>
+  				<input type="checkbox" th:field="*{equipment.internet}" />
+  				<label th:for="${#ids.prev('equipment.internet')}"></label>
   				
   				
-  				<label th:for="${#ids.next('hotel.equipment.parking')}">
-  				<input type="checkbox" th:field="*{hotel.equipment.parking}" />Parkování</label>
+  				<label th:for="${#ids.next('equipment.parking')}">
+  				<input type="checkbox" th:field="*{equipment.parking}" />Parkování</label>
   				
- 				<label th:for="${#ids.next('hotel.equipment.pets')}">
-  				<input type="checkbox" th:field="*{hotel.equipment.pets}" />Zvířata</label>
+ 				<label th:for="${#ids.next('equipment.pets')}">
+  				<input type="checkbox" th:field="*{equipment.pets}" />Zvířata</label>
   				
-  				<label th:for="${#ids.next('hotel.equipment.pool')}">
-  				<input type="checkbox" th:field="*{hotel.equipment.pool}" />Bazén</label>
+  				<label th:for="${#ids.next('equipment.pool')}">
+  				<input type="checkbox" th:field="*{equipment.pool}" />Bazén</label>
 
 			</div>
 			<div class="checkbox">
-				<label th:for="${#ids.next('hotel.equipment.restauration')}">
-  				<input type="checkbox" th:field="*{hotel.equipment.restauration}" />Restaurace</label>
+				<label th:for="${#ids.next('equipment.restauration')}">
+  				<input type="checkbox" th:field="*{equipment.restauration}" />Restaurace</label>
   				
-  				<label th:for="${#ids.next('hotel.equipment.saloon')}">
-  				<input type="checkbox" th:field="*{hotel.equipment.saloon}" />Společenská místnost</label>
+  				<label th:for="${#ids.next('equipment.saloon')}">
+  				<input type="checkbox" th:field="*{equipment.saloon}" />Společenská místnost</label>
   				
- 				<label th:for="${#ids.next('hotel.equipment.wellness')}">
-  				<input type="checkbox" th:field="*{hotel.equipment.wellness}" />Wellness</label>
+ 				<label th:for="${#ids.next('equipment.wellness')}">
+  				<input type="checkbox" th:field="*{equipment.wellness}" />Wellness</label>
   				
-  				<label th:for="${#ids.next('hotel.equipment.wheellchairAccess')}">
-  				<input type="checkbox" th:field="*{hotel.equipment.wheellchairAccess}" />Bezbarierový přístup</label>
+  				<label th:for="${#ids.next('equipment.wheellchairAccess')}">
+  				<input type="checkbox" th:field="*{equipment.wheellchairAccess}" />Bezbarierový přístup</label>
 			
 			</div>
 			<input type="hidden" name="${_csrf.parameterName}"
 				value="${_csrf.token}" />
 
-			<button id="send" th:if="${hotelUpload.hotel.name}" type="submit" name="edit">Edit</button>
-			<button id="send" th:unless="${hotelUpload.hotel.name}" type="submit" name="add">Přidat hotel</button>
+			<button id="send" th:if="${hotel.name}" type="submit" name="edit">Edit</button>
+			<button id="send" th:unless="${hotel.name}" type="submit" name="add">Přidat hotel</button>
 		</form>
 
 
@@ -180,7 +184,7 @@
 	        	      // Make sure that the form isn't actually being sent.
 	        	      
 //	        	                  myDropzone.on("sendingmultiple", function(file, xhr, formData) {
-//                formData.append("id", [[${hotelUpload.hotel.hotelId}]]);    
+//                formData.append("id", [[${hotel.hotelId}]]);    
 //            });
 	        	      
 	        	      e.preventDefault();
@@ -194,12 +198,12 @@
 	        	    // of the sending event because uploadMultiple is set to true.
 	        	    this.on("sendingmultiple", function(file, xhr, formData) {
 	        	    	
-	        	    	formData.append("id", [[${hotelUpload.hotel.hotelId}]]);
+	        	    	formData.append("id", [[${hotel.hotelId}]]);
 	        	      // Gets triggered when the form is actually being sent.
 	        	      // Hide the success button or the complete form.
 	        	    });
 	        	    this.on("sending", function(file, xhr, formData) {
-	        	    	//formData.append("id", [[${hotelUpload.hotel.hotelId}]]); 
+	        	    	//formData.append("id", [[${hotel.hotelId}]]); 
 		        	      // Gets triggered when the form is actually being sent.
 		        	      // Hide the success button or the complete form.
 		        	    });

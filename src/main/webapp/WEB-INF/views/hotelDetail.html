@@ -36,27 +36,27 @@
             <tbody>
             	<tr>
             	<td>Ubytování</td><td>				
-            	<input class="rating form-control" th:field="*{review.reviewAccommodation}" data-min="0" data-max="5" data-step="1" 
+            	<input class="rating form-control" th:field="${review.reviewAccommodation}" data-min="0" data-max="5" data-step="1" 
 				 glyphicon="true"/></td>
             	</tr>
             	<tr>
             	<td>Prostředí</td><td>				
-            	<input class="rating form-control" th:field="*{review.reviewEnviroment}" data-min="0" data-max="5" data-step="1" 
+            	<input class="rating form-control" th:field="${review.reviewEnviroment}" data-min="0" data-max="5" data-step="1" 
 				 glyphicon="true"/></td>
             	</tr>
             	<tr>
             	<td>Jídlo</td><td>				
-            	<input class="rating form-control" th:field="*{review.reviewFood}" data-min="0" data-max="5" data-step="1" 
+            	<input class="rating form-control" th:field="${review.reviewFood}" data-min="0" data-max="5" data-step="1" 
 				 glyphicon="true"/></td>
             	</tr>
             	<tr>
             	<td>Cena</td><td>				
-            	<input class="rating form-control" th:field="*{review.reviewPrice}" data-min="0" data-max="5" data-step="1" 
+            	<input class="rating form-control" th:field="${review.reviewPrice}" data-min="0" data-max="5" data-step="1" 
 				 glyphicon="true"/></td>
             	</tr>
             	<tr>
             	<td>Celkem</td><td>				
-            	<input class="rating form-control" th:field="*{review.reviewComplete}" data-min="0" data-max="5" data-step="1" 
+            	<input class="rating form-control" th:field="${review.reviewComplete}" data-min="0" data-max="5" data-step="1" 
 				 glyphicon="true"/></td>
             	</tr>
             </tbody>
@@ -75,7 +75,7 @@
         <h2>Adresa hotelu</h2>
         <p th:text="${hotel.name}"></p>
         <p th:text="${hotel.address.city}"></p>
-        <p th:text="${hotel.address.district}"></p>
+        <p th:text="${district.name}"></p>
         <p th:text="${hotel.address.street}"></p>        
         <p th:text="${hotel.address.streetNumber}"></p>
         <p th:text="${hotel.address.zipCode}"></p>
@@ -87,7 +87,16 @@
 
 
 </div>
-	
+<!--         <div th:fragment="sub" th:remove="tag">
+            <ul>
+                <li th:each="option : ${menu.options}" >
+                    <span th:text="${option.label}">Town hall</span>
+                    <div th:with="menu = ${option}" th:include="::sub" th:remove="tag" />
+                </li>
+            </ul>
+        </div> -->
+
+
 	
 	
 	

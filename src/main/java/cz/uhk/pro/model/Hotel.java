@@ -27,10 +27,10 @@ public class Hotel {
     @GeneratedValue(strategy= GenerationType.AUTO)
 	private int hotelId;
 	
-    //@NotNull(message = "Zadejte jméno hotelu")
+    @NotNull(message = "Zadejte jméno hotelu")
 	private String name;
 	
-    //@NotNull(message = "Zadejte poèet hvìzd hotelu")
+    @NotNull(message = "Zadejte poèet hvìzd hotelu")
 	private byte stars;
 	
     

@@ -34,9 +34,12 @@ public class ReviewDaoImpl extends GenericDaoImpl<Review, Integer> implements Re
 			List<Double> review = new ArrayList<Double>();
 			double average = 0.0;
 			
+			try{
 			average = 0.0;
 			criteria.setProjection(Projections.avg("reviewAccommodation")).add(Restrictions.eq("hotel",hotel));
+			System.out.println(criteria.uniqueResult());
 			average = (Double) criteria.uniqueResult();
+			System.out.println(average);
 	        review.add(average);
 			
 	        average = 0.0;
@@ -58,7 +61,15 @@ public class ReviewDaoImpl extends GenericDaoImpl<Review, Integer> implements Re
 			criteria.setProjection(Projections.avg("reviewPrice")).add(Restrictions.eq("hotel",hotel));
 			average = (Double) criteria.uniqueResult();
 	        review.add(average);
-
+			}
+			catch(Exception e){
+				review.clear();
+				review.add(0.0);
+				review.add(0.0);
+				review.add(0.0);
+				review.add(0.0);
+				review.add(0.0);
+			}
 	        return review;
 		
 	}
