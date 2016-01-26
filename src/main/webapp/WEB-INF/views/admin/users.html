@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html 	xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="/layout/header :: header">
+  </head>
+
+  <body>
+	
+	<nav th:replace="/layout/header :: navbar"></nav>
+    <div class="container">
+        <!-- Team Members Row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="page-header">Uživatelé</h2>
+            </div>
+            
+            <div class="row bt-table-container">
+    <div class="col-xs-12">
+            <table class="table table-responsive" data-toggle="table" data-search="true" data-pagination="true" data-page-size="30">    
+            	<thead>
+
+            			<th data-sortable="true" data-searchable="true">Username</th>
+            			<th data-searchable="true" >Email</th>
+            			<th data-sortable="true" data-searchable="true">Mesto</th>
+            			<th data-sortable="true" data-searchable="true">Typ</th>
+            			<th data-width="18%" data-align="center">Akce</th>
+            		
+            	</thead>
+            	<tbody>
+            	<div th:each="user : ${users}" th:switch="${user.enabled}">
+            		<tr th:case="true">
+            			<td th:text="${user.login}">Username</td>
+            			<td th:text="${user.email}">Email</td>
+            			<td th:text="${user.address.city}">Mesto</td>
+            			<td th:text="${user.role.description}">Typ</td>
+            			<td>
+            			 <a href="#" data-th-href="@{/admin/disabled/(id=${user.userId})}" onclick="return confirm('Opravdu zneaktivnit tohoto uzivatele?');" class="btn btn-primary btn-sm">Disable</a>
+               			 <a href="#" data-th-href="@{/admin/detail/(id=${user.userId})}" class="btn btn-primary btn-sm">Detail</a> 
+                		 <a href="#" data-th-href="@{/admin/user/(id=${user.userId})}" class="btn btn-primary btn-sm">Edit</a>       			
+            			</td>            			
+            		</tr>
+            		<tr th:case="false" class="danger">
+            			<td th:text="${user.login}">Username</td>
+            			<td th:text="${user.email}">Email</td>
+            			<td th:text="${user.address.city}">Mesto</td>
+            			<td th:text="${user.role.description}">Typ</td>
+            			<td>
+            			 <a href="#" data-th-href="@{/admin/enabled/(id=${user.userId})}" onclick="return confirm('Opravdu aktivovat tohoto uzivatele?');" class="btn btn-primary btn-sm">Enable</a>
+               			 <a href="#" data-th-href="@{/admin/detail/(id=${user.userId})}" class="btn btn-primary btn-sm">Detail</a>      			
+            			</td>            			
+            		</tr>
+            		
+            		
+            		
+            		
+            		
+            		</div>
+          
+            	
+            	
+            	</tbody>
+              </table> 
+              </div>
+              </div>     
+
+			</div>      
+            
+      
+
+        <hr />
+
+      
+    
+   
+  <!-- Footer -->
+        <footer th:replace="/layout/footer :: footer">
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+	<div th:replace="/layout/footer :: scripts">
+	</div>
+
+</body>
+
+</html>
+   

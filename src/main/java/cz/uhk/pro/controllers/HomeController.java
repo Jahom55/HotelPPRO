@@ -240,7 +240,7 @@ public class HomeController {
 					if(fileName.length() > 15)
 						fileName = fileName.substring(0,15);
 					fileName = String.valueOf(fileName.hashCode());
-					path = "C:/Users/Adam-LenovoY570/git/HotelPPRO/src/main/webapp/resources/images/" + name + fileName + "." + sType;
+					path = "D:/sts/work/ProHotel/src/main/webapp/resources/images/" + name + fileName + "." + sType;
 					File destination = new File(path);
 					file.transferTo(destination);
 					String path2 ="";

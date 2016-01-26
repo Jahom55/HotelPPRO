@@ -13,8 +13,8 @@
 		<form accept-charset="utf-8" action="#" th:action="@{/updateHotel/}"
 			th:object="${hotel}" method="post" name="hotel"	>
 			
-			<h2 th:if="*{name}">Editace hotelu: <span th:text="*{name}"></span>Přidání nového hotelu</h2>
-	<h2 th:unless="*{name}">Přidání nového hotelu</h2>
+			<h2 th:if="*{website}">Editace hotelu: <span th:text="*{name}"></span></h2>
+			<h2 th:unless="*{website}">Přidání nového hotelu</h2>
 			
 			<div class="form-group">
 				<input type="hidden" th:field="*{hotelId}" /> 
@@ -90,7 +90,7 @@
 			<div class="checkbox">
 			  	
   				<input type="checkbox" th:field="*{equipment.internet}" />
-  				<label th:for="${#ids.prev('equipment.internet')}"></label>
+  				<label th:for="${#ids.prev('equipment.internet')}">Interner</label>
   				
   				
   				<label th:for="${#ids.next('equipment.parking')}">
@@ -120,8 +120,8 @@
 			<input type="hidden" name="${_csrf.parameterName}"
 				value="${_csrf.token}" />
 
-			<button id="send" th:if="${hotel.name}" type="submit" name="edit">Edit</button>
-			<button id="send" th:unless="${hotel.name}" type="submit" name="add">Přidat hotel</button>
+			<button id="send" th:if="${hotel.website}" type="submit" name="edit">Edit</button>
+			<button id="send" th:unless="${hotel.website}" type="submit" name="add">Přidat hotel</button>
 		</form>
 
 

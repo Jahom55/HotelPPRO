@@ -66,6 +66,12 @@ public class UserServiceImpl extends GenericServiceImpl<cz.uhk.pro.model.User, I
 		return userDao.findByUserName(username);
 	}
 	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public List<cz.uhk.pro.model.User> getAll() {
+		return userDao.getAll();
+	}
+	
 	
 	
 	

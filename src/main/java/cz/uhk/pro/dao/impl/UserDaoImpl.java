@@ -1,6 +1,9 @@
 package cz.uhk.pro.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -18,5 +21,10 @@ public class UserDaoImpl extends GenericDaoImpl<User, Integer> implements UserDa
         
         return (User) criteria.uniqueResult();
 	}
-
+	
+	@Override
+	public List<User> getAll(){
+		return currentSession().createCriteria(User.class).addOrder(Order.desc("enabled")).list();
+	}
+ 
 }

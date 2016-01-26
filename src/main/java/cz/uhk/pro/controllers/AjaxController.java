@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cz.uhk.pro.model.Hotel;
@@ -35,9 +36,10 @@ public class AjaxController {
 			return new ResponseEntity<List<Image>>(images, HttpStatus.OK);
 		}
 	}
+
 	
-	@RequestMapping(value="/getImages/{id}", method=RequestMethod.GET)
-	public ResponseEntity<List<Image>> getImage(@PathVariable("id") int id){
+	@RequestMapping(value="/getImages", params = "id", method=RequestMethod.GET)
+	public ResponseEntity<List<Image>> getImage(@RequestParam int id){
 		Hotel hotel = hotelService.get(id);
 		List<Image> images = imageService.getImages(hotel);
 		if (images == null){
