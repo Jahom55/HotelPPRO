@@ -25,6 +25,57 @@
     </div>
 <!-- TODO: tady se bude odehravat hlasovani -->
     <div class="col-lg-9">
+    <div>
+
+  <!-- Nav tabs -->
+
+
+</div>
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#complete" aria-controls="complete" role="tab" data-toggle="tab">Celkové hodnocení</a></li>
+    <li sec:authorize="hasRole('ROLE_USER')" role="presentation"><a href="#custom" aria-controls="custom" role="tab" data-toggle="tab">Vaše hodnocení</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="complete"><table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Kategorie</th>
+                    <th class="text-center">Hodnocení</th>
+<!--                     <th class="text-center">Počet hlasujících</th> -->
+                </tr>
+            </thead>
+            <tbody>
+            	<tr>
+            	<td>Ubytování</td><td>				
+            	<input class="rating form-control" data-disabled="true" th:field="${reviews.reviewAccommodation}" data-min="0" data-max="5" data-step="1" 
+				 glyphicon="true"/></td>
+            	</tr>
+            	<tr>
+            	<td>Prostředí</td><td>				
+            	<input class="rating form-control" data-disabled="true" th:field="${reviews.reviewEnviroment}" data-min="0" data-max="5" data-step="1" 
+				 glyphicon="true"/></td>
+            	</tr>
+            	<tr>
+            	<td>Jídlo</td><td>				
+            	<input class="rating form-control" data-disabled="true" th:field="${reviews.reviewFood}" data-min="0" data-max="5" data-step="1" 
+				 glyphicon="true"/></td>
+            	</tr>
+            	<tr>
+            	<td>Cena</td><td>				
+            	<input class="rating form-control" data-disabled="true" th:field="${reviews.reviewPrice}" data-min="0" data-max="5" data-step="1" 
+				 glyphicon="true"/></td>
+            	</tr>
+            	<tr>
+            	<td>Celkem</td><td>				
+            	<input class="rating form-control" data-disabled="true" th:field="${reviews.reviewComplete}" data-min="0" data-max="5" data-step="1" 
+				 glyphicon="true"/></td>
+            	</tr>
+            </tbody>
+            
+        </table></div>
+    <div role="tabpanel" class="tab-pane" id="custom">
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -36,32 +87,36 @@
             <tbody>
             	<tr>
             	<td>Ubytování</td><td>				
-            	<input class="rating form-control" th:field="${review.reviewAccommodation}" data-min="0" data-max="5" data-step="1" 
+            	<input class="rating form-control" id="ac" th:field="${review.reviewAccommodation}" data-min="0" data-max="5" data-step="1" 
 				 glyphicon="true"/></td>
             	</tr>
             	<tr>
             	<td>Prostředí</td><td>				
-            	<input class="rating form-control" th:field="${review.reviewEnviroment}" data-min="0" data-max="5" data-step="1" 
+            	<input class="rating form-control" id="en" th:field="${review.reviewEnviroment}" data-min="0" data-max="5" data-step="1" 
 				 glyphicon="true"/></td>
             	</tr>
             	<tr>
             	<td>Jídlo</td><td>				
-            	<input class="rating form-control" th:field="${review.reviewFood}" data-min="0" data-max="5" data-step="1" 
+            	<input class="rating form-control" id="fo" th:field="${review.reviewFood}" data-min="0" data-max="5" data-step="1" 
 				 glyphicon="true"/></td>
             	</tr>
             	<tr>
             	<td>Cena</td><td>				
-            	<input class="rating form-control" th:field="${review.reviewPrice}" data-min="0" data-max="5" data-step="1" 
+            	<input class="rating form-control" id="pr" th:field="${review.reviewPrice}" data-min="0" data-max="5" data-step="1" 
 				 glyphicon="true"/></td>
             	</tr>
             	<tr>
             	<td>Celkem</td><td>				
-            	<input class="rating form-control" th:field="${review.reviewComplete}" data-min="0" data-max="5" data-step="1" 
+            	<input class="rating form-control" id="co" th:field="${review.reviewComplete}" data-min="0" data-max="5" data-step="1" 
 				 glyphicon="true"/></td>
             	</tr>
             </tbody>
             
         </table>
+        
+      </div>
+
+  </div>
     </div>
 </div>
 
@@ -112,10 +167,78 @@
 
 	<div th:replace="/layout/footer :: scripts">
 	</div>
-	<script type="text/javascript">
+	<script th:inline="javascript">
+	/*<![CDATA[*/
 	$("#hotel.stars").rating({
 		showCaption: false	
 	});
+	
+	
+	var field = '';
+	var val = 0;
+	function post(){
+		$.ajax({
+		    async: false,
+		    type: 'POST',
+		    data: {
+		    	idUser: 6,
+				name: field,
+		    	value: val,
+		    	idHotel: [[${hotel.hotelId}]]
+		    },
+		    url: [[@{/updateReview}]],
+		    headers: { "X-CSRF-HEADER": [[${_csrf.parameterName}]],
+				"X-CSRF-TOKEN": [[${_csrf.token}]]},
+			success: function (data, textStatus, xhr) {
+				var id = '';
+				switch(field){
+				case "accommodation":
+					id = "#ac";
+					break;
+				case "complete":
+					id = "#co";
+					break;
+				case "food":
+					id = "#fo";
+					break;
+				case "price":
+					id = "#pr";
+					break;
+				case "enviroment":
+					id = "#en";
+					break;
+				}
+				$(id).rating('update', data);
+				
+				}
+		    });
+	}
+	$("#ac").on('rating.change', function(event, value, caption) {
+		field = 'accommodation';
+		val = value;
+		post();
+		  }); 
+	$("#co").on('rating.change', function(event, value, caption) {
+		field = 'complete';
+		val = value;
+		post();
+		  });
+	$("#fo").on('rating.change', function(event, value, caption) {
+		field = 'food';
+		val = value;
+		post();
+		  });
+	$("#pr").on('rating.change', function(event, value, caption) {
+		field = 'price';
+		val = value;
+		post();
+		  });
+	$("#en").on('rating.change', function(event, value, caption) {
+		field = 'enviroment';
+		val = value;
+		post();
+		  });
+	/*]]>*/
 	</script>
 
 </body>

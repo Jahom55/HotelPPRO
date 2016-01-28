@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -200,15 +206,29 @@ public class HomeController {
 		return "hotelAddEdit";
 	}
 	@RequestMapping(value="/detail", params = "id")
-	public String detailHotel(Model model, @RequestParam int id){	
-		User u = userService.findByUserName("admin");
+	public String detailHotel(Model model, @RequestParam int id, HttpServletRequest request){	
+		//User u = userService.findByUserName("admin");
 		Hotel h = hotelService.get(id);
 		List<Image> images = imageService.getImages(h);
 		model.addAttribute("images", images);
-		List<Double> forhotel = reviewService.getAverageReview(h);		
+		List<Double> forhotel = reviewService.getAverageReview(h);
+		Review rko = new Review();
+		rko.setReviewAccommodation(Byte.valueOf(forhotel.get(0).byteValue()));
+		rko.setReviewComplete(Byte.valueOf(forhotel.get(1).byteValue()));
+		rko.setReviewEnviroment(Byte.valueOf(forhotel.get(2).byteValue()));
+		rko.setReviewFood(Byte.valueOf(forhotel.get(3).byteValue()));
+		rko.setReviewPrice(Byte.valueOf(forhotel.get(4).byteValue()));
 		model.addAttribute("type", h.getType());
-		model.addAttribute("reviews", forhotel);
+		model.addAttribute("reviews", rko);
 		Review r = new Review();
+		if(request.isUserInRole("ROLE_USER")){
+
+			System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+			User user = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName().toString());
+			r = reviewService.getReviewsByHotelAndUser(h, user);
+			model.addAttribute("user", user);
+		}
+		
 		model.addAttribute("review", r);
 		model.addAttribute("hotel", h);
         model.addAttribute("address",h.getAddress());

@@ -12,6 +12,7 @@ import cz.uhk.pro.dao.GenericDao;
 import cz.uhk.pro.dao.ReviewDao;
 import cz.uhk.pro.model.Hotel;
 import cz.uhk.pro.model.Review;
+import cz.uhk.pro.model.User;
 import cz.uhk.pro.service.ReviewService;
 
 @Service
@@ -40,5 +41,12 @@ public class ReviewServiceImpl extends GenericServiceImpl<Review, Integer> imple
 	@Transactional(propagation = Propagation.REQUIRED)	
 	public List<Double> getAverageReview(Hotel hotel){
 		return reviewDao.getAverageReview(hotel);
+	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public Review getReviewsByHotelAndUser(Hotel hotel, User user){
+		return reviewDao.getReviewsByHotelAndUser(hotel, user);
+		
 	}
 }

@@ -223,7 +223,6 @@ public class LoginController {
 		int id = (int) userService.add(u);
 		User user = new User();
 		user.setUserId(id);
-		model.addAttribute("id", id);
 		model.addAttribute("user", user);
 		return "registration";		
 	}
@@ -231,8 +230,12 @@ public class LoginController {
 	@RequestMapping(value="/registration", method = RequestMethod.POST)
 	public String addUserProcess(Model model,@Valid @ModelAttribute("user") User u, BindingResult bindingResult){	
 		if (bindingResult.hasErrors()) {
-			List<Role> roleList = getAllWithoutAdmin();
-			model.addAttribute("roles", roleList);
+			//List<Role> roleList = getAllWithoutAdmin();
+			//model.addAttribute("roles", roleList);
+			u.setPassword(null);
+			model.addAttribute("user", u);
+			List<District> districtList = districtService.getAll();
+			model.addAttribute("districts", districtList);
             return "registration";
         }
 		BCryptPasswordEncoder b = new BCryptPasswordEncoder();

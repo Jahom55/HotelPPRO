@@ -105,8 +105,8 @@
 			</select>-->
 			
 
-			<button id="send"  th:if="*{userId}" type="submit">Edit</button>
-			<button id="send" th:unless="*{userId}" type="submit">Registrovat</button>
+			<button id="send"  th:if="*{surname}" type="submit">Edit</button>
+			<button id="send" th:unless="*{surname}" type="submit">Registrovat</button>
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		</form>    
 
@@ -122,6 +122,21 @@
 	<div th:replace="/layout/footer :: scripts">
 	</div>
 	<script type="text/javascript" th:src="@{/resources/js/dropzone.min.js}"></script>
+		<script th:unless="${user.password}" th:inline="javascript">
+	/*<![CDATA[*/
+	$(document).ready(function(){           
+		$(window).bind('beforeunload', function() {
+		  $.ajax({
+		    async: false,
+		    type: 'DELETE',
+		    url: [[@{/deleteEmptyUser/(id=${user.userId})}]],
+		    headers: { "X-CSRF-HEADER": [[${_csrf.parameterName}]],
+				"X-CSRF-TOKEN": [[${_csrf.token}]]}
+		    });
+		  }); 
+	});
+/*]]>*/
+</script>
 <script th:inline="javascript">
 	/*<![CDATA[*/
 	           
@@ -150,6 +165,7 @@
 	        	    // First change the button to actually tell Dropzone to process the queue.
 	        	    	window.document.getElementById("send").addEventListener("click", function(e) {
 	        	      // Make sure that the form isn't actually being sent.
+	        	      $(window).unbind('beforeunload');
 	        	          e.preventDefault();
 	        	      if (myDropzone.files.length > 0){
 		        	      myDropzone.processQueue();
@@ -166,7 +182,7 @@
 	        	    // of the sending event because uploadMultiple is set to true.
 	        	    this.on("sending", function(file, xhr, formData) {
 	        	    	
-	        	    	formData.append("id", [[${id}]]);
+	        	    	formData.append("id", [[${user.userId}]]);
 	        	      // Gets triggered when the form is actually being sent.
 	        	      // Hide the success button or the complete form.
 	        	    });

@@ -90,7 +90,7 @@
 			<div class="checkbox">
 			  	
   				<input type="checkbox" th:field="*{equipment.internet}" />
-  				<label th:for="${#ids.prev('equipment.internet')}">Interner</label>
+  				<label th:for="${#ids.prev('equipment.internet')}">Internet</label>
   				
   				
   				<label th:for="${#ids.next('equipment.parking')}">
@@ -150,12 +150,25 @@
 		  	entity_encoding : "numeric" 
 	});</script>
 	<script type="text/javascript" th:src="@{/resources/js/dropzone.min.js}"></script>
+	<script th:unless="${hotel.website}" th:inline="javascript">
+	/*<![CDATA[*/
+	$(document).ready(function(){           
+		$(window).bind('beforeunload', function() {
+		  $.ajax({
+		    async: false,
+		    type: 'DELETE',
+		    url: [[@{/deleteEmptyHotel/(id=${hotel.hotelId})}]],
+		    headers: { "X-CSRF-HEADER": [[${_csrf.parameterName}]],
+				"X-CSRF-TOKEN": [[${_csrf.token}]]}
+		    });
+		  }); 
+	});
+/*]]>*/
+</script>
 <script th:inline="javascript">
 	/*<![CDATA[*/
-	           
-	           
-	           
-	           
+	                 
+     
 	$("#stars").rating({
 		showCaption: false	
 	});
@@ -212,15 +225,14 @@
 	        	    // First change the button to actually tell Dropzone to process the queue.
 	        	    	window.document.getElementById("send").addEventListener("click", function(e) {
 	        	      // Make sure that the form isn't actually being sent.
+	        	       $(window).unbind('beforeunload');
 	        	      
-//	        	                  myDropzone.on("sendingmultiple", function(file, xhr, formData) {
-//                formData.append("id", [[${hotel.hotelId}]]);    
-//            });
-	        	      
-	        	      e.preventDefault();
-	        	      //e.stopPropagation();
-	        	      
-	        	      myDropzone.processQueue();
+	        	       e.preventDefault();
+		        	      if (myDropzone.files.length > 0){
+			        	      myDropzone.processQueue();
+		        	      }else{
+		        	    	  document.hotel.submit();
+		        	      }
 	        	      //document.hotel.submit();
 	        	    });
 	        	    

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import cz.uhk.pro.dao.ReviewDao;
 import cz.uhk.pro.model.Hotel;
 import cz.uhk.pro.model.Review;
+import cz.uhk.pro.model.User;
 
 @Repository
 public class ReviewDaoImpl extends GenericDaoImpl<Review, Integer> implements ReviewDao {
@@ -24,6 +25,16 @@ public class ReviewDaoImpl extends GenericDaoImpl<Review, Integer> implements Re
 	                .add(Restrictions.eq("hotel",hotel));
 	        
 	        return criteria.list();
+		
+	}
+	
+	@Override
+	public Review getReviewsByHotelAndUser(Hotel hotel, User user) {		
+			Criteria criteria = currentSession().createCriteria(Review.class)
+	                .add(Restrictions.eq("hotel",hotel))
+	                .add(Restrictions.eq("user", user));
+
+	        return (Review)criteria.uniqueResult();
 		
 	}
 	
