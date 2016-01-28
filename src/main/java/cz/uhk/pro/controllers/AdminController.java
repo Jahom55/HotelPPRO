@@ -119,6 +119,9 @@ public class AdminController {
 	        u.setEnabled(true);
 	        userService.saveOrUpdate(u);
 			return "redirect:/admin/users";
-		}	 
+		}	
+	 
+	 
+	 
 	 
 }

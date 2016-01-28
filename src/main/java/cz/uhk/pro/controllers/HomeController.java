@@ -225,7 +225,7 @@ public class HomeController {
 
 			System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
 			User user = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName().toString());
-			r = reviewService.getReviewsByHotelAndUser(h, user);
+			if(reviewService.getReviewsByHotelAndUser(h, user) != null) r = reviewService.getReviewsByHotelAndUser(h, user);			
 			model.addAttribute("user", user);
 		}
 		

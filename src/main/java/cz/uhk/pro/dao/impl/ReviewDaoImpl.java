@@ -84,5 +84,14 @@ public class ReviewDaoImpl extends GenericDaoImpl<Review, Integer> implements Re
 	        return review;
 		
 	}
+	
+	@Override
+	public List<Review> getReviewsByUser(User user) {		
+		Criteria criteria = currentSession().createCriteria(Review.class)
+                .add(Restrictions.eq("user",user));
+        
+        return criteria.list();
+	}
+	
 
 }

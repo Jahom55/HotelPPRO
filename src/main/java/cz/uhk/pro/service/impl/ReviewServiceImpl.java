@@ -49,4 +49,10 @@ public class ReviewServiceImpl extends GenericServiceImpl<Review, Integer> imple
 		return reviewDao.getReviewsByHotelAndUser(hotel, user);
 		
 	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)	
+	public List<Review> getReviewsByUser(User user){
+		return reviewDao.getReviewsByUser(user);
+	}
 }

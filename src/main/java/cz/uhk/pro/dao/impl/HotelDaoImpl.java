@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import cz.uhk.pro.dao.HotelDao;
 import cz.uhk.pro.model.Hotel;
 import cz.uhk.pro.model.Review;
+import cz.uhk.pro.model.User;
 
 @Repository
 public class HotelDaoImpl extends GenericDaoImpl<Hotel, Integer> implements HotelDao {
@@ -42,6 +43,14 @@ public class HotelDaoImpl extends GenericDaoImpl<Hotel, Integer> implements Hote
 		Long count = (Long) criteria.uniqueResult();
 		return count;
 		
+	}
+	
+	@Override
+	public List<Hotel> getHotelsByUser(User user) {		
+		Criteria criteria = currentSession().createCriteria(Hotel.class)
+                .add(Restrictions.eq("user",user));
+        
+        return criteria.list();
 	}
 	
 }

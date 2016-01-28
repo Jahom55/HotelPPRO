@@ -187,7 +187,7 @@ public class LoginController {
 				if(fileName.length() > 15)
 					fileName = fileName.substring(0,15);
 				fileName = String.valueOf(fileName.hashCode());
-				path = "C:/Users/Adam-LenovoY570/git/HotelPPRO/src/main/webapp/resources/images/" + name + fileName + "." + sType;
+				path = "D:/sts/work/ProHotel/src/main/webapp/resources/images/" + name + fileName + "." + sType;
 				File destination = new File(path);
 				file.transferTo(destination);
 				String path2 ="";
@@ -254,6 +254,20 @@ public class LoginController {
 		userService.saveOrUpdate(u);				
 		return "redirect:/";
 	}
+	
+	//TODO 27.1
+		@RequestMapping(value="/detailUser")
+		public String detailHotel(Model model){	
+			User u = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());		
+			List<Hotel> hotels = hotelService.getHotelsByUser(u);
+			List<Review> reviews = reviewService.getReviewsByUser(u);		
+			model.addAttribute("hotels", hotels);
+			model.addAttribute("reviews", reviews);
+			model.addAttribute("user", u);
+	        model.addAttribute("address",u.getAddress());
+	        model.addAttribute("district", u.getAddress().getDistrict());	        
+			return "userDetail";
+		}
 	
 	
 

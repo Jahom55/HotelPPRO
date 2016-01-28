@@ -55,7 +55,7 @@
                 </ul>
                 <ul sec:authorize="isAuthenticated()" class="nav navbar-nav navbar-right">
                     
-                    		<form th:action="@{/logout}" method="post" id="logoutForm">
+              <form th:action="@{/logout}" method="post" id="logoutForm">
 			<input type="hidden" name="${_csrf.parameterName}"
 				value="${_csrf.token}" />
 		</form>
@@ -65,18 +65,19 @@
 			}
 		</script>
 		<li>
-                        <a sec:authentication="name" href="#">Ahoj</a>
+                        <a sec:authentication="name" href="#" th:href="@{/detailUser}">Ahoj</a>
                         </li> <li>
                         <a href="javascript:formSubmit()"> Logout</a>
                     </li>
                     </ul>
-                    <ul sec:authorize="isAnonymous()" class="nav navbar-nav navbar-right">
-                    <li>
+                    <ul sec:authorize="isAnonymous()" class="nav navbar-nav navbar-right">                     
+                    <li>                   
                         <a th:href="@{/registration}">Registrovat</a>
                     </li><li>
                         <a th:href="@{/login}">Přihlásit</a>
                     </li>
                 </ul>
+                
             </div>
             <!-- /.navbar-collapse -->
             

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cz.uhk.pro.dao.GenericDao;
 import cz.uhk.pro.dao.HotelDao;
 import cz.uhk.pro.model.Hotel;
+import cz.uhk.pro.model.User;
 import cz.uhk.pro.service.HotelService;
 
 @Service
@@ -49,5 +50,13 @@ public class HotelServiceImpl extends GenericServiceImpl<Hotel, Integer> impleme
 		return hotelDao.countHotels();
 		
 	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public List<Hotel> getHotelsByUser(User user){
+		return hotelDao.getHotelsByUser(user);
+		
+	}
+	
 
 }
