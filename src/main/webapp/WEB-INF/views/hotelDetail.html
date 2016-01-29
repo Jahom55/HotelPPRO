@@ -244,10 +244,10 @@ $("#hotel.stars").rating({
 	    xmlhttp.setRequestHeader("X-CSRF-TOKEN", [[${_csrf.token}]]);
 
 	    xmlhttp.onreadystatechange = function() {
+	    	debugger
 	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 	            var myArr = JSON.parse(xmlhttp.responseText);
 	           	if(myArr.length > 0){
-	           		debugger;
 	           		com(myArr);
 	           	}
 	            
@@ -258,17 +258,14 @@ $("#hotel.stars").rating({
 		
 		
 	}
-	$( document ).ready(function (){
-
+	function appendForum(){
 	    $("#forum").append( "<textarea id='com' class='form-control'></textarea><button id='but' type='button'>Click Me!</button>" );
-		getCom();
-		
+
 		tinymce.init({ 
 			selector: 'textarea',
 		  	language: 'cs_CZ',
 		  	entity_encoding : "numeric" 
 		});
-		
 		$( "#but" ).on( "click", function() {
 			
 			$.ajax({
@@ -289,8 +286,16 @@ $("#hotel.stars").rating({
 			    }
 			});
 	});
+	}
+	
+	$( document ).ready(function (){
+		getCom();
+		
 	
 	});
+	
+	
+	
 	function com(itemsList){
 		$("#forum").html("");
 		var prewNode = 0;
@@ -302,13 +307,13 @@ $("#hotel.stars").rating({
 						div += "<ul> "
 					}
 					div += "<li class='media'> <div class='media-left'> <a href='#'> <img class='media-object' src='...'></a>";
-				    div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].user.name + " napsal</h4>"+ itemsList[i].body +"</div>";
+				    div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].depth + " napsal</h4>"+ itemsList[i].body +"</div>";
 				}
 				
 				if(prewNode == itemsList[i].depth){
 					div += "</li> ";
 					div += "<li class='media'> <div class='media-left'> <a href='#'> <img class='media-object' src='...'></a>";
-				    div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].user.name + " napsal</h4>"+ itemsList[i].body +"</div>";
+				    div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].depth + " napsal</h4>"+ itemsList[i].body +"</div>";
 				}
 				
 				if(prewNode > itemsList[i].depth){
@@ -318,7 +323,7 @@ $("#hotel.stars").rating({
 					
 					div += "</li> ";
 					div += "<li class='media'> <div class='media-left'> <a href='#'> <img class='media-object' src='...'></a>";
-				    div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].user.name + " napsal</h4>"+ itemsList[i].body +"</div>";
+				    div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].depth + " napsal</h4>"+ itemsList[i].body +"</div>";
 				}
 				prewNode = itemsList[i].depth;
 			}
@@ -326,7 +331,7 @@ $("#hotel.stars").rating({
 		}
 		div += "</li> </ul> ";	
 		$("#forum").html(div);
-
+		appendForum();
 	}
 	
 	/*]]>*/

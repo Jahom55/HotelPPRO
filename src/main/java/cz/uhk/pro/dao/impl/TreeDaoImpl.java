@@ -29,15 +29,11 @@ public class TreeDaoImpl extends GenericDaoImpl<Tree, Integer> implements TreeDa
 		Criteria criteria = currentSession().createCriteria(Tree.class);
 		criteria.add(Restrictions.eq("hotel",hotel));
 		List<Tree> tree = criteria.list();
-		System.out.println("fads");
-		System.out.println(tree.size());
 		
 		
 		for (Tree t : tree) {
 			if(t.isRoot()){
 				ffinalTree.add(t);
-				System.out.println("fads2");
-				System.out.println(ffinalTree.size());
 				Tree tre = t;
 				tree.remove(t);
 				serad(tree, tre);
@@ -56,18 +52,25 @@ public class TreeDaoImpl extends GenericDaoImpl<Tree, Integer> implements TreeDa
 	
 	
 	private void serad(List<Tree> tr, Tree tree){
-		
-		for (Tree t : tr) {
-			if(t.getAncestor() == tree.getTreeId()){
+		System.out.println(tr.size());
+		for (int i = 0; i < tr.size(); i++) {
+			System.out.println(i);
+			System.out.println(tr.get(0).getTreeId());
+			if(tr.get(i).getAncestor() == tree.getTreeId()){
+				System.out.println("tu");
+				Tree t = tr.get(i);
 				ffinalTree.add(t);
-				System.out.println("fads3");
 				System.out.println(ffinalTree.size());
 				Tree tre = t;
+				//List<Tree> tr2 = tr;
+				//tr2.remove(t);
+				//serad(tr2, tre);
+				
 				tr.remove(t);
 				if(tr.size() > 0){
 					serad(tr, tre);
 				}{
-					return;
+					break;
 				}
 				
 			}

@@ -229,7 +229,6 @@ public class HomeController {
 			model.addAttribute("user", user);
 		}
 		
-		//System.out.println(user.toString());
 		model.addAttribute("review", r);
 		model.addAttribute("hotel", h);
         model.addAttribute("address",h.getAddress());

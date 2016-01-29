@@ -48,7 +48,7 @@ public class Tree {
 	@Column(columnDefinition="LONGTEXT")
 	String body;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.REFRESH)
 	@JoinColumn(name="userId")
 	@JsonBackReference
 	User user;

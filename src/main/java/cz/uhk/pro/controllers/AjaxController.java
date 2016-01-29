@@ -176,9 +176,7 @@ public class AjaxController {
 	public ResponseEntity<List<Tree>> getCom(@RequestParam int id){
 		Hotel hotel = hotelService.get(id);
 		List<Tree> tree = treeService.getComForHotel(hotel);
-		for (Tree tree2 : tree) {
-			System.out.println(tree2.toString());
-		}
+		System.out.println("velikost " + tree.size());
 		if (tree == null){
 			return new ResponseEntity<List<Tree>>(HttpStatus.NOT_FOUND);
 		}else{
@@ -220,7 +218,7 @@ public class AjaxController {
 			tr.setHotel(hotel);
 			tr.setAncestor(0);
 			int id = treeService.add(tr);
-			tree = treeService.get(id);		
+			tree = treeService.get(id);	
 		}
 		Tree fTree = new Tree();
 		if(ancestor == 0){
@@ -234,6 +232,8 @@ public class AjaxController {
 		fTree.setRoot(false);
 		User user = userService.get(idUser);
 		fTree.setUser(user);
+		fTree.setDescendant(0);
+
 		try {
 			treeService.add(fTree);
 		} catch (Exception e) {
