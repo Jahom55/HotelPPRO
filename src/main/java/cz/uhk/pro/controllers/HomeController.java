@@ -46,6 +46,7 @@ import cz.uhk.pro.model.HotelUpload;
 import cz.uhk.pro.model.Image;
 import cz.uhk.pro.model.Person;
 import cz.uhk.pro.model.Review;
+import cz.uhk.pro.model.Tree;
 import cz.uhk.pro.model.Type;
 import cz.uhk.pro.model.User;
 import cz.uhk.pro.service.AddressService;
@@ -223,12 +224,12 @@ public class HomeController {
 		Review r = new Review();
 		if(request.isUserInRole("ROLE_USER")){
 
-			System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
 			User user = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName().toString());
 			if(reviewService.getReviewsByHotelAndUser(h, user) != null) r = reviewService.getReviewsByHotelAndUser(h, user);			
 			model.addAttribute("user", user);
 		}
 		
+		//System.out.println(user.toString());
 		model.addAttribute("review", r);
 		model.addAttribute("hotel", h);
         model.addAttribute("address",h.getAddress());

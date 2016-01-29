@@ -21,10 +21,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 import cz.uhk.pro.model.Hotel;
 import cz.uhk.pro.model.Image;
 import cz.uhk.pro.model.Review;
+import cz.uhk.pro.model.Tree;
 import cz.uhk.pro.model.User;
 import cz.uhk.pro.service.HotelService;
 import cz.uhk.pro.service.ImageService;
 import cz.uhk.pro.service.ReviewService;
+import cz.uhk.pro.service.TreeService;
 import cz.uhk.pro.service.UserService;
 
 @RestController
@@ -42,6 +44,9 @@ public class AjaxController {
 	
 	@Autowired
 	ReviewService reviewService;
+	
+	@Autowired
+	TreeService treeService;
 	
 	@RequestMapping(value="/getImages", method=RequestMethod.GET)
 	public ResponseEntity<List<Image>> getAllImages(){
@@ -79,15 +84,12 @@ public class AjaxController {
 	}
 	
 	@RequestMapping(value="/updateReview", method=RequestMethod.POST)
-	public ResponseEntity<Byte> updateReview(@RequestParam(value = "name", required = true) String name,
+	public ResponseEntity<Review> updateReview(@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "idUser", required = true) int idUser,
 			@RequestParam(value = "idHotel", required = true) int idHotel,
 			@RequestParam(value = "value", required = true) int value,
 			UriComponentsBuilder ucBuilder){
 		
-		System.out.println(name.toString());
-		System.out.println(idUser);
-		System.out.println(value);
 		Hotel hotel;
 		User user;
 		Review review;
@@ -95,7 +97,7 @@ public class AjaxController {
 			hotel = hotelService.get(idHotel);
 			user = userService.get(idUser);
 		}catch(Exception e){
-			return new ResponseEntity<Byte>(HttpStatus.EXPECTATION_FAILED);
+			return new ResponseEntity<Review>(HttpStatus.EXPECTATION_FAILED);
 		}
 		
 		review = reviewService.getReviewsByHotelAndUser(hotel, user);
@@ -110,32 +112,23 @@ public class AjaxController {
 		//enviroment  10
 		//food   4
 		//price  5
-		byte res = 0 ;
+		
+		
 		switch(name.length()){
 		case 13:
 			review.setReviewAccommodation((byte)value);
-			List<Double> d = reviewService.getAverageReview(hotel);
-			res = d.get(0).byteValue();
 			break;
 		case 8:
 			review.setReviewComplete((byte)value);
-			List<Double> d1 = reviewService.getAverageReview(hotel);
-			res = d1.get(1).byteValue();
 			break;
 		case 10:
 			review.setReviewEnviroment((byte)value);
-			List<Double> d2 = reviewService.getAverageReview(hotel);
-			res = d2.get(2).byteValue();
 			break;
 		case 4:
 			review.setReviewFood((byte)value);
-			List<Double> d3 = reviewService.getAverageReview(hotel);
-			res = d3.get(3).byteValue();
 			break;
 		case 5:
 			review.setReviewPrice((byte)value);
-			List<Double> d4 = reviewService.getAverageReview(hotel);
-			res = d4.get(4).byteValue();
 			break;
 
 		}
@@ -144,13 +137,30 @@ public class AjaxController {
 			reviewService.saveOrUpdate(review);
 		}
 		catch(Exception e){
-			return new ResponseEntity<Byte>(HttpStatus.UNPROCESSABLE_ENTITY);
+			return new ResponseEntity<Review>(HttpStatus.UNPROCESSABLE_ENTITY);
 			
 		}
-			return new ResponseEntity<Byte>(HttpStatus.NO_CONTENT);
-		
+			return new ResponseEntity<Review>(HttpStatus.NO_CONTENT);
+
 	}
-	
+	@RequestMapping(value="/updateReviewComplete", params = "id", method=RequestMethod.GET)
+	public ResponseEntity<Review> updateReviewComplete(@RequestParam int id){
+		Hotel hotel = hotelService.get(id);
+		List<Double> ld = reviewService.getAverageReview(hotel);
+		Review review = new Review();
+		try{
+		review.setReviewAccommodation(ld.get(0).byteValue());
+		review.setReviewComplete(ld.get(1).byteValue());
+		review.setReviewEnviroment(ld.get(2).byteValue());
+		review.setReviewFood(ld.get(3).byteValue());
+		review.setReviewPrice(ld.get(4).byteValue());
+		
+			return new ResponseEntity<Review>(review, HttpStatus.OK);
+		}
+		catch(Exception e){
+			return new ResponseEntity<Review>(HttpStatus.NOT_FOUND);
+		}
+	}
 	@RequestMapping(value="/getImages", params = "id", method=RequestMethod.GET)
 	public ResponseEntity<List<Image>> getImage(@RequestParam int id){
 		Hotel hotel = hotelService.get(id);
@@ -162,12 +172,76 @@ public class AjaxController {
 		}
 	}
 	
-    @RequestMapping("/greeting")
-    public List<Image> greeting() {
-    	Hibernate.initialize(imageService.getAll());
-    	List<Image> images = imageService.getAll();
-        return images;
-    }
+	@RequestMapping(value="/getCom", params = "id", method=RequestMethod.GET)
+	public ResponseEntity<List<Tree>> getCom(@RequestParam int id){
+		Hotel hotel = hotelService.get(id);
+		List<Tree> tree = treeService.getComForHotel(hotel);
+		for (Tree tree2 : tree) {
+			System.out.println(tree2.toString());
+		}
+		if (tree == null){
+			return new ResponseEntity<List<Tree>>(HttpStatus.NOT_FOUND);
+		}else{
+			return new ResponseEntity<List<Tree>>(tree, HttpStatus.OK);
+		}
+	}
+	
+	
+	@RequestMapping(value="/createComment", method=RequestMethod.POST)
+	public ResponseEntity<Tree> createComment(@RequestParam(value = "body", required = true) String body,
+			@RequestParam(value = "idUser", required = true) int idUser,
+			@RequestParam(value = "idHotel", required = true) int idHotel,
+			@RequestParam(value = "ancestor", required = true) int ancestor,
+			@RequestParam(value = "depth", required = true) int depth,
+			UriComponentsBuilder ucBuilder){
+		Hotel hotel = hotelService.get(idHotel);
+		Tree tree = null;
+		try{
+			List<Tree> t = treeService.getComForHotel(hotel);
+			if (t.isEmpty() || t == null){
+				Tree tr = new Tree();
+				tr.setRoot(true);
+				tr.setHotel(hotel);
+				tr.setAncestor(0);
+				int id = treeService.add(tr);
+				tree = treeService.get(id);
+			}else{
+				for (Tree tre : t) {
+					if(tre.isRoot()){
+						tree = tre;
+						break;
+					}
+				}
+			}
+		}
+		catch(Exception e){
+			Tree tr = new Tree();
+			tr.setRoot(true);
+			tr.setHotel(hotel);
+			tr.setAncestor(0);
+			int id = treeService.add(tr);
+			tree = treeService.get(id);		
+		}
+		Tree fTree = new Tree();
+		if(ancestor == 0){
+			fTree.setAncestor(tree.getTreeId());
+		}else{
+			fTree.setAncestor(ancestor);
+		}
+		fTree.setBody(body);
+		fTree.setDepth(depth);
+		fTree.setHotel(hotel);
+		fTree.setRoot(false);
+		User user = userService.get(idUser);
+		fTree.setUser(user);
+		try {
+			treeService.add(fTree);
+		} catch (Exception e) {
+			return new ResponseEntity<Tree>(HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+			return new ResponseEntity<Tree>(HttpStatus.NO_CONTENT);
+
+	}
 	
 	
 }

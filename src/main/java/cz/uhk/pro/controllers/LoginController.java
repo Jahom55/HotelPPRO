@@ -173,7 +173,7 @@ public class LoginController {
 			int id = Integer.valueOf(request.getParameter("id"));
 			Iterator<String> itr = request.getFileNames();
 			
-            
+            System.out.println(id);
             while (itr.hasNext()) {
             	String path = "";
                 String uploadedFile = itr.next();
@@ -181,30 +181,33 @@ public class LoginController {
                 
                 String pType = file.getContentType().split("/")[0];
 				String sType = file.getContentType().split("/")[1];
+				System.out.println(sType);
 				UUID uuid = new UUID(255, 200);
 				String name = String.valueOf(uuid.randomUUID());
+				System.out.println(name);
 				String fileName = file.getOriginalFilename();
 				if(fileName.length() > 15)
 					fileName = fileName.substring(0,15);
 				fileName = String.valueOf(fileName.hashCode());
-				path = "D:/sts/work/ProHotel/src/main/webapp/resources/images/" + name + fileName + "." + sType;
+				System.out.println(fileName);
+				path = "C:/Users/Adam-LenovoY570/git/HotelPPRO/src/main/webapp/resources/images/" + name + fileName + "." + sType;
 				File destination = new File(path);
 				file.transferTo(destination);
 				String path2 ="";
 				path2 = "../../pro/resources/images/" + name + fileName + "." + sType;
+				System.out.println(path2);
 				User u = userService.get(id);
 				u.setImage(path2);
+				System.out.println(u.toString());
                 File check = new File(path);
-                while (!check.exists()){
-                	System.out.println("jeste ne");
-                }
                 userService.saveOrUpdate(u);
+                System.out.println(u.toString());
             }
         }
         catch (Exception e) {
             return new ResponseEntity("{}", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
+        System.out.println("ok");
         return new ResponseEntity("{}", HttpStatus.OK);
     }
 	
@@ -238,20 +241,19 @@ public class LoginController {
 			model.addAttribute("districts", districtList);
             return "registration";
         }
+		User user = userService.get(u.getUserId());
+		u.setImage(user.getImage());
 		BCryptPasswordEncoder b = new BCryptPasswordEncoder();
 		u.setPassword(b.encode(u.getPassword()));
-		
 		Address a = new Address();
 		a = u.getAddress();
 		District d = districtService.get(a.getDistrict().getDistrictId());
 		a.setDistrict(d);
 		addressService.saveOrUpdate(a);
 		
-		
 		// PRIRAZENI ROLE
 		u.setRole(roleService.get(2));
-		
-		userService.saveOrUpdate(u);				
+		userService.saveOrUpdate(u);		
 		return "redirect:/";
 	}
 	

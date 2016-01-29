@@ -149,12 +149,71 @@
                     <div th:with="menu = ${option}" th:include="::sub" th:remove="tag" />
                 </li>
             </ul>
-        </div> -->
+        </div> 
 
 
-	
-	
-	
+	<div th:with="prewNode = 0">
+		<ul th:each="f : ${forum}">
+			<ul th:if="${f.depth != 0 and prewNode &lt; f.depth and prewNode !=0}">
+			
+			</ul>
+		
+		</ul>
+	</div>  
+	<section layout:fragment="menu">
+        <ul>
+        	<th:block th:each="menuItem : ${menuItemsList}">
+        	<th:block th:if="${menuItem.menuId == id}">
+        	<th:block th:if="${menuItem.menuId == id}">
+            	<li th:with="level=${menuItem.depth}" th:text="${menuItem.name}">
+            	 
+                	<section th:unless="${menuItem.depth == level and menuItem.depth &lt; level}" layout:include=":: menu" th:with="menuItemsList=${menuItem.children}"></section>
+            	</li>
+           <th:block th:if="${menuItem.menuId == id}">	
+          </th:block>
+          </th:block>
+        </ul> 
+    </section>
+	 
+	         <div>
+            <th:block th:with="prewNode = 0">
+            
+            <ul id="menu">
+            <th:block th:each="menuItem : ${menuItemsList}">
+            <th:block th:if="${menuItem.depth != 0}">
+            <th:block th:if="${prewNode &lt; menuItem.depth}">
+            <th:block th:if="{$prewNode != 0}">
+                                <ul>
+              </th:block>
+                                <li th:text="${menuItem.name}">
+                   </th:block>        
+                                <th:block th:if="${prewNode &eq; menuItem.depth}">
+                                </li>
+                                <li th:text="${menuItem.name}">
+                                </th:block>       
+                                <th:block th:if="${prewNode &gt; menuItem.depth}">
+                                <th:block th:with="kolik = ${prewNode - menuItem.depth}">
+                                <th:block th:each="i : ${#numbers.sequence( 0, ${kolik})}">
+                                    </li>
+                                </ul>
+                            </th:block>
+                            </th:block>
+                            </li th:with="prewNode = ${menuItem.depth}">                          
+                            <li th:text="${menuItem.name}"> 
+                            </th:block> 
+                        </th:block>
+                    </th:block>
+                </li>
+            </ul>
+            </th:block>
+        </div>   
+        
+        
+        
+        
+        
+	 -->
+	 <div id="forum"></div>
 		<hr />
 
    
@@ -168,20 +227,121 @@
 	<div th:replace="/layout/footer :: scripts">
 	</div>
 	<script th:inline="javascript">
-	/*<![CDATA[*/
-	$("#hotel.stars").rating({
+$("#hotel.stars").rating({
 		showCaption: false	
 	});
+</script>
+<script type="text/javascript" th:src="@{/resources/js/tinymce/tinymce.min.js}"></script>
+	<script sec:authorize="hasRole('ROLE_USER')" th:inline="javascript">
+	/*<![CDATA[*/
 	
+	function getCom(){
+		
+	    var xmlhttp = new XMLHttpRequest();
+	    var urlko = [[@{/getCom/(id=${hotel.hotelId})}]];
+	    xmlhttp.open("GET", urlko, true);
+	    xmlhttp.setRequestHeader("X-CSRF-HEADER", [[${_csrf.parameterName}]]);
+	    xmlhttp.setRequestHeader("X-CSRF-TOKEN", [[${_csrf.token}]]);
+
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            var myArr = JSON.parse(xmlhttp.responseText);
+	           	if(myArr.length > 0){
+	           		debugger;
+	           		com(myArr);
+	           	}
+	            
+	        }
+	    };
+	    
+	    xmlhttp.send();
+		
+		
+	}
+	$( document ).ready(function (){
+
+	    $("#forum").append( "<textarea id='com' class='form-control'></textarea><button id='but' type='button'>Click Me!</button>" );
+		getCom();
+		
+		tinymce.init({ 
+			selector: 'textarea',
+		  	language: 'cs_CZ',
+		  	entity_encoding : "numeric" 
+		});
+		
+		$( "#but" ).on( "click", function() {
+			
+			$.ajax({
+			    async: false,
+			    type: 'POST',
+			    data: {
+			    	idUser: [[${user.userId}]],
+					body: tinyMCE.activeEditor.getContent({format : 'raw'}),
+			    	ancestor: 0,
+			    	depth: 1,
+			    	idHotel: [[${hotel.hotelId}]]
+			    },
+			    url: [[@{/createComment}]],
+			    headers: { "X-CSRF-HEADER": [[${_csrf.parameterName}]],
+					"X-CSRF-TOKEN": [[${_csrf.token}]]},
+				success: function (xhr) {
+				    getCom();
+			    }
+			});
+	});
 	
+	});
+	function com(itemsList){
+		$("#forum").html("");
+		var prewNode = 0;
+		var div = "<ul id='menu' class='media-list' > ";
+		for(var i = 0; i < itemsList.length; i++) {
+			if(itemsList[i].depth != 0){
+				if(prewNode < itemsList[i].depth){
+					if(prewNode != 0){
+						div += "<ul> "
+					}
+					div += "<li class='media'> <div class='media-left'> <a href='#'> <img class='media-object' src='...'></a>";
+				    div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].user.name + " napsal</h4>"+ itemsList[i].body +"</div>";
+				}
+				
+				if(prewNode == itemsList[i].depth){
+					div += "</li> ";
+					div += "<li class='media'> <div class='media-left'> <a href='#'> <img class='media-object' src='...'></a>";
+				    div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].user.name + " napsal</h4>"+ itemsList[i].body +"</div>";
+				}
+				
+				if(prewNode > itemsList[i].depth){
+					for(var j = 0; j < (prewNode - itemsList[i].depth); j++){
+						div += "</li> </ul> ";	
+					}
+					
+					div += "</li> ";
+					div += "<li class='media'> <div class='media-left'> <a href='#'> <img class='media-object' src='...'></a>";
+				    div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].user.name + " napsal</h4>"+ itemsList[i].body +"</div>";
+				}
+				prewNode = itemsList[i].depth;
+			}
+			
+		}
+		div += "</li> </ul> ";	
+		$("#forum").html(div);
+
+	}
+	
+	/*]]>*/
+	</script>
+	<script sec:authorize="hasRole('ROLE_USER')" th:inline="javascript">
+	/*<![CDATA[*/
 	var field = '';
 	var val = 0;
 	function post(){
+		
 		$.ajax({
 		    async: false,
 		    type: 'POST',
 		    data: {
-		    	idUser: 6,
+		    	idUser: [[${user.userId}]],
 				name: field,
 		    	value: val,
 		    	idHotel: [[${hotel.hotelId}]]
@@ -189,30 +349,42 @@
 		    url: [[@{/updateReview}]],
 		    headers: { "X-CSRF-HEADER": [[${_csrf.parameterName}]],
 				"X-CSRF-TOKEN": [[${_csrf.token}]]},
-			success: function (data, textStatus, xhr) {
-				var id = '';
-				switch(field){
-				case "accommodation":
-					id = "#ac";
-					break;
-				case "complete":
-					id = "#co";
-					break;
-				case "food":
-					id = "#fo";
-					break;
-				case "price":
-					id = "#pr";
-					break;
-				case "enviroment":
-					id = "#en";
-					break;
-				}
-				$(id).rating('update', data);
+			success: function (xhr) {
+			    var xmlhttp = new XMLHttpRequest();
+			    var urlko = [[@{/updateReviewComplete/(id=${hotel.hotelId})}]];
+			    xmlhttp.open("GET", urlko, true);
+			    xmlhttp.setRequestHeader("X-CSRF-HEADER", [[${_csrf.parameterName}]]);
+			    xmlhttp.setRequestHeader("X-CSRF-TOKEN", [[${_csrf.token}]]);
+
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			            var myArr = JSON.parse(xmlhttp.responseText);
+			            myFunction(myArr);
+			            
+			        }
+			    };
+			    
+			    xmlhttp.send();
 				
 				}
 		    });
+		
+		
 	}
+		
+	
+		function myFunction(arr) {
+			$('#reviewPrice').rating('update', arr.reviewPrice);
+			$('#reviewFood').rating('update', arr.reviewFood);
+			$('#reviewEnviroment').rating('update', arr.reviewEnviroment);
+			$('#reviewAccommodation').rating('update', arr.reviewAccommodation);
+			$('#reviewComplete').rating('update', arr.reviewComplete);
+
+	    }
+		
+		
+		
+		
 	$("#ac").on('rating.change', function(event, value, caption) {
 		field = 'accommodation';
 		val = value;
@@ -238,9 +410,14 @@
 		val = value;
 		post();
 		  });
+	
+	
+	
 	/*]]>*/
 	</script>
-
+	
+		<script type="text/javascript">
+		</script>
 </body>
 
 </html>
