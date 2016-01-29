@@ -249,6 +249,8 @@ $("#hotel.stars").rating({
 	            var myArr = JSON.parse(xmlhttp.responseText);
 	           	if(myArr.length > 0){
 	           		com(myArr);
+	           	}else{
+	           		appendForum();
 	           	}
 	            
 	        }
