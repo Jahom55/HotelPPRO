@@ -90,19 +90,12 @@
 
 			<div id="dropanbula" class="dropzone form-group">
 			
-			</div>
-<!-- 
-			<div class="form-group">
-				<label for="image">Fotka:</label> <input type="file"
-					th:field="${user.image}" id="image"/>
-			</div>
-			
-			
-			Roli budeme prirazovat automaticky  
+			</div>	
+			 
 			<select class="form-control" th:field="${user.role.roleId}">
 				<option th:each="r : ${roles}" th:value="${r.roleId}"  th:text="${r.description}"
 					 >Types</option>
-			</select>-->
+			</select>
 			
 
 			<button id="send"  th:if="*{surname}" type="submit">Edit</button>

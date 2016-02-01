@@ -154,7 +154,8 @@ public class AjaxController {
 		review.setReviewEnviroment(ld.get(2).byteValue());
 		review.setReviewFood(ld.get(3).byteValue());
 		review.setReviewPrice(ld.get(4).byteValue());
-		
+		hotel.setRating(hotelService.getRate(hotel));
+		hotelService.saveOrUpdate(hotel);
 			return new ResponseEntity<Review>(review, HttpStatus.OK);
 		}
 		catch(Exception e){
@@ -184,6 +185,13 @@ public class AjaxController {
 		}
 	}
 	
+	@RequestMapping(value="/setCountPlus", params = "id", method=RequestMethod.GET)
+	public void setCounter(@RequestParam int id){
+		Hotel hotel = hotelService.get(id);
+		hotel.setCounter(hotel.getCounter() + 1);
+		hotelService.saveOrUpdate(hotel);
+	}
+	
 	
 	@RequestMapping(value="/createComment", method=RequestMethod.POST)
 	public ResponseEntity<Tree> createComment(@RequestParam(value = "body", required = true) String body,
@@ -191,6 +199,7 @@ public class AjaxController {
 			@RequestParam(value = "idHotel", required = true) int idHotel,
 			@RequestParam(value = "ancestor", required = true) int ancestor,
 			@RequestParam(value = "depth", required = true) int depth,
+			@RequestParam(value = "header", required = true) String header,
 			UriComponentsBuilder ucBuilder){
 		Hotel hotel = hotelService.get(idHotel);
 		Tree tree = null;
@@ -201,6 +210,7 @@ public class AjaxController {
 				tr.setRoot(true);
 				tr.setHotel(hotel);
 				tr.setAncestor(0);
+				tr.setHeader(header);
 				int id = treeService.add(tr);
 				tree = treeService.get(id);
 			}else{
@@ -224,11 +234,14 @@ public class AjaxController {
 		if(ancestor == 0){
 			fTree.setAncestor(tree.getTreeId());
 		}else{
+			Tree t = treeService.get(ancestor);
 			fTree.setAncestor(ancestor);
+			fTree.setDepth(t.getDepth()+1);
 		}
 		fTree.setBody(body);
-		fTree.setDepth(depth);
 		fTree.setHotel(hotel);
+		fTree.setDepth(depth);
+		fTree.setHeader(header);
 		fTree.setRoot(false);
 		User user = userService.get(idUser);
 		fTree.setUser(user);

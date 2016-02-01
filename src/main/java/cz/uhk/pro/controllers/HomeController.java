@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -57,6 +58,7 @@ import cz.uhk.pro.service.ImageService;
 import cz.uhk.pro.service.PersonService;
 import cz.uhk.pro.service.ReviewService;
 import cz.uhk.pro.service.RoleService;
+import cz.uhk.pro.service.TreeService;
 import cz.uhk.pro.service.TypeService;
 import cz.uhk.pro.service.UserService;
 
@@ -67,12 +69,12 @@ import cz.uhk.pro.service.UserService;
 public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	
-	 //@Autowired(required = true)
-	 //private PersonService personService;
 
 	 @Autowired(required = true)
 	 private AddressService addressService;
+	 
+	 @Autowired(required = true)
+	 private TreeService treeService;
 
 	 @Autowired(required = true)
 	 private RoleService roleService;
@@ -107,18 +109,28 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {	
-		List<Hotel> hotelList = hotelService.getAll();		
+		List<Hotel> hotelList = hotelService.getBest3Hotels();		
 		model.addAttribute("hotels", hotelList);
-		
-		//Hotel hotel = hotelService.get(1);
-		
-		//double d = hotelService.getRate(hotel);
 		return "home";
 	}
 	
-	@RequestMapping(value = "/hotels", method = RequestMethod.GET, params = {"page", "size"})
-	public String allHotels(Locale locale, Model model, @RequestParam int page, @RequestParam int size) {	
-		List<Hotel> hotelList = hotelService.getPage(page,size);		
+	
+	@RequestMapping(value = "/hotels", method = RequestMethod.POST)
+	public String filterHotel(@ModelAttribute("hotel") Hotel hotel,
+			Model model) { 
+			return "redirect:/hotels/?page=1&size=20&districtId="+hotel.getAddress().getDistrict().getDistrictId()+"&stars="+ hotel.getStars();
+	}
+	
+	@RequestMapping(value = "/detailHotelSearch", method = RequestMethod.POST)
+	public String searchHotel(@ModelAttribute("hotel") Hotel hotel,
+			Model model) { 
+			Hotel h = hotelService.getHotelByName(hotel.getName());
+			return "redirect:/detail?id="+h.getHotelId();
+	}
+	
+	@RequestMapping(value = "/hotels", params = {"page", "size","districtId", "stars"})
+	public String allHotels(Locale locale, Model model, @RequestParam int page, @RequestParam int size,@RequestParam int districtId,@RequestParam int stars) {			
+		List<Hotel> hotelList = hotelService.getPage(page,size, districtService.get(districtId), stars);		
 		model.addAttribute("hotels", hotelList);
 		double number = hotelService.countHotels();
 		int pages = (int) Math.ceil(number / (double) size);
@@ -147,16 +159,43 @@ public class HomeController {
 			paginator.add(String.valueOf(i));
 		}
 		model.addAttribute("paginator", paginator);
-		
+		List<District> districtList = districtService.getAll();
+		model.addAttribute("districts", districtList);
+		Hotel h = new Hotel();
+		h.setStars((byte)stars);
+		Address a = new Address();
+		a.setDistrict(districtService.get(districtId));
+		h.setAddress(a);
+		if(districtService.get(districtId) != null)			
+		model.addAttribute("district", h.getAddress().getDistrict());
+		model.addAttribute("hotel", h);	
 		return "hotels";
 	}
+	
+	@RequestMapping(value = "/getHotels", method = RequestMethod.GET)
+	public @ResponseBody
+	List<Hotel> getHotels(@RequestParam String tagName) {
+		return simulateSearchResult(tagName);
+	}
+	
+	private List<Hotel> simulateSearchResult(String tagName) {
+		List<Hotel> data = hotelService.getAll();
+		List<Hotel> result = new ArrayList<Hotel>();
+		for (Hotel h : data) {
+			if (h.getName().contains(tagName)) {
+				result.add(h);
+			if(result.size() >= 3) break;
+			}
+		}
+		return result;
+	}
+	
 	
 	
 	
 	@ModelAttribute("allHotels")
 	public List<Hotel> populateHotels() {
-		return this.hotelService.getPage(2, 1);
-	    //return this.hotelService.getAll();
+		return this.hotelService.getPage(2, 1, null,0);
 	}
 	/*
 	@RequestMapping(value="/person")
@@ -181,16 +220,19 @@ public class HomeController {
 	}
 	*/
 	@RequestMapping(value="/hotel")
-	public String addHotel(Model model){		
+	public String addHotel(Model model){			
 		List<Type> typesList = typeService.getAll();
 		model.addAttribute("types", typesList);
 		List<District> districtList = districtService.getAll();
 		model.addAttribute("districts", districtList);
 		Hotel hotel = new Hotel();
-		hotel.setName("");
+		hotel.setName("dummy");
+		hotel.setWebsite("dummy");
 		hotel.setStars((byte) 3);
 		int id = (int) hotelService.add(hotel);
-		model.addAttribute("hotel", hotel);
+		Hotel h = new Hotel();
+		h.setHotelId(id);
+		model.addAttribute("hotel", h);
 		return "hotelAddEdit";
 	}
 	
@@ -223,7 +265,6 @@ public class HomeController {
 		model.addAttribute("reviews", rko);
 		Review r = new Review();
 		if(request.isUserInRole("ROLE_USER")){
-
 			User user = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName().toString());
 			if(reviewService.getReviewsByHotelAndUser(h, user) != null) r = reviewService.getReviewsByHotelAndUser(h, user);			
 			model.addAttribute("user", user);
@@ -237,6 +278,8 @@ public class HomeController {
         
 		return "hotelDetail";
 	}
+
+	
 	
 
 	@RequestMapping(value = "/updateHotelsImages", method = RequestMethod.POST)
@@ -291,7 +334,7 @@ public class HomeController {
 	}
 	@RequestMapping(value = "/updateHotel", method = RequestMethod.POST)
 	public String updateHotel(@ModelAttribute("hotel") Hotel hotel,
-			Model model) { 
+			Model model) { 		
 			hotel.setDescription(HtmlUtils.htmlUnescape((hotel.getDescription())));
 			Address a = new Address();
 			a = hotel.getAddress();

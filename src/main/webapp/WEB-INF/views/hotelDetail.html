@@ -142,78 +142,13 @@
 
 
 </div>
-<!--         <div th:fragment="sub" th:remove="tag">
-            <ul>
-                <li th:each="option : ${menu.options}" >
-                    <span th:text="${option.label}">Town hall</span>
-                    <div th:with="menu = ${option}" th:include="::sub" th:remove="tag" />
-                </li>
-            </ul>
-        </div> 
-
-
-	<div th:with="prewNode = 0">
-		<ul th:each="f : ${forum}">
-			<ul th:if="${f.depth != 0 and prewNode &lt; f.depth and prewNode !=0}">
-			
-			</ul>
-		
-		</ul>
-	</div>  
-	<section layout:fragment="menu">
-        <ul>
-        	<th:block th:each="menuItem : ${menuItemsList}">
-        	<th:block th:if="${menuItem.menuId == id}">
-        	<th:block th:if="${menuItem.menuId == id}">
-            	<li th:with="level=${menuItem.depth}" th:text="${menuItem.name}">
-            	 
-                	<section th:unless="${menuItem.depth == level and menuItem.depth &lt; level}" layout:include=":: menu" th:with="menuItemsList=${menuItem.children}"></section>
-            	</li>
-           <th:block th:if="${menuItem.menuId == id}">	
-          </th:block>
-          </th:block>
-        </ul> 
-    </section>
-	 
-	         <div>
-            <th:block th:with="prewNode = 0">
-            
-            <ul id="menu">
-            <th:block th:each="menuItem : ${menuItemsList}">
-            <th:block th:if="${menuItem.depth != 0}">
-            <th:block th:if="${prewNode &lt; menuItem.depth}">
-            <th:block th:if="{$prewNode != 0}">
-                                <ul>
-              </th:block>
-                                <li th:text="${menuItem.name}">
-                   </th:block>        
-                                <th:block th:if="${prewNode &eq; menuItem.depth}">
-                                </li>
-                                <li th:text="${menuItem.name}">
-                                </th:block>       
-                                <th:block th:if="${prewNode &gt; menuItem.depth}">
-                                <th:block th:with="kolik = ${prewNode - menuItem.depth}">
-                                <th:block th:each="i : ${#numbers.sequence( 0, ${kolik})}">
-                                    </li>
-                                </ul>
-                            </th:block>
-                            </th:block>
-                            </li th:with="prewNode = ${menuItem.depth}">                          
-                            <li th:text="${menuItem.name}"> 
-                            </th:block> 
-                        </th:block>
-                    </th:block>
-                </li>
-            </ul>
-            </th:block>
-        </div>   
-        
-        
-        
-        
-        
-	 -->
-	 <div id="forum"></div>
+	 <div id="forum">
+	 <h4 sec:authorize="isAnonymous()"> Pro diskuzi se prosím přihlašte</h4>
+	 	
+	 	
+	 		 
+	 </div>
+	
 		<hr />
 
    
@@ -230,6 +165,24 @@
 $("#hotel.stars").rating({
 		showCaption: false	
 	});
+	
+function counter(){
+	
+    var xmlhttp = new XMLHttpRequest();
+    var urlko = [[@{/setCountPlus/(id=${hotel.hotelId})}]];
+    xmlhttp.open("GET", urlko, true);
+    xmlhttp.setRequestHeader("X-CSRF-HEADER", [[${_csrf.parameterName}]]);
+    xmlhttp.setRequestHeader("X-CSRF-TOKEN", [[${_csrf.token}]]);
+    xmlhttp.send();	
+}
+
+$( document ).ready(function (){
+	counter();		
+
+});
+
+	
+	
 </script>
 <script type="text/javascript" th:src="@{/resources/js/tinymce/tinymce.min.js}"></script>
 	<script sec:authorize="hasRole('ROLE_USER')" th:inline="javascript">
@@ -261,22 +214,23 @@ $("#hotel.stars").rating({
 		
 	}
 	function appendForum(){
-	    $("#forum").append( "<textarea id='com' class='form-control'></textarea><button id='but' type='button'>Click Me!</button>" );
-
+	    $("#forum").append( "<div><label for='name' /><h4>Nadpis</h4></label><input type='text' id='nadpis'/> </div> <div><p> <input type='radio' name='reakce' id='reakce' value='0' checked='checked'/> Nová reakce na článek </p></div>  <textarea id='com' class='form-control'></textarea><button id='but' type='button'>Click Me!</button>" );
 		tinymce.init({ 
 			selector: 'textarea',
 		  	language: 'cs_CZ',
 		  	entity_encoding : "numeric" 
-		});
-		$( "#but" ).on( "click", function() {
-			
-			$.ajax({
+		});		
+		
+		
+		$( "#but" ).on( "click", function() {			
+			$.ajax({				
 			    async: false,
 			    type: 'POST',
 			    data: {
 			    	idUser: [[${user.userId}]],
 					body: tinyMCE.activeEditor.getContent({format : 'raw'}),
-			    	ancestor: 0,
+					header: document.getElementById('nadpis').value,
+			    	ancestor: document.querySelector('input[name="reakce"]:checked').value ,
 			    	depth: 1,
 			    	idHotel: [[${hotel.hotelId}]]
 			    },
@@ -288,12 +242,14 @@ $("#hotel.stars").rating({
 			    }
 			});
 	});
-	}
-	
-	$( document ).ready(function (){
-		getCom();
 		
-	
+		
+		
+		
+	}
+		
+	$( document ).ready(function (){
+		getCom();	
 	});
 	
 	
@@ -309,13 +265,13 @@ $("#hotel.stars").rating({
 						div += "<ul> "
 					}
 					div += "<li class='media'> <div class='media-left'> <a href='#'> <img class='media-object' src='...'></a>";
-				    div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].depth + " napsal</h4>"+ itemsList[i].body +"</div>";
+					div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].header + " <input type='radio' name='reakce' id='reakce' value='"+ itemsList[i].treeId +"' /></h4>"  +itemsList[i].body +"</div>";
 				}
 				
 				if(prewNode == itemsList[i].depth){
 					div += "</li> ";
 					div += "<li class='media'> <div class='media-left'> <a href='#'> <img class='media-object' src='...'></a>";
-				    div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].depth + " napsal</h4>"+ itemsList[i].body +"</div>";
+				    div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].header + " <input type='radio' name='reakce' id='reakce' value='"+ itemsList[i].treeId +"' /></h4>"  +itemsList[i].body +"</div>";
 				}
 				
 				if(prewNode > itemsList[i].depth){
@@ -325,7 +281,7 @@ $("#hotel.stars").rating({
 					
 					div += "</li> ";
 					div += "<li class='media'> <div class='media-left'> <a href='#'> <img class='media-object' src='...'></a>";
-				    div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].depth + " napsal</h4>"+ itemsList[i].body +"</div>";
+					div += "</div> <div class='media-body'> <h4 class='media-heading'>"+ itemsList[i].header + " <input type='radio' name='reakce' id='reakce' value='"+ itemsList[i].treeId +"' /></h4>"  +itemsList[i].body +"</div>";
 				}
 				prewNode = itemsList[i].depth;
 			}

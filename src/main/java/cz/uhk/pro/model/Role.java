@@ -3,6 +3,7 @@ package cz.uhk.pro.model;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,7 +20,7 @@ public class Role {
 	
 	private String description;
 	
-	@OneToMany(mappedBy="role")
+	@OneToMany(mappedBy="role",fetch = FetchType.EAGER)
     private List<User> users;
 
 	

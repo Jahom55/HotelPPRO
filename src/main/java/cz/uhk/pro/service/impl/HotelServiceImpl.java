@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cz.uhk.pro.dao.GenericDao;
 import cz.uhk.pro.dao.HotelDao;
+import cz.uhk.pro.model.District;
 import cz.uhk.pro.model.Hotel;
 import cz.uhk.pro.model.User;
 import cz.uhk.pro.service.HotelService;
@@ -39,8 +40,8 @@ public class HotelServiceImpl extends GenericServiceImpl<Hotel, Integer> impleme
 	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public List<Hotel> getPage(int page, int size){
-		return hotelDao.getPage(page, size);
+	public List<Hotel> getPage(int page, int size, District districtId, int stars){
+		return hotelDao.getPage(page, size, districtId, stars);
 		
 	}
 	
@@ -56,6 +57,19 @@ public class HotelServiceImpl extends GenericServiceImpl<Hotel, Integer> impleme
 	public List<Hotel> getHotelsByUser(User user){
 		return hotelDao.getHotelsByUser(user);
 		
+	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public List<Hotel> getBest3Hotels(){
+		return hotelDao.getBest3Hotels();
+		
+	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public Hotel getHotelByName(String name){
+		return hotelDao.getHotelByName(name);
 	}
 	
 

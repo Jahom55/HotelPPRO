@@ -85,30 +85,7 @@ public class LoginController {
 	 
 	 @Autowired
 	 private HttpServletRequest context;
-	
 
-	@RequestMapping(value = {"/welcome**" }, method = RequestMethod.GET)
-	public ModelAndView defaultPage() {
-
-		ModelAndView model = new ModelAndView();
-		model.addObject("title", "Spring Security + Hibernate Example");
-		model.addObject("message", "This is default page!");
-		model.setViewName("hello");
-		return model;
-
-	}
-
-	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
-	public ModelAndView adminPage() {
-
-		ModelAndView model = new ModelAndView();
-		model.addObject("title", "Spring Security + Hibernate Example");
-		model.addObject("message", "This page is for ROLE_ADMIN only!");
-		model.setViewName("admin");
-
-		return model;
-
-	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(@RequestParam(value = "error", required = false) String error,
@@ -190,7 +167,7 @@ public class LoginController {
 					fileName = fileName.substring(0,15);
 				fileName = String.valueOf(fileName.hashCode());
 				System.out.println(fileName);
-				path = "C:/Users/Adam-LenovoY570/git/HotelPPRO/src/main/webapp/resources/images/" + name + fileName + "." + sType;
+				path = "D:/sts/work/ProHotel/src/main/webapp/resources/images/" + name + fileName + "." + sType;
 				File destination = new File(path);
 				file.transferTo(destination);
 				String path2 ="";
@@ -271,21 +248,25 @@ public class LoginController {
 			return "userDetail";
 		}
 	
-	
-
-	
-	
-	
-	
 
 	private List<Role> getAllWithoutAdmin() {
 		List<Role> roleList = roleService.getAll();
 		List<Role> roleListSelect = new ArrayList<Role>();
+		boolean firstUser = true;
+		boolean firstHotel = true;
 		for (Role role : roleList) {
 			if (role.getRoleId() != 1) {
-				if(role.getDescription().equals("ROLE_USER")) role.setDescription("Návštìvník");
-				if(role.getDescription().equals("ROLE_HOTELIER")) role.setDescription("Hoteliér");
-				roleListSelect.add(role);
+				if(role.getDescription().equals("ROLE_USER") && firstUser) {
+					role.setDescription("Návštìvník");
+					firstUser = false;
+					roleListSelect.add(role);
+				}
+				if(role.getDescription().equals("ROLE_HOTELIER") && firstHotel) {
+					firstHotel = false;
+					role.setDescription("Hoteliér");
+					roleListSelect.add(role);					
+				}
+				
 			}
 		}
 		return roleListSelect;

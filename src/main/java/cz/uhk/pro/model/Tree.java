@@ -48,6 +48,8 @@ public class Tree {
 	@Column(columnDefinition="LONGTEXT")
 	String body;
 	
+	String header;
+	
 	@ManyToOne(cascade=CascadeType.REFRESH)
 	@JoinColumn(name="userId")
 	@JsonBackReference
@@ -65,6 +67,15 @@ public class Tree {
 	int ancestor;
 	
 	int descendant;
+	
+
+	public String getHeader() {
+		return header;
+	}
+
+	public void setHeader(String header) {
+		this.header = header;
+	}
 
 	public int getTreeId() {
 		return treeId;

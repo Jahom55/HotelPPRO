@@ -27,6 +27,7 @@
           <link rel="stylesheet" type="text/css" media="all" 
           href="../../reources/css/bootstrap-table.min.css" th:href="@{/resources/css/bootstrap-table.min.css}" />  
           
+          
           <link  href="../../reources/css/fotorama.css" th:href="@{/resources/css/fotorama.css}" rel="stylesheet" />                
   </head>		
 
@@ -47,7 +48,7 @@
                         <a href="#">About</a>
                     </li>
                     <li>
-                        <a th:href="@{/hotels(page=1,size=1)}">Vsechny hotely</a>
+                        <a th:href="@{/hotels(page=1,size=20,districtId=0,stars=0)}">Vsechny hotely</a>
                     </li>
                     <li>
                         <a href="#">Contact</a>

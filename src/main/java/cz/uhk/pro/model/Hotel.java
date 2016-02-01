@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
 @Entity
@@ -29,12 +30,10 @@ public class Hotel {
     @GeneratedValue(strategy= GenerationType.AUTO)
 	private int hotelId;
 	
-    @NotNull(message = "Zadejte jméno hotelu")
+    @NotEmpty( message = "Nesmí být prázdné")
 	private String name;
 	
-    @NotNull(message = "Zadejte poèet hvìzd hotelu")
-	private byte stars;
-	
+	private byte stars;	
     
 	private double rating;
 	
@@ -45,7 +44,8 @@ public class Hotel {
 	
 	private String image;
 	
-	//@URL(message = "Zadejte URL ve správném tvaru")
+	@NotEmpty( message = "Nesmí být prázdné")
+	
 	private String website;
 	
 	private int counter;
