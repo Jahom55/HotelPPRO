@@ -5,57 +5,66 @@
 </head>
 
 <body>
-	
+
 	<nav th:replace="/layout/header :: navbar"></nav>
 
 	<div class="container">
-	
+
 		<form accept-charset="utf-8" action="#" th:action="@{/updateHotel/}"
-			th:object="${hotel}" method="post" name="hotel" data-toggle="validator"	>
-			
-			<h2 th:if="*{description}">Editace hotelu: <span th:text="*{name}"></span></h2>
+			th:object="${hotel}" method="post" name="hotel"
+			data-toggle="validator">
+
+			<h2 th:if="*{description}">
+				Editace hotelu: <span th:text="*{name}"></span>
+			</h2>
 			<h2 th:unless="*{description}">Přidání nového hotelu</h2>
-			
+
 			<div class="form-group">
-				<input type="hidden" th:field="*{hotelId}" /> 
-				<label for="name">Název:</label>
-				<input class="form-control" type="text" th:field="*{name}" required="required" />
-				<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
+				<input type="hidden" th:field="*{hotelId}" /> <label for="name">Název:</label>
+				<input class="form-control" type="text" th:field="*{name}"
+					required="required" /> <span th:if="${#fields.hasErrors('name')}"
+					th:errors="*{name}">Name Error</span>
 			</div>
 			<div class="form-group">
-				<label for="website">Webová stránka</label> 
-				<input class="form-control" type="text" th:field="*{website}" placeholder="www.neco.cz" required="required" />
+				<label for="website">Webová stránka</label> <input
+					class="form-control" type="text" th:field="*{website}"
+					placeholder="www.neco.cz"
+					pattern="(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})"
+					required="required" data-error="Spatny format web. stranky" />
 				<div class="help-block with-errors"></div>
-				<span th:if="${#fields.hasErrors('website')}" th:errors="*{website}">Name Error</span>
+				<span th:if="${#fields.hasErrors('website')}" th:errors="*{website}">Name
+					Error</span>
 			</div>
 			<div class="form-group">
-				<label for="stars">Hvězd: </label>
-				<input class="rating form-control" th:field="*{stars}" data-min="0" data-max="5" data-step="1" 
-				 glyphicon="true"/>
+				<label for="stars">Hvězd: </label> <input
+					class="rating form-control" th:field="*{stars}" data-min="0"
+					data-max="5" required="required" data-step="1" glyphicon="true" />
+				<div class="help-block with-errors"></div>
+				<span th:if="${#fields.hasErrors('stars')}" th:errors="*{stars}">Name
+					Error</span>
 			</div>
 			<div class="form-group">
-			<select class="form-control" th:field="*{type.typeId}">
-				<option th:each="t : ${types}" th:value="${t.typeId}"  th:text="${t.description}"
-					 >Types</option>
-			</select>
+				<select class="form-control" th:field="*{type.typeId}">
+					<option th:each="t : ${types}" th:value="${t.typeId}"
+						th:text="${t.description}">Types</option>
+				</select>
 			</div>
 			<div class="form-group">
 				<label for="description">Popis: </label>
-				<textarea class="form-control"
-					th:field="*{description}"></textarea>
+				<textarea class="form-control" th:field="*{description}"></textarea>
 			</div>
 
 			<div class="form-group">
 				<label for="address.city">Město: </label> <input type="text"
-					class="form-control" 
-					th:field="*{address.city}" required="required"/>
+					class="form-control" th:field="*{address.city}" required="required" />
 			</div>
-			
+
 			<div class="form-group">
-			<select class="form-control" th:field="*{address.district.districtId}">
-				<option th:each="d : ${districts}" th:value="${d.districtId}"  th:text="${d.name}"
-					 >Districts</option>
-			</select>
+				<select class="form-control"
+					th:field="*{address.district.districtId}">
+					<option th:each="d : ${districts}" th:value="${d.districtId}"
+						th:text="${d.name}">Districts</option>
+				</select>
 			</div>
 
 
@@ -66,65 +75,62 @@
 			</div>
 
 			<div class="form-group">
-				<label for="address.streetNumber">Číslo popisné: </label> <input type="text"
-					class="form-control" required="required"
+				<label for="address.streetNumber">Číslo popisné: </label> <input
+					type="text" class="form-control" required="required"
 					th:field="*{address.streetNumber}" />
 			</div>
 
 			<div class="form-group">
 				<label for="address.zipCode">PSČ: </label> <input type="text"
-					class="form-control" required="required"
-					th:field="*{address.zipCode}" />
+					class="form-control" required="required" pattern="\d{5}"
+					data-error="Spatny format PSC" th:field="*{address.zipCode}" />
+				<div class="help-block with-errors"></div>
+				<span th:if="${#fields.hasErrors('address.zipCode')}"
+					th:errors="*{address.zipCode}">Name Error</span>
 			</div>
-			
-			<div>
-			
-			
-			</div>
-			
-			
-			<div id="dropanbula" class="dropzone form-group">
-			
-			</div>
-			
+
+			<div></div>
+
+
+			<div id="dropanbula" class="dropzone form-group"></div>
+
 
 
 
 			<div class="checkbox">
-			  	
-  				<input type="checkbox" th:field="*{equipment.internet}" />
-  				<label th:for="${#ids.prev('equipment.internet')}">Internet</label>
-  				
-  				
-  				<label th:for="${#ids.next('equipment.parking')}">
-  				<input type="checkbox" th:field="*{equipment.parking}" />Parkování</label>
-  				
- 				<label th:for="${#ids.next('equipment.pets')}">
-  				<input type="checkbox" th:field="*{equipment.pets}" />Zvířata</label>
-  				
-  				<label th:for="${#ids.next('equipment.pool')}">
-  				<input type="checkbox" th:field="*{equipment.pool}" />Bazén</label>
+
+				<input type="checkbox" th:field="*{equipment.internet}" /> <label
+					th:for="${#ids.prev('equipment.internet')}">Internet</label> <label
+					th:for="${#ids.next('equipment.parking')}"> <input
+					type="checkbox" th:field="*{equipment.parking}" />Parkování
+				</label> <label th:for="${#ids.next('equipment.pets')}"> <input
+					type="checkbox" th:field="*{equipment.pets}" />Zvířata
+				</label> <label th:for="${#ids.next('equipment.pool')}"> <input
+					type="checkbox" th:field="*{equipment.pool}" />Bazén
+				</label>
 
 			</div>
 			<div class="checkbox">
-				<label th:for="${#ids.next('equipment.restauration')}">
-  				<input type="checkbox" th:field="*{equipment.restauration}" />Restaurace</label>
-  				
-  				<label th:for="${#ids.next('equipment.saloon')}">
-  				<input type="checkbox" th:field="*{equipment.saloon}" />Společenská místnost</label>
-  				
- 				<label th:for="${#ids.next('equipment.wellness')}">
-  				<input type="checkbox" th:field="*{equipment.wellness}" />Wellness</label>
-  				
-  				<label th:for="${#ids.next('equipment.wheellchairAccess')}">
-  				<input type="checkbox" th:field="*{equipment.wheellchairAccess}" />Bezbarierový přístup</label>
-			
+				<label th:for="${#ids.next('equipment.restauration')}"> <input
+					type="checkbox" th:field="*{equipment.restauration}" />Restaurace
+				</label> <label th:for="${#ids.next('equipment.saloon')}"> <input
+					type="checkbox" th:field="*{equipment.saloon}" />Společenská
+					místnost
+				</label> <label th:for="${#ids.next('equipment.wellness')}"> <input
+					type="checkbox" th:field="*{equipment.wellness}" />Wellness
+				</label> <label th:for="${#ids.next('equipment.wheellchairAccess')}">
+					<input type="checkbox" th:field="*{equipment.wheellchairAccess}" />Bezbarierový
+					přístup
+				</label>
+
 			</div>
 			<input type="hidden" name="${_csrf.parameterName}"
 				value="${_csrf.token}" />
 
-			<button id="send" th:if="${hotel.description}" type="submit" name="edit">Edit</button>
-			<button id="send" th:unless="${hotel.description}" type="submit" name="add">Přidat hotel</button>
+			<button id="send" th:if="${hotel.description}" type="submit"
+				name="edit">Edit</button>
+			<button id="send" th:unless="${hotel.description}" type="submit"
+				name="add">Přidat hotel</button>
 		</form>
 
 
@@ -135,7 +141,7 @@
 		<hr />
 
 
-	<div id="id01"></div>
+		<div id="id01"></div>
 
 		<!-- Footer -->
 		<footer th:replace="/layout/footer :: footer"> </footer>
@@ -143,16 +149,17 @@
 	</div>
 	<!-- /.container -->
 
-	<div th:replace="/layout/footer :: scripts">
-	</div>
-	
-	<script type="text/javascript" th:src="@{/resources/js/tinymce/tinymce.min.js}"></script>
+	<div th:replace="/layout/footer :: scripts"></div>
+
+	<script type="text/javascript"
+		th:src="@{/resources/js/tinymce/tinymce.min.js}"></script>
 	<script type="text/javascript">tinymce.init({ 
 			selector: 'textarea', 
 		  	language: 'cs_CZ',
 		  	entity_encoding : "numeric" 
 	});</script>
-	<script type="text/javascript" th:src="@{/resources/js/dropzone.min.js}"></script>
+	<script type="text/javascript"
+		th:src="@{/resources/js/dropzone.min.js}"></script>
 	<script th:unless="${hotel.website}" th:inline="javascript">
 	/*<![CDATA[*/
 	$(document).ready(function(){           
@@ -168,7 +175,7 @@
 	});
 /*]]>*/
 </script>
-<script th:inline="javascript">
+	<script th:inline="javascript">
 	/*<![CDATA[*/
 	                 
      

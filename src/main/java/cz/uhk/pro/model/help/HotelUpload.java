@@ -1,6 +1,8 @@
-package cz.uhk.pro.model;
+package cz.uhk.pro.model.help;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import cz.uhk.pro.model.Hotel;
 
 public class HotelUpload {
 	

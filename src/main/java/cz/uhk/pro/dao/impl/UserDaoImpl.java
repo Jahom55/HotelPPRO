@@ -15,16 +15,14 @@ import cz.uhk.pro.model.User;
 public class UserDaoImpl extends GenericDaoImpl<User, Integer> implements UserDao {
 
 	@Override
-	public User findByUserName(String username) {		
-		Criteria criteria = currentSession().createCriteria(User.class)
-                .add(Restrictions.eq("login",username));
-        
-        return (User) criteria.uniqueResult();
+	public User findByUserName(String username) {
+		Criteria criteria = currentSession().createCriteria(User.class).add(Restrictions.eq("login", username));
+		return (User) criteria.uniqueResult();
 	}
-	
+
 	@Override
-	public List<User> getAll(){
+	public List<User> getAll() {
 		return currentSession().createCriteria(User.class).addOrder(Order.desc("enabled")).list();
 	}
- 
+
 }

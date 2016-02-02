@@ -33,7 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 import cz.uhk.pro.model.Address;
 import cz.uhk.pro.model.District;
 import cz.uhk.pro.model.Hotel;
-import cz.uhk.pro.model.HotelUpload;
+import cz.uhk.pro.model.help.HotelUpload;
 import cz.uhk.pro.model.Image;
 import cz.uhk.pro.model.Review;
 import cz.uhk.pro.model.Role;
@@ -52,40 +52,39 @@ import cz.uhk.pro.service.UserService;
 
 @Controller
 public class LoginController {
-	
+
 	@Autowired(required = true)
-	 private PersonService personService;
+	private PersonService personService;
 
-	 @Autowired(required = true)
-	 private AddressService addressService;
+	@Autowired(required = true)
+	private AddressService addressService;
 
-	 @Autowired(required = true)
-	 private RoleService roleService;
-	 
-	 @Autowired(required = true)
-	 private TypeService typeService;
-	 
-	 @Autowired(required = true)
-	 private UserService userService;
-	 
-	 @Autowired(required = true)
-	 private EquipmentService equipmentService;
-	 
-	 @Autowired(required = true)
-	 private HotelService hotelService;
-	 
-	 @Autowired(required = true)
-	 private ImageService imageService;
-	 
-	 @Autowired(required = true)
-	 private ReviewService reviewService;
-	 
-	 @Autowired(required = true)
-	 private DistrictService districtService;
-	 
-	 @Autowired
-	 private HttpServletRequest context;
+	@Autowired(required = true)
+	private RoleService roleService;
 
+	@Autowired(required = true)
+	private TypeService typeService;
+
+	@Autowired(required = true)
+	private UserService userService;
+
+	@Autowired(required = true)
+	private EquipmentService equipmentService;
+
+	@Autowired(required = true)
+	private HotelService hotelService;
+
+	@Autowired(required = true)
+	private ImageService imageService;
+
+	@Autowired(required = true)
+	private ReviewService reviewService;
+
+	@Autowired(required = true)
+	private DistrictService districtService;
+
+	@Autowired
+	private HttpServletRequest context;
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(@RequestParam(value = "error", required = false) String error,
@@ -133,7 +132,6 @@ public class LoginController {
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
 			UserDetails userDetail = (UserDetails) auth.getPrincipal();
 			System.out.println(userDetail);
-
 			model.addObject("username", userDetail.getUsername());
 
 		}
@@ -142,54 +140,53 @@ public class LoginController {
 		return model;
 
 	}
-	
-	@RequestMapping(value = "/updateUserImages", method = RequestMethod.POST)
-    public ResponseEntity uploadFile(MultipartHttpServletRequest request) {
 
-        try {
+	@RequestMapping(value = "/updateUserImages", method = RequestMethod.POST)
+	public ResponseEntity uploadFile(MultipartHttpServletRequest request) {
+
+		try {
 			int id = Integer.valueOf(request.getParameter("id"));
 			Iterator<String> itr = request.getFileNames();
-			
-            System.out.println(id);
-            while (itr.hasNext()) {
-            	String path = "";
-                String uploadedFile = itr.next();
-                MultipartFile file = request.getFile(uploadedFile);                    
-                
-                String pType = file.getContentType().split("/")[0];
+
+			System.out.println(id);
+			while (itr.hasNext()) {
+				String path = "";
+				String uploadedFile = itr.next();
+				MultipartFile file = request.getFile(uploadedFile);
+
+				String pType = file.getContentType().split("/")[0];
 				String sType = file.getContentType().split("/")[1];
 				System.out.println(sType);
 				UUID uuid = new UUID(255, 200);
 				String name = String.valueOf(uuid.randomUUID());
 				System.out.println(name);
 				String fileName = file.getOriginalFilename();
-				if(fileName.length() > 15)
-					fileName = fileName.substring(0,15);
+				if (fileName.length() > 15)
+					fileName = fileName.substring(0, 15);
 				fileName = String.valueOf(fileName.hashCode());
 				System.out.println(fileName);
 				path = "D:/sts/work/ProHotel/src/main/webapp/resources/images/" + name + fileName + "." + sType;
 				File destination = new File(path);
 				file.transferTo(destination);
-				String path2 ="";
+				String path2 = "";
 				path2 = "../../pro/resources/images/" + name + fileName + "." + sType;
 				System.out.println(path2);
 				User u = userService.get(id);
 				u.setImage(path2);
 				System.out.println(u.toString());
-                File check = new File(path);
-                userService.saveOrUpdate(u);
-                System.out.println(u.toString());
-            }
-        }
-        catch (Exception e) {
-            return new ResponseEntity("{}", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        System.out.println("ok");
-        return new ResponseEntity("{}", HttpStatus.OK);
-    }
-	
-	@RequestMapping(value="/registration",method = RequestMethod.GET)
-	public String addUser(Model model){		
+				File check = new File(path);
+				userService.saveOrUpdate(u);
+				System.out.println(u.toString());
+			}
+		} catch (Exception e) {
+			return new ResponseEntity("{}", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		System.out.println("ok");
+		return new ResponseEntity("{}", HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/registration", method = RequestMethod.GET)
+	public String addUser(Model model) {
 		List<Role> roleList = getAllWithoutAdmin();
 		List<District> districtList = districtService.getAll();
 		model.addAttribute("districts", districtList);
@@ -204,20 +201,20 @@ public class LoginController {
 		User user = new User();
 		user.setUserId(id);
 		model.addAttribute("user", user);
-		return "registration";		
+		return "registration";
 	}
-	
-	@RequestMapping(value="/registration", method = RequestMethod.POST)
-	public String addUserProcess(Model model,@Valid @ModelAttribute("user") User u, BindingResult bindingResult){	
+
+	@RequestMapping(value = "/registration", method = RequestMethod.POST)
+	public String addUserProcess(Model model, @Valid @ModelAttribute("user") User u, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			//List<Role> roleList = getAllWithoutAdmin();
-			//model.addAttribute("roles", roleList);
+			List<Role> roleList = getAllWithoutAdmin();
+			model.addAttribute("roles", roleList);
 			u.setPassword(null);
 			model.addAttribute("user", u);
 			List<District> districtList = districtService.getAll();
 			model.addAttribute("districts", districtList);
-            return "registration";
-        }
+			return "registration";
+		}
 		User user = userService.get(u.getUserId());
 		u.setImage(user.getImage());
 		BCryptPasswordEncoder b = new BCryptPasswordEncoder();
@@ -227,27 +224,23 @@ public class LoginController {
 		District d = districtService.get(a.getDistrict().getDistrictId());
 		a.setDistrict(d);
 		addressService.saveOrUpdate(a);
-		
-		// PRIRAZENI ROLE
-		u.setRole(roleService.get(2));
-		userService.saveOrUpdate(u);		
+		userService.saveOrUpdate(u);
 		return "redirect:/";
 	}
-	
-	//TODO 27.1
-		@RequestMapping(value="/detailUser")
-		public String detailHotel(Model model){	
-			User u = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());		
-			List<Hotel> hotels = hotelService.getHotelsByUser(u);
-			List<Review> reviews = reviewService.getReviewsByUser(u);		
-			model.addAttribute("hotels", hotels);
-			model.addAttribute("reviews", reviews);
-			model.addAttribute("user", u);
-	        model.addAttribute("address",u.getAddress());
-	        model.addAttribute("district", u.getAddress().getDistrict());	        
-			return "userDetail";
-		}
-	
+
+	// TODO 27.1
+	@RequestMapping(value = "/detailUser")
+	public String detailHotel(Model model) {
+		User u = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+		List<Hotel> hotels = hotelService.getHotelsByUser(u);
+		List<Review> reviews = reviewService.getReviewsByUser(u);
+		model.addAttribute("hotels", hotels);
+		model.addAttribute("reviews", reviews);
+		model.addAttribute("user", u);
+		model.addAttribute("address", u.getAddress());
+		model.addAttribute("district", u.getAddress().getDistrict());
+		return "userDetail";
+	}
 
 	private List<Role> getAllWithoutAdmin() {
 		List<Role> roleList = roleService.getAll();
@@ -256,17 +249,17 @@ public class LoginController {
 		boolean firstHotel = true;
 		for (Role role : roleList) {
 			if (role.getRoleId() != 1) {
-				if(role.getDescription().equals("ROLE_USER") && firstUser) {
+				if (role.getDescription().equals("ROLE_USER") && firstUser) {
 					role.setDescription("Návštìvník");
 					firstUser = false;
 					roleListSelect.add(role);
 				}
-				if(role.getDescription().equals("ROLE_HOTELIER") && firstHotel) {
+				if (role.getDescription().equals("ROLE_HOTELIER") && firstHotel) {
 					firstHotel = false;
 					role.setDescription("Hoteliér");
-					roleListSelect.add(role);					
+					roleListSelect.add(role);
 				}
-				
+
 			}
 		}
 		return roleListSelect;

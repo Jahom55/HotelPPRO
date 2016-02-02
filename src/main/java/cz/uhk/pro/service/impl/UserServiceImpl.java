@@ -21,43 +21,37 @@ import cz.uhk.pro.dao.UserDao;
 import cz.uhk.pro.service.UserService;
 
 @Service
-public class UserServiceImpl extends GenericServiceImpl<cz.uhk.pro.model.User, Integer> implements UserService, UserDetailsService {
-	
+public class UserServiceImpl extends GenericServiceImpl<cz.uhk.pro.model.User, Integer>
+		implements UserService, UserDetailsService {
+
 	private UserDao userDao;
-	
-	public UserServiceImpl(){
-		
+
+	public UserServiceImpl() {
+
 	}
-	
+
 	@Autowired
-	public UserServiceImpl(@Qualifier("userDaoImpl") GenericDao<cz.uhk.pro.model.User, Integer> genericDao){
+	public UserServiceImpl(@Qualifier("userDaoImpl") GenericDao<cz.uhk.pro.model.User, Integer> genericDao) {
 		super(genericDao);
 		this.userDao = (UserDao) genericDao;
 	}
-	
-	
+
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public UserDetails loadUserByUsername(String username) 
-               throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 		cz.uhk.pro.model.User user = findByUserName(username);
 		List<GrantedAuthority> authority = new ArrayList<GrantedAuthority>();
 		authority.add(new SimpleGrantedAuthority(user.getRole().getDescription()));
 
 		return buildUserForAuthentication(user, authority);
-		
-		
 
 	}
 
-	// Converts com.mkyong.users.model.User user to
+	// Converts model.User user to
 	// org.springframework.security.core.userdetails.User
-	private User buildUserForAuthentication(cz.uhk.pro.model.User user, 
-		 List<GrantedAuthority> authorities) {
-		return new User(user.getLogin(), 
-			user.getPassword(), user.isEnabled(), 
-                        true, true, true, authorities);
+	private User buildUserForAuthentication(cz.uhk.pro.model.User user, List<GrantedAuthority> authorities) {
+		return new User(user.getLogin(), user.getPassword(), user.isEnabled(), true, true, true, authorities);
 	}
 
 	@Override
@@ -65,15 +59,11 @@ public class UserServiceImpl extends GenericServiceImpl<cz.uhk.pro.model.User, I
 	public cz.uhk.pro.model.User findByUserName(String username) {
 		return userDao.findByUserName(username);
 	}
-	
+
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public List<cz.uhk.pro.model.User> getAll() {
 		return userDao.getAll();
 	}
-	
-	
-	
-	
 
 }

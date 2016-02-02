@@ -1,166 +1,183 @@
 <!DOCTYPE html>
-<html 	xmlns="http://www.w3.org/1999/xhtml" 
-		xmlns:th="http://www.thymeleaf.org" >
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 <head th:replace="/layout/header :: header">
-  </head>
+</head>
 
-  <body>
-	
+<body>
+
 	<nav th:replace="/layout/header :: navbar"></nav>
 	<div class="container">
-	<div class="row">
-    <div class="col-lg-12 text-center">
-        <h1 th:text="${hotel.name}"></h1>
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<h1 th:text="${hotel.name}"></h1>
 
-				<input class="rating form-control" th:field="${hotel.stars}" data-disabled="true" data-min="0" data-max="5" data-step="1" 
-				 glyphicon="true"/>
-        <br />
-        <br />
-    </div>
-</div>
+				<input class="rating form-control" th:field="${hotel.stars}"
+					data-disabled="true" data-min="0" data-max="5" data-step="1"
+					glyphicon="true" /> <br /> <br />
+			</div>
+		</div>
 
-<div class="row">
-    <div class="col-lg-3 fotorama" data-nav="thumbs" data-allowfullscreen="true" data-autoplay="true">
-            <img th:each="i : ${images}" class="img" th:attr="src=${i.image},alt=${i.alt}" />
-    </div>
-<!-- TODO: tady se bude odehravat hlasovani -->
-    <div class="col-lg-9">
-    <div>
+		<div class="row">
+			<div class="col-lg-3 fotorama" data-nav="thumbs"
+				data-allowfullscreen="true" data-autoplay="true">
+				<img th:each="i : ${images}" class="img"
+					th:attr="src=${i.image},alt=${i.alt}" />
+			</div>
+			<!-- TODO: tady se bude odehravat hlasovani -->
+			<div class="col-lg-9">
+				<div>
 
-  <!-- Nav tabs -->
-
-
-</div>
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#complete" aria-controls="complete" role="tab" data-toggle="tab">Celkové hodnocení</a></li>
-    <li sec:authorize="hasRole('ROLE_USER')" role="presentation"><a href="#custom" aria-controls="custom" role="tab" data-toggle="tab">Vaše hodnocení</a></li>
-  </ul>
-
-  <!-- Tab panes -->
-  <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="complete"><table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Kategorie</th>
-                    <th class="text-center">Hodnocení</th>
-<!--                     <th class="text-center">Počet hlasujících</th> -->
-                </tr>
-            </thead>
-            <tbody>
-            	<tr>
-            	<td>Ubytování</td><td>				
-            	<input class="rating form-control" data-disabled="true" th:field="${reviews.reviewAccommodation}" data-min="0" data-max="5" data-step="1" 
-				 glyphicon="true"/></td>
-            	</tr>
-            	<tr>
-            	<td>Prostředí</td><td>				
-            	<input class="rating form-control" data-disabled="true" th:field="${reviews.reviewEnviroment}" data-min="0" data-max="5" data-step="1" 
-				 glyphicon="true"/></td>
-            	</tr>
-            	<tr>
-            	<td>Jídlo</td><td>				
-            	<input class="rating form-control" data-disabled="true" th:field="${reviews.reviewFood}" data-min="0" data-max="5" data-step="1" 
-				 glyphicon="true"/></td>
-            	</tr>
-            	<tr>
-            	<td>Cena</td><td>				
-            	<input class="rating form-control" data-disabled="true" th:field="${reviews.reviewPrice}" data-min="0" data-max="5" data-step="1" 
-				 glyphicon="true"/></td>
-            	</tr>
-            	<tr>
-            	<td>Celkem</td><td>				
-            	<input class="rating form-control" data-disabled="true" th:field="${reviews.reviewComplete}" data-min="0" data-max="5" data-step="1" 
-				 glyphicon="true"/></td>
-            	</tr>
-            </tbody>
-            
-        </table></div>
-    <div role="tabpanel" class="tab-pane" id="custom">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Kategorie</th>
-                    <th class="text-center">Hodnocení</th>
-<!--                     <th class="text-center">Počet hlasujících</th> -->
-                </tr>
-            </thead>
-            <tbody>
-            	<tr>
-            	<td>Ubytování</td><td>				
-            	<input class="rating form-control" id="ac" th:field="${review.reviewAccommodation}" data-min="0" data-max="5" data-step="1" 
-				 glyphicon="true"/></td>
-            	</tr>
-            	<tr>
-            	<td>Prostředí</td><td>				
-            	<input class="rating form-control" id="en" th:field="${review.reviewEnviroment}" data-min="0" data-max="5" data-step="1" 
-				 glyphicon="true"/></td>
-            	</tr>
-            	<tr>
-            	<td>Jídlo</td><td>				
-            	<input class="rating form-control" id="fo" th:field="${review.reviewFood}" data-min="0" data-max="5" data-step="1" 
-				 glyphicon="true"/></td>
-            	</tr>
-            	<tr>
-            	<td>Cena</td><td>				
-            	<input class="rating form-control" id="pr" th:field="${review.reviewPrice}" data-min="0" data-max="5" data-step="1" 
-				 glyphicon="true"/></td>
-            	</tr>
-            	<tr>
-            	<td>Celkem</td><td>				
-            	<input class="rating form-control" id="co" th:field="${review.reviewComplete}" data-min="0" data-max="5" data-step="1" 
-				 glyphicon="true"/></td>
-            	</tr>
-            </tbody>
-            
-        </table>
-        
-      </div>
-
-  </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-9">
-        <h2 class="text-center">Popis</h2>
-        <p th:utext="${hotel.description}"></p>
-    </div>
-
-    <div class="col-lg-offset-9 text-center">
-        <h2>Adresa hotelu</h2>
-        <p th:text="${hotel.name}"></p>
-        <p th:text="${hotel.address.city}"></p>
-        <p th:text="${district.name}"></p>
-        <p th:text="${hotel.address.street}"></p>        
-        <p th:text="${hotel.address.streetNumber}"></p>
-        <p th:text="${hotel.address.zipCode}"></p>
-        <p><a class="text-center" th:href="${hotel.website}">WebSites</a>
-        </p>
-    </div>
+					<!-- Nav tabs -->
 
 
+				</div>
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#complete"
+						aria-controls="complete" role="tab" data-toggle="tab">Celkové
+							hodnocení</a></li>
+					<li sec:authorize="hasRole('ROLE_USER')" role="presentation"><a
+						href="#custom" aria-controls="custom" role="tab" data-toggle="tab">Vaše
+							hodnocení</a></li>
+				</ul>
+
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane active" id="complete">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>Kategorie</th>
+									<th class="text-center">Hodnocení</th>
+									<!--                     <th class="text-center">Počet hlasujících</th> -->
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Ubytování</td>
+									<td><input class="rating form-control"
+										data-disabled="true" th:field="${reviews.reviewAccommodation}"
+										data-min="0" data-max="5" data-step="1" glyphicon="true" /></td>
+								</tr>
+								<tr>
+									<td>Prostředí</td>
+									<td><input class="rating form-control"
+										data-disabled="true" th:field="${reviews.reviewEnviroment}"
+										data-min="0" data-max="5" data-step="1" glyphicon="true" /></td>
+								</tr>
+								<tr>
+									<td>Jídlo</td>
+									<td><input class="rating form-control"
+										data-disabled="true" th:field="${reviews.reviewFood}"
+										data-min="0" data-max="5" data-step="1" glyphicon="true" /></td>
+								</tr>
+								<tr>
+									<td>Cena</td>
+									<td><input class="rating form-control"
+										data-disabled="true" th:field="${reviews.reviewPrice}"
+										data-min="0" data-max="5" data-step="1" glyphicon="true" /></td>
+								</tr>
+								<tr>
+									<td>Celkem</td>
+									<td><input class="rating form-control"
+										data-disabled="true" th:field="${reviews.reviewComplete}"
+										data-min="0" data-max="5" data-step="1" glyphicon="true" /></td>
+								</tr>
+							</tbody>
+
+						</table>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="custom">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>Kategorie</th>
+									<th class="text-center">Hodnocení</th>
+									<!--                     <th class="text-center">Počet hlasujících</th> -->
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Ubytování</td>
+									<td><input class="rating form-control" id="ac"
+										th:field="${review.reviewAccommodation}" data-min="0"
+										data-max="5" data-step="1" glyphicon="true" /></td>
+								</tr>
+								<tr>
+									<td>Prostředí</td>
+									<td><input class="rating form-control" id="en"
+										th:field="${review.reviewEnviroment}" data-min="0"
+										data-max="5" data-step="1" glyphicon="true" /></td>
+								</tr>
+								<tr>
+									<td>Jídlo</td>
+									<td><input class="rating form-control" id="fo"
+										th:field="${review.reviewFood}" data-min="0" data-max="5"
+										data-step="1" glyphicon="true" /></td>
+								</tr>
+								<tr>
+									<td>Cena</td>
+									<td><input class="rating form-control" id="pr"
+										th:field="${review.reviewPrice}" data-min="0" data-max="5"
+										data-step="1" glyphicon="true" /></td>
+								</tr>
+								<tr>
+									<td>Celkem</td>
+									<td><input class="rating form-control" id="co"
+										th:field="${review.reviewComplete}" data-min="0" data-max="5"
+										data-step="1" glyphicon="true" /></td>
+								</tr>
+							</tbody>
+
+						</table>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-9">
+				<h2 class="text-center">Popis</h2>
+				<p th:utext="${hotel.description}"></p>
+			</div>
+
+			<div class="col-lg-offset-9 text-center">
+				<h2>Adresa hotelu</h2>
+				<p th:text="${hotel.name}"></p>
+				<p th:text="${hotel.address.city}"></p>
+				<p th:text="${district.name}"></p>
+				<p th:text="${hotel.address.street}"></p>
+				<p th:text="${hotel.address.streetNumber}"></p>
+				<p th:text="${hotel.address.zipCode}"></p>
+				<p>
+					<a class="text-center" th:href="${hotel.website}">WebSites</a>
+				</p>
+			</div>
 
 
-</div>
-	 <div id="forum">
-	 <h4 sec:authorize="isAnonymous()"> Pro diskuzi se prosím přihlašte</h4>
-	 	
-	 	
-	 		 
-	 </div>
-	
+
+
+		</div>
+		<div id="forum">
+			<h4 sec:authorize="isAnonymous()">Pro diskuzi se prosím
+				přihlašte</h4>
+
+
+
+		</div>
+
 		<hr />
 
-   
-  <!-- Footer -->
-        <footer th:replace="/layout/footer :: footer">
-        </footer>
 
-    </div>
-    <!-- /.container -->
+		<!-- Footer -->
+		<footer th:replace="/layout/footer :: footer"> </footer>
 
-	<div th:replace="/layout/footer :: scripts">
 	</div>
+	<!-- /.container -->
+
+	<div th:replace="/layout/footer :: scripts"></div>
 	<script th:inline="javascript">
 $("#hotel.stars").rating({
 		showCaption: false	
@@ -184,7 +201,8 @@ $( document ).ready(function (){
 	
 	
 </script>
-<script type="text/javascript" th:src="@{/resources/js/tinymce/tinymce.min.js}"></script>
+	<script type="text/javascript"
+		th:src="@{/resources/js/tinymce/tinymce.min.js}"></script>
 	<script sec:authorize="hasRole('ROLE_USER')" th:inline="javascript">
 	/*<![CDATA[*/
 	
@@ -378,8 +396,8 @@ $( document ).ready(function (){
 	
 	/*]]>*/
 	</script>
-	
-		<script type="text/javascript">
+
+	<script type="text/javascript">
 		</script>
 </body>
 

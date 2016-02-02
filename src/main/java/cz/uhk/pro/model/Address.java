@@ -27,7 +27,7 @@ public class Address {
     private String street;
     @NotEmpty( message = "Nesmí být prázdné")
     private String streetNumber;
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name="districtId")
     private District district;
     @NotEmpty( message = "Nesmí být prázdné")

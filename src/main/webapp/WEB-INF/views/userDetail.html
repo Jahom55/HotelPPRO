@@ -1,127 +1,132 @@
 <!DOCTYPE html>
-<html 	xmlns="http://www.w3.org/1999/xhtml" 
-		xmlns:th="http://www.thymeleaf.org" >
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 <head th:replace="/layout/header :: header">
-  </head>
+</head>
 
-  <body>
-	
+<body>
+
 	<nav th:replace="/layout/header :: navbar"></nav>
 	<div class="container">
-	<div class="row">
-    <div class="col-lg-12 text-center">
-        <h1 th:text="${user.name}"></h1>
-        <br />
-    </div>
-</div>
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<h1 th:text="${user.name}"></h1>
+				<br />
+			</div>
+		</div>
 
-<div class="row">
-     <div class="col-lg-3 fotorama" data-nav="thumbs" data-allowfullscreen="true" data-autoplay="true">
-            <img class="img" th:attr="src=${user.image}" />
-    </div>
-<!-- TODO: tady se bude odehravat hlasovani -->
-    <div class="col-lg-9">
-    <div>
+		<div class="row">
+			<div class="col-lg-3 fotorama" data-nav="thumbs"
+				data-allowfullscreen="true" data-autoplay="true">
+				<img class="img" th:attr="src=${user.image}" />
+			</div>
+			<!-- TODO: tady se bude odehravat hlasovani -->
+			<div class="col-lg-9">
+				<div>
 
-  <!-- Nav tabs -->
-
-
-</div>
-  <h2>Informace o uživatelovi: <span th:text="${user.name}"></span></h2>
-  <table class="table table-bordered">
-            <tbody>
-            	<tr>
-            	<td>Email</td>				
-            	<td th:text="${user.email}">Email</td>	
-            	</tr>
-            		<tr>
-            	<td>Jmeno:</td>				
-            	<td th:text="${user.name}">Jmeno</td>	
-            	</tr>
-            		<tr>
-            	<td>Přijmení</td>				
-            	<td th:text="${user.surname}">Surname</td>	
-            	</tr>
-            	<tr>
-            	<td>Město</td>				
-            	<td th:text="${user.address.city}">Email</td>	
-            	</tr>
-            	<tr>
-            	<td>PSČ</td>				
-            	<td th:text="${user.address.zipCode}">Email</td>	
-            	</tr>
-            	<tr>
-            	<td>Kraj</td>				
-            	<td th:text="${district.name}">Kraj</td>	
-            	</tr>
-            	<tr>
-            	<td>Ulice</td>				
-            	<td><span th:text="${user.address.street}"></span><span th:text="${user.address.streetNumber}"></span></td>	
-            	</tr>
-            </tbody>            
-        </table>        
-      </div>
-  </div>
-  
-  <div sec:authorize="hasRole('ROLE_HOTELIER')" class="row" >
-    <div class="col-lg-9">
-        <h2 class="text-center">Moje hotely</h2>
-        
-         <table class="table table-bordered">
-        	<thead>
-        		<th> Hotel </th>
-        		<th> Město</th>
-        	</thead>
-        	<tbody>
-        		<tr th:each="hotel : ${hotels}" th:if="${hotels}">
-        			<td th:text="${hotel.name}"><a th:href="@{/detail/(id=${hotel.hotelId})}"></a>Hotel</td>
-        			<td th:text="${hotel.address.city}">Mesto</td>
-        		</tr>        	
-        	</tbody>        
-        </table>
-    </div>
-  </div>
-  
-  <div sec:authorize="hasRole('ROLE_USER')" class="row" >
-    <div class="col-lg-9">
-        <h2 class="text-center">Moje hodnoceni</h2>
-        
-        <table class="table table-bordered">
-        	<thead>
-        		<th> Hotel </th>
-        		<th> Moje hodnoceni - Celkove</th>
-        	</thead>
-        	<tbody>
-        		<tr th:each="review : ${reviews}" th:if="${reviews}">
-        			<td th:text="${review.hotel.name}"><a th:href="@{/detail/(id=${review.hotel.hotelId})}"></a>Hotel</td>
-        			<td th:text="${review.reviewComplete}">Hodnoceni</td>
-        		</tr>        	
-        	</tbody>        
-        </table>
-       
-    </div>    
-    
-  </div>
-  
+					<!-- Nav tabs -->
 
 
+				</div>
+				<h2>
+					Informace o uživatelovi: <span th:text="${user.name}"></span>
+				</h2>
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<td>Email</td>
+							<td th:text="${user.email}">Email</td>
+						</tr>
+						<tr>
+							<td>Jmeno:</td>
+							<td th:text="${user.name}">Jmeno</td>
+						</tr>
+						<tr>
+							<td>Přijmení</td>
+							<td th:text="${user.surname}">Surname</td>
+						</tr>
+						<tr>
+							<td>Město</td>
+							<td th:text="${user.address.city}">Email</td>
+						</tr>
+						<tr>
+							<td>PSČ</td>
+							<td th:text="${user.address.zipCode}">Email</td>
+						</tr>
+						<tr>
+							<td>Kraj</td>
+							<td th:text="${district.name}">Kraj</td>
+						</tr>
+						<tr>
+							<td>Ulice</td>
+							<td><span th:text="${user.address.street}"></span><span
+								th:text="${user.address.streetNumber}"></span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div sec:authorize="hasRole('ROLE_HOTELIER')" class="row">
+			<div class="col-lg-9">
+				<h2 class="text-center">Moje hotely</h2>
+
+				<table class="table table-bordered">
+					<thead>
+						<th>Hotel</th>
+						<th>Město</th>
+					</thead>
+					<tbody>
+						<tr th:each="hotel : ${hotels}" th:if="${hotels}">
+							<td><a href="#" th:href="@{/detail/(id=${hotel.hotelId})}"
+								th:text="${hotel.name}"></a></td>
+							<td th:text="${hotel.address.city}">Mesto</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div sec:authorize="hasRole('ROLE_USER')" class="row">
+			<div class="col-lg-9">
+				<h2 class="text-center">Moje hodnoceni</h2>
+
+				<table class="table table-bordered">
+					<thead>
+						<th>Hotel</th>
+						<th>Moje hodnoceni - Celkove</th>
+					</thead>
+					<tbody>
+						<tr th:each="review : ${reviews}" th:if="${reviews}">
+							<td><a href="#"
+								th:href="@{/detail/(id=${review.hotel.hotelId})}"
+								th:text="${review.hotel.name}"></a></td>
+							<td th:text="${review.reviewComplete}">Hodnoceni</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+
+		</div>
 
 
-	
-	
-	
-	<hr />
 
-   
-  <!-- Footer -->
-        <footer th:replace="/layout/footer :: footer">
-        </footer>
 
-    </div>
-    <!-- /.container -->
 
-	<div th:replace="/layout/footer :: scripts">
+
+
+
+		<hr />
+
+
+		<!-- Footer -->
+		<footer th:replace="/layout/footer :: footer"> </footer>
+
 	</div>
+	<!-- /.container -->
+
+	<div th:replace="/layout/footer :: scripts"></div>
 
 </body>
 

@@ -10,17 +10,17 @@
 
 
 	<div class="container">
-		
+
 		<form class="form-signin" th:action="@{/login}" method="post">
 			<p th:if="${error}">Špatné přihlašovací údaje</p>
 			<p th:if="${msg}">Odhlášení proběhlo úspěšně</p>
 			<h2 class="form-signin-heading">Přihlášení</h2>
 			<label for="username" class="sr-only">Username</label> <input
 				type="text" id="username" class="form-control"
-				placeholder="Username" name="username" required="required" autofocus="autofocus" />
-			<label for="password" class="sr-only">Password</label> <input
-				type="password" id="password" class="form-control"
-				placeholder="Password" required="required" name="password"/>
+				placeholder="Username" name="username" required="required"
+				autofocus="autofocus" /> <label for="password" class="sr-only">Password</label>
+			<input type="password" id="password" class="form-control"
+				placeholder="Password" required="required" name="password" />
 			<div class="checkbox">
 				<label> <input type="checkbox" value="remember-me" />
 					Zapamatovat si mě

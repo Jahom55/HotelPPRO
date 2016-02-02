@@ -73,10 +73,21 @@ public class Hotel {
     @Fetch(FetchMode.SUBSELECT)
     private List<Review> reviews;
 	
-	@OneToMany(mappedBy="hotel")
+	@OneToMany(mappedBy="hotel",cascade=CascadeType.ALL)
 	private List<Image> images;
 
+	
     
+	public List<Image> getImages() {
+		return images;
+	}
+
+
+	public void setImages(List<Image> images) {
+		this.images = images;
+	}
+
+
 	public List<Review> getReviews() {
 		return reviews;
 	}
@@ -320,5 +331,7 @@ public class Hotel {
 				+ ", image=" + image + ", website=" + website + ", counter=" + counter + ", functional=" + functional
 				+ ", address=" + address + ", user=" + user + ", type=" + type + ", equipment=" + equipment + "]";
 	}
+	
+	
 
 }

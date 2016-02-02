@@ -1,54 +1,64 @@
 <!DOCTYPE html>
-<html 	xmlns="http://www.w3.org/1999/xhtml" 
-		xmlns:th="http://www.thymeleaf.org" >
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 <head th:replace="/layout/header :: header">
-  </head>
+</head>
 
-  <body>
-	
+<body>
+
 	<nav th:replace="/layout/header :: navbar"></nav>
 
-    <div class="container">
-		<form action="#" data-th-action="@{/updateReview/(hotelId=${hotelId})}"
+	<div class="container">
+		<form action="#"
+			data-th-action="@{/updateReview/(hotelId=${hotelId})}"
 			data-th-object="${review}" method="post">
-			<table class="box-table-a">			
+			<table class="box-table-a">
 				<tbody>
-				<tr>
-						<input type="text" hidden="hidden" data-th-field="${review.reviewId}"  />
-						<td>Ubytovani: </td>
-						<td><input type="text" data-th-field="${review.reviewAccommodation}" data-th-value="${review.reviewAccommodation}" /></td>
-				 </tr>
-					
 					<tr>
-					<td>Cena: </td>
-						<td><input type="text" data-th-field="${review.reviewPrice}" data-th-value="${review.reviewPrice}" /></td>
-						
+						<input type="text" hidden="hidden"
+							data-th-field="${review.reviewId}" />
+						<td>Ubytovani:</td>
+						<td><input type="text"
+							data-th-field="${review.reviewAccommodation}"
+							data-th-value="${review.reviewAccommodation}" /></td>
+					</tr>
+
+					<tr>
+						<td>Cena:</td>
+						<td><input type="text" data-th-field="${review.reviewPrice}"
+							data-th-value="${review.reviewPrice}" /></td>
+
 
 					</tr>
 					<tr>
-					<td>Prostredi: </td>
-						<td><input type="text" class="rating" data-size="xs" data-th-field="${review.reviewEnviroment}" data-th-value="${review.reviewEnviroment}" /></td>
-						
+						<td>Prostredi:</td>
+						<td><input type="text" class="rating" data-size="xs"
+							data-th-field="${review.reviewEnviroment}"
+							data-th-value="${review.reviewEnviroment}" /></td>
+
 
 					</tr>
 					<tr>
-					<td>Jidlo: </td>
-						<td><input type="text" data-th-field="${review.reviewFood}" data-th-value="${review.reviewFood}" /></td>
-						
+						<td>Jidlo:</td>
+						<td><input type="text" data-th-field="${review.reviewFood}"
+							data-th-value="${review.reviewFood}" /></td>
+
 
 					</tr>
 					<tr>
-					<td>Celkem: </td>
-						<td><input type="text" data-th-field="${review.reviewComplete}" data-th-value="${review.reviewComplete}" /></td>
-						
+						<td>Celkem:</td>
+						<td><input type="text"
+							data-th-field="${review.reviewComplete}"
+							data-th-value="${review.reviewComplete}" /></td>
+
 
 					</tr>
-					<tr>					
+					<tr>
 						<td>
 							<button th:if="${review.reviewComplete}" type="submit">Edit</button>
 							<button th:unless="${review.reviewComplete}" type="submit">Add</button>
 						</td>
-						
+
 					</tr>
 				</tbody>
 			</table>
@@ -61,20 +71,17 @@
 
 		<hr />
 
-      
-    
-   
-  <!-- Footer -->
-        <footer th:replace="/layout/footer :: footer">
-        </footer>
 
-    </div>
-    <!-- /.container -->
 
-	<div th:replace="/layout/footer :: scripts">
+
+		<!-- Footer -->
+		<footer th:replace="/layout/footer :: footer"> </footer>
+
 	</div>
+	<!-- /.container -->
+
+	<div th:replace="/layout/footer :: scripts"></div>
 
 </body>
 
 </html>
-   

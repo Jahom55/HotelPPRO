@@ -1,6 +1,9 @@
 package cz.uhk.pro.controllers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.text.html.parser.Entity;
 import javax.xml.ws.Response;
@@ -15,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import cz.uhk.pro.model.Hotel;
+import cz.uhk.pro.model.help.HelpTag;
 import cz.uhk.pro.model.Image;
 import cz.uhk.pro.model.Review;
 import cz.uhk.pro.model.Tree;
@@ -32,180 +37,174 @@ import cz.uhk.pro.service.UserService;
 @RestController
 public class AjaxController {
 
-	
 	@Autowired
 	ImageService imageService;
-	
+
 	@Autowired
 	HotelService hotelService;
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	ReviewService reviewService;
-	
+
 	@Autowired
 	TreeService treeService;
-	
-	@RequestMapping(value="/getImages", method=RequestMethod.GET)
-	public ResponseEntity<List<Image>> getAllImages(){
+
+	@RequestMapping(value = "/getImages", method = RequestMethod.GET)
+	public ResponseEntity<List<Image>> getAllImages() {
 		List<Image> images = imageService.getAll();
-		if (images == null){
+		if (images == null) {
 			return new ResponseEntity<List<Image>>(HttpStatus.NOT_FOUND);
-		}else{
+		} else {
 			return new ResponseEntity<List<Image>>(images, HttpStatus.OK);
 		}
 	}
-	@RequestMapping(value="/deleteEmptyHotel", params = "id", method=RequestMethod.DELETE)
-	public ResponseEntity<Hotel> deleteHotel(@RequestParam int id){
+
+	@RequestMapping(value = "/deleteEmptyHotel", params = "id", method = RequestMethod.DELETE)
+	public ResponseEntity<Hotel> deleteHotel(@RequestParam int id) {
 		Hotel hotel = hotelService.get(id);
 
 		if (hotel == null)
 			return new ResponseEntity<Hotel>(HttpStatus.NOT_FOUND);
-		
-			
-			hotelService.remove(hotel);
-			return new ResponseEntity<Hotel>(HttpStatus.NO_CONTENT);
-		
+
+		hotelService.remove(hotel);
+		return new ResponseEntity<Hotel>(HttpStatus.NO_CONTENT);
+
 	}
-	
-	@RequestMapping(value="/deleteEmptyUser", params = "id", method=RequestMethod.DELETE)
-	public ResponseEntity<User> deleteUser(@RequestParam int id){
+
+	@RequestMapping(value = "/deleteEmptyUser", params = "id", method = RequestMethod.DELETE)
+	public ResponseEntity<User> deleteUser(@RequestParam int id) {
 		User user = userService.get(id);
 
 		if (user == null)
 			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-		
-			
-			userService.remove(user);
-			return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
-		
+
+		userService.remove(user);
+		return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+
 	}
-	
-	@RequestMapping(value="/updateReview", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/updateReview", method = RequestMethod.POST)
 	public ResponseEntity<Review> updateReview(@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "idUser", required = true) int idUser,
 			@RequestParam(value = "idHotel", required = true) int idHotel,
-			@RequestParam(value = "value", required = true) int value,
-			UriComponentsBuilder ucBuilder){
-		
+			@RequestParam(value = "value", required = true) int value, UriComponentsBuilder ucBuilder) {
+
 		Hotel hotel;
 		User user;
 		Review review;
-		try{
+		try {
 			hotel = hotelService.get(idHotel);
 			user = userService.get(idUser);
-		}catch(Exception e){
+		} catch (Exception e) {
 			return new ResponseEntity<Review>(HttpStatus.EXPECTATION_FAILED);
 		}
-		
+
 		review = reviewService.getReviewsByHotelAndUser(hotel, user);
-		if (review == null){
+		if (review == null) {
 			review = new Review();
 			review.setHotel(hotel);
 			review.setUser(user);
 		}
-		//prasarna jak svin
-		//accommodation  13
-		//complete   8
-		//enviroment  10
-		//food   4
-		//price  5
-		
-		
-		switch(name.length()){
+		// String length -> unique option for review
+		// accommodation 13
+		// complete 8
+		// enviroment 10
+		// food 4
+		// price 5
+
+		switch (name.length()) {
 		case 13:
-			review.setReviewAccommodation((byte)value);
+			review.setReviewAccommodation((byte) value);
 			break;
 		case 8:
-			review.setReviewComplete((byte)value);
+			review.setReviewComplete((byte) value);
 			break;
 		case 10:
-			review.setReviewEnviroment((byte)value);
+			review.setReviewEnviroment((byte) value);
 			break;
 		case 4:
-			review.setReviewFood((byte)value);
+			review.setReviewFood((byte) value);
 			break;
 		case 5:
-			review.setReviewPrice((byte)value);
+			review.setReviewPrice((byte) value);
 			break;
 
 		}
-		
-		try{
+
+		try {
 			reviewService.saveOrUpdate(review);
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			return new ResponseEntity<Review>(HttpStatus.UNPROCESSABLE_ENTITY);
-			
+
 		}
-			return new ResponseEntity<Review>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Review>(HttpStatus.NO_CONTENT);
 
 	}
-	@RequestMapping(value="/updateReviewComplete", params = "id", method=RequestMethod.GET)
-	public ResponseEntity<Review> updateReviewComplete(@RequestParam int id){
+
+	@RequestMapping(value = "/updateReviewComplete", params = "id", method = RequestMethod.GET)
+	public ResponseEntity<Review> updateReviewComplete(@RequestParam int id) {
 		Hotel hotel = hotelService.get(id);
 		List<Double> ld = reviewService.getAverageReview(hotel);
 		Review review = new Review();
-		try{
-		review.setReviewAccommodation(ld.get(0).byteValue());
-		review.setReviewComplete(ld.get(1).byteValue());
-		review.setReviewEnviroment(ld.get(2).byteValue());
-		review.setReviewFood(ld.get(3).byteValue());
-		review.setReviewPrice(ld.get(4).byteValue());
-		hotel.setRating(hotelService.getRate(hotel));
-		hotelService.saveOrUpdate(hotel);
+		try {
+			review.setReviewAccommodation(ld.get(0).byteValue());
+			review.setReviewComplete(ld.get(1).byteValue());
+			review.setReviewEnviroment(ld.get(2).byteValue());
+			review.setReviewFood(ld.get(3).byteValue());
+			review.setReviewPrice(ld.get(4).byteValue());
+			hotel.setRating(hotelService.getRate(hotel));
+			hotelService.saveOrUpdate(hotel);
 			return new ResponseEntity<Review>(review, HttpStatus.OK);
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			return new ResponseEntity<Review>(HttpStatus.NOT_FOUND);
 		}
 	}
-	@RequestMapping(value="/getImages", params = "id", method=RequestMethod.GET)
-	public ResponseEntity<List<Image>> getImage(@RequestParam int id){
+
+	@RequestMapping(value = "/getImages", params = "id", method = RequestMethod.GET)
+	public ResponseEntity<List<Image>> getImage(@RequestParam int id) {
 		Hotel hotel = hotelService.get(id);
 		List<Image> images = imageService.getImages(hotel);
-		if (images == null){
+		if (images == null) {
 			return new ResponseEntity<List<Image>>(HttpStatus.NOT_FOUND);
-		}else{
+		} else {
 			return new ResponseEntity<List<Image>>(images, HttpStatus.OK);
 		}
 	}
-	
-	@RequestMapping(value="/getCom", params = "id", method=RequestMethod.GET)
-	public ResponseEntity<List<Tree>> getCom(@RequestParam int id){
+
+	@RequestMapping(value = "/getCom", params = "id", method = RequestMethod.GET)
+	public ResponseEntity<List<Tree>> getCom(@RequestParam int id) {
 		Hotel hotel = hotelService.get(id);
 		List<Tree> tree = treeService.getComForHotel(hotel);
 		System.out.println("velikost " + tree.size());
-		if (tree == null){
+		if (tree == null) {
 			return new ResponseEntity<List<Tree>>(HttpStatus.NOT_FOUND);
-		}else{
+		} else {
 			return new ResponseEntity<List<Tree>>(tree, HttpStatus.OK);
 		}
 	}
-	
-	@RequestMapping(value="/setCountPlus", params = "id", method=RequestMethod.GET)
-	public void setCounter(@RequestParam int id){
+
+	@RequestMapping(value = "/setCountPlus", params = "id", method = RequestMethod.GET)
+	public void setCounter(@RequestParam int id) {
 		Hotel hotel = hotelService.get(id);
 		hotel.setCounter(hotel.getCounter() + 1);
 		hotelService.saveOrUpdate(hotel);
 	}
-	
-	
-	@RequestMapping(value="/createComment", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/createComment", method = RequestMethod.POST)
 	public ResponseEntity<Tree> createComment(@RequestParam(value = "body", required = true) String body,
 			@RequestParam(value = "idUser", required = true) int idUser,
 			@RequestParam(value = "idHotel", required = true) int idHotel,
 			@RequestParam(value = "ancestor", required = true) int ancestor,
 			@RequestParam(value = "depth", required = true) int depth,
-			@RequestParam(value = "header", required = true) String header,
-			UriComponentsBuilder ucBuilder){
+			@RequestParam(value = "header", required = true) String header, UriComponentsBuilder ucBuilder) {
 		Hotel hotel = hotelService.get(idHotel);
 		Tree tree = null;
-		try{
+		try {
 			List<Tree> t = treeService.getComForHotel(hotel);
-			if (t.isEmpty() || t == null){
+			if (t.isEmpty() || t == null) {
 				Tree tr = new Tree();
 				tr.setRoot(true);
 				tr.setHotel(hotel);
@@ -213,34 +212,33 @@ public class AjaxController {
 				tr.setHeader(header);
 				int id = treeService.add(tr);
 				tree = treeService.get(id);
-			}else{
+			} else {
 				for (Tree tre : t) {
-					if(tre.isRoot()){
+					if (tre.isRoot()) {
 						tree = tre;
 						break;
 					}
 				}
 			}
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			Tree tr = new Tree();
 			tr.setRoot(true);
 			tr.setHotel(hotel);
 			tr.setAncestor(0);
 			int id = treeService.add(tr);
-			tree = treeService.get(id);	
+			tree = treeService.get(id);
 		}
 		Tree fTree = new Tree();
-		if(ancestor == 0){
+		if (ancestor == 0) {
 			fTree.setAncestor(tree.getTreeId());
-		}else{
+			fTree.setDepth(depth);
+		} else {
 			Tree t = treeService.get(ancestor);
 			fTree.setAncestor(ancestor);
-			fTree.setDepth(t.getDepth()+1);
+			fTree.setDepth(t.getDepth() + 1);
 		}
 		fTree.setBody(body);
 		fTree.setHotel(hotel);
-		fTree.setDepth(depth);
 		fTree.setHeader(header);
 		fTree.setRoot(false);
 		User user = userService.get(idUser);
@@ -252,9 +250,32 @@ public class AjaxController {
 		} catch (Exception e) {
 			return new ResponseEntity<Tree>(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
-			return new ResponseEntity<Tree>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Tree>(HttpStatus.NO_CONTENT);
 
 	}
+
+	@RequestMapping(value = "/getHotels", method = RequestMethod.GET)
+	public @ResponseBody List<HelpTag> getHotels(@RequestParam String tagName) {
+		return simulateSearchResult(tagName);
+	}
+
+	private List<HelpTag> simulateSearchResult(String tagName) {
+		List<Hotel> data = hotelService.getAll();
+		List<HelpTag> result = new ArrayList<HelpTag>();
+		for (Hotel h : data) {
+			if (h.getName().contains(tagName)) {
+				result.add(new HelpTag(h.getHotelId(), h.getName()));
+				if (result.size() >= 3)
+					break;
+			}
+		}
+		
+		
+		return result;
+	}
 	
-	
+
 }
+
+
+
