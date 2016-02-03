@@ -109,7 +109,42 @@
 			</div>
 
 		</div>
+	<div sec:authorize="hasRole('ROLE_ADMIN')" class="row">
+		<div class="col-lg-9">
+				<h2 class="text-center">Moje hodnoceni</h2>
+				<table class="table table-bordered">
+					<thead>
+						<th>Hotel</th>
+						<th>Moje hodnoceni - Celkove</th>
+					</thead>
+					<tbody>
+						<tr th:each="review : ${reviews}" th:if="${reviews}">
+							<td><a href="#"
+								th:href="@{/detail/(id=${review.hotel.hotelId})}"
+								th:text="${review.hotel.name}"></a></td>
+							<td th:text="${review.reviewComplete}">Hodnoceni</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-lg-9">
+				<h2 class="text-center">Moje hotely</h2>
 
+				<table class="table table-bordered">
+					<thead>
+						<th>Hotel</th>
+						<th>Město</th>
+					</thead>
+					<tbody>
+						<tr th:each="hotel : ${hotels}" th:if="${hotels}">
+							<td><a href="#" th:href="@{/detail/(id=${hotel.hotelId})}"
+								th:text="${hotel.name}"></a></td>
+							<td th:text="${hotel.address.city}">Mesto</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>	
+	</div>
 
 
 

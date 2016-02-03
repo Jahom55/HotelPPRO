@@ -54,37 +54,23 @@ import cz.uhk.pro.service.UserService;
 public class LoginController {
 
 	@Autowired(required = true)
-	private PersonService personService;
-
-	@Autowired(required = true)
 	private AddressService addressService;
 
 	@Autowired(required = true)
 	private RoleService roleService;
 
 	@Autowired(required = true)
-	private TypeService typeService;
-
-	@Autowired(required = true)
 	private UserService userService;
 
-	@Autowired(required = true)
-	private EquipmentService equipmentService;
 
 	@Autowired(required = true)
 	private HotelService hotelService;
-
-	@Autowired(required = true)
-	private ImageService imageService;
 
 	@Autowired(required = true)
 	private ReviewService reviewService;
 
 	@Autowired(required = true)
 	private DistrictService districtService;
-
-	@Autowired
-	private HttpServletRequest context;
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(@RequestParam(value = "error", required = false) String error,
